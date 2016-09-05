@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas (New/Search) - Sydney/Singapore
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.08.09
+// @version      2016.09.06
 // @description  try to take over the world!
 // @author       You
 // @match        https://siteadmin.ap-southeast-2.instructure.com/accounts/site_admin/root_accounts*

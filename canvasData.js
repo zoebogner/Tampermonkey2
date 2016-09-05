@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas Data
 // @namespace    https://portal.inshosteddata.com/
-// @version      2016.08.09
+// @version      2016.09.06
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://portal.inshosteddata.com/*
