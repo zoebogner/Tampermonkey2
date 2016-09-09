@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.09.06
+// @version      2016.09.09
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -14,11 +14,11 @@
 var domain = 'https://'+document.location.hostname;
 
 $(document).ready(function(){
-    //add the self link
-    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="' + domain + '/accounts/self" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="http://cdn.shopify.com/s/files/1/0151/3253/articles/smiling-face-with-heart-shaped-eyes_grande.png" alt="Self" title = "Self"> </div> </div> <div class="menu-item__text"> Self </div></a></li>');
-
     //add the settings link
     $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/1/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
+
+    //add the self link
+    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="' + domain + '/accounts/self" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="http://cdn.shopify.com/s/files/1/0151/3253/articles/smiling-face-with-heart-shaped-eyes_grande.png" alt="Self" title = "Self"> </div> </div> <div class="menu-item__text"> Self </div></a></li>');
 
     //remove the images if on the old UI remove the images
     if($('#menu > li:contains("Dashboard")').length <= 0){
