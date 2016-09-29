@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.09.27
+// @version      2016.09.30
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -58,6 +58,7 @@ $(document).ready(function(){
             $('#account_settings_sub_account_includes:not(:checked)').click();
             $('#account_services_analytics:not(:checked)').click();
             $('#account_services_avatars:not(:checked)').click();
+            $('#account_settings_prevent_course_renaming_by_teachers:not(:checked)').click();
 
             //Enabled Web Services to none
             $('#account_settings > fieldset:contains("Enabled Web Services") > div:not(:last) input[type="checkbox"]:checked').click();
@@ -65,27 +66,27 @@ $(document).ready(function(){
             //---------On the main Feature page of 'Settings'-----------------
             //check to see if clicked, and if not click them!
             //new UI
-            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.use_new_styles div.ic-Super-toggle__switch').css('background-color') === "rgb(89, 89, 89)"){
+            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.use_new_styles div.ic-Super-toggle__switch').css('background-color') === "rgb(57, 75, 88)"){
                 $('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.use_new_styles > div.span5.text-right > label > div > div').click();
             }
 
             //LOR External Tools
-            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.lor_for_account div.ic-Super-toggle__switch').css('background-color') === "rgb(89, 89, 89)"){
+            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.lor_for_account div.ic-Super-toggle__switch').css('background-color') === "rgb(57, 75, 88)"){
                 $('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.lor_for_account > div.span5.text-right > label > div > div').click();
             }
 
             //internation SMS
-            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.international_sms div.ic-Super-toggle__switch').css('background-color') === "rgb(89, 89, 89)"){
+            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.international_sms div.ic-Super-toggle__switch').css('background-color') === "rgb(57, 75, 88)"){
                 $('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.international_sms > div.span5.text-right > label > div > div').click();
             }
 
             //Wrap Calendar titles
-            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.wrap_calendar_event_titles div.ic-Super-toggle__switch').css('background-color') === "rgb(89, 89, 89)"){
+            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.wrap_calendar_event_titles div.ic-Super-toggle__switch').css('background-color') === "rgb(57, 75, 88)"){
                 $('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.wrap_calendar_event_titles > div.span5.text-right > label > div > div').click();
             }
 
             //Canvas Parent
-            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.canvas_parent div.ic-Super-toggle__switch').css('background-color') === "rgb(89, 89, 89)"){
+            if($('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.canvas_parent div.ic-Super-toggle__switch').css('background-color') === "rgb(57, 75, 88)"){
                 $('#tab-features > div.account-feature-flags > ul div.row-fluid.feature.canvas_parent > div.span5.text-right > label > div > div').click();
             }
 
