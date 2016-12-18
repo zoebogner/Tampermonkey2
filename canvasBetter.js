@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.12.18
+// @version      2016.12.19
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -194,10 +194,14 @@ $(document).ready(function(){
                 var authDeleteOld = $('#dg_deleteOldAuthMethod:checked').length;
                 var loginID = $('fieldset#login_information > table.ic-Table > tbody > tr.login:eq('+ (authMethodNumber-1) +') b.unique_id').text().trim();
                 var sisID = $('fieldset#login_information > table.ic-Table > tbody > tr.login:eq('+ (authMethodNumber-1) +') th[scope="row"] div:eq(0)').text().trim().split('SIS ID: ').join('');
-                sisID += "_" + authMethodSelected;
-
+                
                 //if no SIS id, then SIS id is login ID
-                if(sisID === "SIS ID:") sisID = loginID;
+                if(sisID === "SIS ID:"){
+                    sisID = loginID;
+                }else{
+                    sisID += "_" + authMethodSelected;
+                }
+                
                 var integrationID = $('fieldset#login_information > table.ic-Table > tbody > tr.login:eq('+ (authMethodNumber-1) +') th[scope="row"] div:last').text().trim().split('Integration ID: ').join('');
                 //if not Integration ID then it equalls null
                 if(integrationID=== "Integration ID:") integrationID = '';
