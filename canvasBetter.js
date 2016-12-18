@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.12.19
+// @version      2016.12.19-2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -236,7 +236,7 @@ $(document).ready(function(){
                 xhr.send(data);
             }
         });
-    }else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations"){
+    }else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations" || document.location.pathname.toLowerCase()==="/accounts/1/settings"){
         //token storage and update
         var tokenInputHTML = '<label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="'+userToken+'"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="'+userToken+'" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="dg_apiTokenButton">Update</button></div><br>';
         $('#right-side').prepend(tokenInputHTML);
