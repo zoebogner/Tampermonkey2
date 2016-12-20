@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.12.19.2
+// @version      2016.12.20
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -183,6 +183,8 @@ $(document).ready(function(){
             e.preventDefault();
             //disable the options
             $('#dg_changeAuth_button,#dg_changeAuth,#dg_deleteOldAuthMethod,#dg_changeAuthCount').attr('disabled','disabled');
+            //replace the 'Go' button with the spinny wheel
+            $('#dg_changeAuth_button').html('<body id="dg_spin"><div class="loading_image_holder"><img src="/images/ajax-loader.gif"></div>');
             //check to see a proper value is selected
             if($('#dg_changeAuth').val() === "null" || $('#dg_changeAuthCount').val() === "null"){
                 alert('No Auth method or Number selected!');
