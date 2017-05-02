@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.02
+// @version      2017.05.03
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -36,7 +36,7 @@ $(document).ready(function(){
     $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/1/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
 
     //add the DG Tools link
-    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="Self" title = "Self"> </div> </div> <div class="menu-item__text"> Self </div></a></li>');
+    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
 
     //remove the images if on the old UI remove the images
     if($('#menu > li:contains("Dashboard")').length <= 0){
@@ -44,12 +44,7 @@ $(document).ready(function(){
         $('#dg_link_self, #dg_link_settings').attr('class','menu-item-no-drop');
     }
 
-    //if on the self page
-    if(document.location.pathname==="/accounts/self"){
-        //focus on the self link
-        $('li.ic-app-header__menu-list-item--active').attr('class',"menu-item ic-app-header__menu-list-item");
-        $('li#dg_li_self').attr('class',"menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
-    }else if(document.location.pathname==="/accounts/1/settings" || document.location.pathname==="/accounts/1/settings/configurations"){ //if on the settings page
+    if(document.location.pathname==="/accounts/1/settings" || document.location.pathname==="/accounts/1/settings/configurations"){ //if on the settings page
         //focus on the settings link
         $('li.ic-app-header__menu-list-item--active').attr('class',"menu-item ic-app-header__menu-list-item");
         $('li#dg_li_settings').attr('class',"menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
@@ -251,6 +246,10 @@ $(document).ready(function(){
             return;
         });
     } else if(document.location.pathname.toLowerCase() === "/dgtools"){
+        //focus on the DG links page
+        $('li.ic-app-header__menu-list-item--active').attr('class',"menu-item ic-app-header__menu-list-item");
+        $('li#dg_li_self').attr('class',"menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
+
         document.title = "Update SIS id from one to another";
         $('#main').html('<div> <h1>Update SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
 
