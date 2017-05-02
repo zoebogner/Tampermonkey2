@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.04.1
+// @version      2017.05.04.2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -313,7 +313,7 @@ function update_sis_id(userArray){
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
                     console.log("Completed id update for: " + this.responseText);
-                    $('#dg_console_log').val("Completed id update for: " + this.responseText.sis_user_id +" [" + this.responseText.id +"]\n" + $('#dg_console_log').val());
+                    $('#dg_console_log').val("Completed id update for: " + this.responseText[0].sis_user_id +" [" + this.responseText[0].id +"]\n" + $('#dg_console_log').val());
                 }
             });
 
