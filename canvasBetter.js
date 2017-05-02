@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2016.12.20
+// @version      2017.05.02
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -35,8 +35,8 @@ $(document).ready(function(){
     //add the settings link
     $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/1/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
 
-    //add the self link
-    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="' + domain + '/accounts/self" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="http://cdn.shopify.com/s/files/1/0151/3253/articles/smiling-face-with-heart-shaped-eyes_grande.png" alt="Self" title = "Self"> </div> </div> <div class="menu-item__text"> Self </div></a></li>');
+    //add the DG Tools link
+    $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="Self" title = "Self"> </div> </div> <div class="menu-item__text"> Self </div></a></li>');
 
     //remove the images if on the old UI remove the images
     if($('#menu > li:contains("Dashboard")').length <= 0){
@@ -56,7 +56,7 @@ $(document).ready(function(){
 
         //---------On the main Settings page of 'Settings-----------------
         //create the button to do the default settings
-        $('#account_settings > legend').after('<button type="button" id="dg_button_applyDefaults_settings">Apply defaults</button>');
+        $('#account_settings > legend').after('<button type="button" class ="btn" id="dg_button_applyDefaults_settings">Apply defaults</button>');
         //apply the action of clicking the default button
         $('#dg_button_applyDefaults_settings').click(function(e){
             e.preventDefault();
@@ -250,5 +250,82 @@ $(document).ready(function(){
             }
             return;
         });
+    } else if(document.location.pathname.toLowerCase() === "/dgtools"){
+        document.title = "Update SIS id from one to another";
+        $('#main').html('<div> <h1>Update SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
+
+        $('button#dg_updateGo').click(function(e){
+            e.preventDefault();
+            //disable fields and buttons
+            $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id').attr('disabled','disabled');
+
+            //get the arrays and confrim that they match
+            var old_sis_ID = $('#dg_old_sis_id').val().split(',');
+            var new_sis_ID = $('#dg_new_sis_id').val().split(',');
+
+            //create new object array
+            var newObjectArray = [];
+
+            if(old_sis_ID.length === new_sis_ID.length){
+                $.each(old_sis_ID, function(i,e){
+                    var tmp = {
+                        new : new_sis_ID[i].trim(),
+                        old : e.trim()
+                    };
+                    newObjectArray.push(tmp);
+                });
+                if(confirm("Are you sure?")){
+                    update_sis_id(newObjectArray);
+                }else{
+                    return 0;
+                }
+            }else {
+                return alert('Array lengths do not match!');
+            }
+        });
     }
 });
+
+function update_sis_id(userArray){
+    //itterate through the array of canvas IDs
+    $.each(userArray, function(index, element){
+        var settingsGET = {
+            "async": true,
+            "url": "/api/v1/users/sis_user_id:" + element.old + '/logins/',
+            "method": "GET",
+            "headers": {
+                "authorization": "Bearer " + userToken,
+                "cache-control": "no-cache"
+            },
+            "error": function(jqXHR, textStatus, errorThrown) { 
+                if(jqXHR.status == 404 || errorThrown == 'Not Found') { 
+                    console.log("Error: " + jqXHR.status +" - User not found: " + element.old);
+                    $('#dg_console_log').val($('#dg_console_log').val() + "Error: " + jqXHR.status +" - User not found: " + element.old + " \n");
+                }
+            }
+        };
+
+        $.ajax(settingsGET).done(function (response) {
+            var data = null;
+
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    console.log("Completed id update for: " + this.responseText);
+                    $('#dg_console_log').val($('#dg_console_log').val() + "Completed id update for: " + this.responseText +"\n");
+                }
+            });
+
+
+            xhr.open("PUT", "/api/v1/accounts/1/logins/" + response[0].id + "?login%5Bsis_user_id%5D=" + element.new);
+            xhr.setRequestHeader("authorization", "Bearer " + userToken);
+            xhr.setRequestHeader("cache-control", "no-cache");
+            xhr.send(data);
+            console.log("Processing for: " + element.new + "[" + element.old + "]");
+            $('#dg_console_log').val($('#dg_console_log').val() + "Processing for: " + element.new + "[" + element.old + "]\n");
+        });
+    });
+}
+
