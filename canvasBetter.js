@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.03
+// @version      2017.05.03.v3
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -250,8 +250,8 @@ $(document).ready(function(){
         $('li.ic-app-header__menu-list-item--active').attr('class',"menu-item ic-app-header__menu-list-item");
         $('li#dg_li_self').attr('class',"menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-        document.title = "Update SIS id from one to another";
-        $('#main').html('<div> <h1>Update SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
+        document.title = "Update User SIS id from one to another";
+        $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
 
         $('button#dg_updateGo').click(function(e){
             e.preventDefault();
@@ -298,8 +298,8 @@ function update_sis_id(userArray){
             },
             "error": function(jqXHR, textStatus, errorThrown) { 
                 if(jqXHR.status == 404 || errorThrown == 'Not Found') { 
-                    console.log("Error: " + jqXHR.status +" - User not found: " + element.old);
-                    $('#dg_console_log').val($('#dg_console_log').val() + "Error: " + jqXHR.status +" - User not found: " + element.old + " \n");
+                    console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
+                    $('#dg_console_log').val("Error: " + jqXHR.status +" - User not found: " + element.old + " \n" + $('#dg_console_log').val() +);
                 }
             }
         };
@@ -313,7 +313,7 @@ function update_sis_id(userArray){
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
                     console.log("Completed id update for: " + this.responseText);
-                    $('#dg_console_log').val($('#dg_console_log').val() + "Completed id update for: " + this.responseText +"\n");
+                    $('#dg_console_log').val("Completed id update for: " + this.responseText.sis_user_id +" [" + this.responseText.id +"]\n" + $('#dg_console_log').val());
                 }
             });
 
@@ -323,7 +323,7 @@ function update_sis_id(userArray){
             xhr.setRequestHeader("cache-control", "no-cache");
             xhr.send(data);
             console.log("Processing for: " + element.new + "[" + element.old + "]");
-            $('#dg_console_log').val($('#dg_console_log').val() + "Processing for: " + element.new + "[" + element.old + "]\n");
+            $('#dg_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#dg_console_log').val());
         });
     });
 }
