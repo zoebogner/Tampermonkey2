@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.03.03
+// @version      2017.05.03.04
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -299,7 +299,7 @@ function update_sis_id(userArray){
             "error": function(jqXHR, textStatus, errorThrown) { 
                 if(jqXHR.status == 404 || errorThrown == 'Not Found') { 
                     console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
-                    $('#dg_console_log').val("Error: " + jqXHR.status +" - User not found: " + element.old + " \n" + $('#dg_console_log').val() +);
+                    $('#dg_console_log').val("Error: " + jqXHR.status +" - User not found: " + element.old + " \n" + $('#dg_console_log').val());
                 }
             }
         };
