@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.06.2
+// @version      2017.05.06.3
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -386,7 +386,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                         DOMAIN_ROOT_ACCOUNT_ID: ENV.DOMAIN_ROOT_ACCOUNT_ID,
                         CONTEXT_BASE_URL: ENV.CONTEXT_BASE_URL,
                         TIMEZONE: ENV.TIMEZONE,
-                        currentAccount: ENV.ACCOUNT.id,
+                        //currentAccount: ENV.ACCOUNT.id, //looks like this doesnt always exist
                         current_user_id: ENV.current_user_id,
                         documentTitle: document.title,
                     };
@@ -427,10 +427,10 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             })();
 
             //fix up some formating
-            $('div').removeClass('form-group');
+            //$('div').removeClass('form-group');
             $('.form-control:not(:last)').css({"display":"-webkit-inline-box","width":"inherit","max-width":"100%", "height": "inherit","padding":"inherit"});
             $('.help-block, #other_details_chars_label').hide();
-            $('#ic_help_request > fieldset > div').each(function(){
+            /*$('#ic_help_request > fieldset > div').each(function(){
                 $(this).html($(this).html().split('<div class="col-md-3">').join('').split('<div class="col-md-5">').join(''));
                 $(this).css('padding-botton','10px');
             });//*/
