@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.06.1
+// @version      2017.05.06.2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
+// @match        https://*.instructure.com/*
 // @match        https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html*
 // @exclude      https://siteadmin*instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
-
 // My functions
 function storeItem(storeName, storeValue) {
     storeValue = btoa(storeValue);
@@ -87,10 +87,12 @@ function buildURI(passedObject, baseURL) {
 //Get parametrs from url
 function getUrlVars(url) {
     //if no variable, set it to the URL
-    if(url === undefined){url = window.location.href;}
+    if (url === undefined) {
+        url = window.location.href;
+    }
 
     var vars = {};
-    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
         vars[key] = decodeURIComponent(value);
     });
     return vars;
@@ -374,7 +376,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     "headers": {
                         "cache-control": "no-cache",
                     }
-                }
+                };
 
                 $.ajax(settings).done(function(response) {
                     buildIcLink = {
@@ -387,7 +389,6 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                         currentAccount: ENV.ACCOUNT.id,
                         current_user_id: ENV.current_user_id,
                         documentTitle: document.title,
-
                     };
                     //build the support link URI
                     linkURL = buildURI(buildIcLink, linkURL);
@@ -400,23 +401,45 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
 
 
     });
-
-// ELSE if on the IC request page
+    // ELSE if on the IC request page
 } else if (document.location.hostname === "s3.amazonaws.com") {
-    if (typeof jQuery == 'undefined' || typeof jQuery === undefined || typeof jQuery == null) {
-    var headTag = document.getElementsByTagName("head")[0];
-    var jqTag = document.createElement('script');
-    jqTag.type = 'text/javascript';
-    jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-    headTag.appendChild(jqTag);
-    jqTag.onload = myJQueryCode;
+    if (typeof jQuery == 'undefined' || typeof jQuery === undefined || typeof jQuery === null) {
+        var headTag = document.getElementsByTagName("head")[0];
+        var jqTag = document.createElement('script');
+        jqTag.type = 'text/javascript';
+        jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
+        headTag.appendChild(jqTag);
+        jqTag.onload = myJQueryCode;
+    }else{
+        myJQueryCode();
+    }
 
-    function myJQueryCode(){
-        $(document).ready(function(){
+    function myJQueryCode() {
+        $(document).ready(function() {
+            //document title and favicon
+            document.title="APAC IC Support";
+            (function() {
+                var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = 'http://www.favicon.cc/logo3d/170779.png';
+                document.getElementsByTagName('head')[0].appendChild(link);
+            })();
+
+            //fix up some formating
+            $('div').removeClass('form-group');
+            $('.form-control:not(:last)').css({"display":"-webkit-inline-box","width":"inherit","max-width":"100%", "height": "inherit","padding":"inherit"});
+            $('.help-block, #other_details_chars_label').hide();
+            $('#ic_help_request > fieldset > div').each(function(){
+                $(this).html($(this).html().split('<div class="col-md-3">').join('').split('<div class="col-md-5">').join(''));
+                $(this).css('padding-botton','10px');
+            });//*/
+
             var icSupportObject = getUrlVars();
 
             //if done via DG tools
-            if(icSupportObject.dgtools == "true"){
+            if (icSupportObject.dgtools == "true") {
+                console.log('gg');
                 //fill out the title field
                 $('#school_name').val(icSupportObject.name);
 
@@ -427,7 +450,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                 var supportDetails = JSON.stringify(icSupportObject);
                 supportDetails = supportDetails.split('","').join('\n');
                 supportDetails = supportDetails.split('":"').join(' : ');
-                supportDetails = supportDetails.split('"}').join('').split().join('{"');
+                supportDetails = supportDetails.split('"}').join('').split('{"').join('');
                 supportDetails = supportDetails.trim();
 
                 $('#other_details').val('\n\n\n===================================\n' + supportDetails);
