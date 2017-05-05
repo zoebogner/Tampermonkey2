@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.06.3
+// @version      2017.05.06.4
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -427,13 +427,10 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             })();
 
             //fix up some formating
-            //$('div').removeClass('form-group');
             $('.form-control:not(:last)').css({"display":"-webkit-inline-box","width":"inherit","max-width":"100%", "height": "inherit","padding":"inherit"});
             $('.help-block, #other_details_chars_label').hide();
-            /*$('#ic_help_request > fieldset > div').each(function(){
-                $(this).html($(this).html().split('<div class="col-md-3">').join('').split('<div class="col-md-5">').join(''));
-                $(this).css('padding-botton','10px');
-            });//*/
+            $('.form-horizontal, .form-group').css({'margin-right':'inherit','margin-left':'inherit'});
+            
 
             var icSupportObject = getUrlVars();
 
@@ -448,10 +445,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
 
                 //create the support details string
                 var supportDetails = JSON.stringify(icSupportObject);
-                supportDetails = supportDetails.split('","').join('\n');
-                supportDetails = supportDetails.split('":"').join(' : ');
-                supportDetails = supportDetails.split('"}').join('').split('{"').join('');
-                supportDetails = supportDetails.trim();
+                supportDetails = supportDetails.split('","').join('\n').split('":"').join(' : ').split('"}').join('').split('{"').join('').trim();
 
                 $('#other_details').val('\n\n\n===================================\n' + supportDetails);
             }
