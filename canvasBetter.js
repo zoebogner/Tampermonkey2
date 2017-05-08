@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.06.4
+// @version      2017.05.08
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -393,7 +393,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     //build the support link URI
                     linkURL = buildURI(buildIcLink, linkURL);
                     console.log(linkURL);
-                    $('#help_tray > ul:first > li').before('<li class="ic-NavMenu-list-item"><a id="#dg_icSupportLink" href="' + linkURL + '" target="_blank" class="ic-NavMenu-list-item__link">IC Support</a><div class="ic-NavMenu-list-item__helper-text is-help-link">Link to the IC support page</div></li>');
+                    $('#help_tray > ul:first > li:first').before('<li class="ic-NavMenu-list-item"><a id="#dg_icSupportLink" href="' + linkURL + '" target="_blank" class="ic-NavMenu-list-item__link">IC Support</a><div class="ic-NavMenu-list-item__helper-text is-help-link">Link to the IC support page</div></li>');
                 });
             }
             return;
