@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.08
+// @version      2017.06.07
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -12,91 +12,6 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
-// My functions
-function storeItem(storeName, storeValue) {
-    storeValue = btoa(storeValue);
-    //localStorage.setItem(storeName, storeValue);
-    GM_setValue(storeName, storeValue);
-    //console.log("Encoded name: " + storeName + "\nEncoded Value: " + storeValue);
-    return true;
-}
-
-function getItem(itemName) {
-    //var retrievedObject = localStorage.getItem(itemName);
-    var retrievedObject = GM_getValue(itemName, null);
-    if (retrievedObject !== null) retrievedObject = atob(retrievedObject);
-    //console.log("Decoded itme Name: " + itemName + "\nDecoded value: " + retrievedObject);
-    return retrievedObject;
-}
-
-function update_sis_id(userArray) {
-    //itterate through the array of canvas IDs
-    $.each(userArray, function(index, element) {
-        var settingsGET = {
-            "async": true,
-            "url": "/api/v1/users/sis_user_id:" + element.old + '/logins/',
-            "method": "GET",
-            "headers": {
-                "authorization": "Bearer " + userToken,
-                "cache-control": "no-cache"
-            },
-            "error": function(jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status == 404 || errorThrown == 'Not Found') {
-                    console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
-                    $('#dg_console_log').val("Error: " + jqXHR.status + " - User not found: " + element.old + " \n" + $('#dg_console_log').val());
-                }
-            }
-        };
-
-        $.ajax(settingsGET).done(function(response) {
-            var data = null;
-
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-
-            xhr.addEventListener("readystatechange", function() {
-                if (this.readyState === 4) {
-                    console.log("Completed id update for: " + this.responseText);
-                    $('#dg_console_log').val("Completed id update for: " + element.new + " [" + element.old + "]\n" + $('#dg_console_log').val());
-                }
-            });
-
-
-            xhr.open("PUT", "/api/v1/accounts/1/logins/" + response[0].id + encodeURI("?login[sis_user_id]=") + element.new);
-            xhr.setRequestHeader("authorization", "Bearer " + userToken);
-            xhr.setRequestHeader("cache-control", "no-cache");
-            xhr.send(data);
-            console.log("Processing for: " + element.new + "[" + element.old + "]");
-            $('#dg_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#dg_console_log').val());
-        });
-    });
-}
-
-//build the URI string from the object array
-function buildURI(passedObject, baseURL) {
-    var str = "?" + Object.keys(passedObject).map(function(prop) {
-        return [prop, passedObject[prop]].map(encodeURIComponent).join("=");
-    }).join("&");
-
-    if (baseURL === null || baseURL === undefined || baseURL === '' || baseURL === 'undefined')
-        return str;
-    else
-        return baseURL + str;
-}
-
-//Get parametrs from url
-function getUrlVars(url) {
-    //if no variable, set it to the URL
-    if (url === undefined) {
-        url = window.location.href;
-    }
-
-    var vars = {};
-    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-        vars[key] = decodeURIComponent(value);
-    });
-    return vars;
-}
 
 //global variables
 var domain = 'https://' + document.location.hostname;
@@ -320,22 +235,24 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                 }
                 return;
             });
+            //=============== DG Tools ======================= */
         } else if (document.location.pathname.toLowerCase() === "/dgtools") {
             //focus on the DG links page
             $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
             $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-            document.title = "Update User SIS id from one to another";
-            $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
+            document.title = "Update SIS id from one to another";
+            var dgHTML = '<div style="padding-left:50px;"> <h1>Update SIS id from one to another</h1> <div> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> &nbsp;<select id="dg_sis_or_canvas" style="width:initial;margin-bottom: initial;"> <option value="sis_id">SIS ID</option> <option value="canvas_id">Canvas ID</option> </select> &nbsp;<select id="dg_whatToChange" style="width:initial;margin-bottom: initial;"> <option value="user">User SIS ID</option> <option value="course">Course SIS ID</option> <option value="section">Section SIS ID</option> </select> </td> <td> <br> <button type="button" class="Button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> <div>Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>';
+            $('#main').html(dgHTML);
 
             $('button#dg_updateGo').click(function(e) {
                 e.preventDefault();
                 //disable fields and buttons
-                $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id').attr('disabled', 'disabled');
+                $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id, #dg_sis_or_canvas, #dg_whatToChange').attr('disabled', 'disabled');
 
                 //get the arrays and confrim that they match
-                var old_sis_ID = $('#dg_old_sis_id').val().split(',');
-                var new_sis_ID = $('#dg_new_sis_id').val().split(',');
+                var old_sis_ID = createNewCSV($('#dg_old_sis_id').val());
+                var new_sis_ID = createNewCSV($('#dg_new_sis_id').val());
 
                 //create new object array
                 var newObjectArray = [];
@@ -349,7 +266,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                         newObjectArray.push(tmp);
                     });
                     if (confirm("Are you sure?")) {
-                        update_sis_id(newObjectArray);
+                        update_sis_id(newObjectArray, $('#dg_sis_or_canvas').val(), $('#dg_whatToChange').val());
                     } else {
                         return 0;
                     }
@@ -430,7 +347,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('.form-control:not(:last)').css({"display":"-webkit-inline-box","width":"inherit","max-width":"100%", "height": "inherit","padding":"inherit"});
             $('.help-block, #other_details_chars_label').hide();
             $('.form-horizontal, .form-group').css({'margin-right':'inherit','margin-left':'inherit'});
-            
+
 
             var icSupportObject = getUrlVars();
 
@@ -451,4 +368,181 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             }
         });
     }
+}
+
+// My functions
+function storeItem(storeName, storeValue) {
+    storeValue = btoa(storeValue);
+    //localStorage.setItem(storeName, storeValue);
+    GM_setValue(storeName, storeValue);
+    //console.log("Encoded name: " + storeName + "\nEncoded Value: " + storeValue);
+    return true;
+}
+
+function getItem(itemName) {
+    //var retrievedObject = localStorage.getItem(itemName);
+    var retrievedObject = GM_getValue(itemName, null);
+    if (retrievedObject !== null) retrievedObject = atob(retrievedObject);
+    //console.log("Decoded itme Name: " + itemName + "\nDecoded value: " + retrievedObject);
+    return retrievedObject;
+}
+
+
+
+//build the URI string from the object array
+function buildURI(passedObject, baseURL) {
+    var str = "?" + Object.keys(passedObject).map(function(prop) {
+        return [prop, passedObject[prop]].map(encodeURIComponent).join("=");
+    }).join("&");
+
+    if (baseURL === null || baseURL === undefined || baseURL === '' || baseURL === 'undefined')
+        return str;
+    else
+        return baseURL + str;
+}
+
+//Get parametrs from url
+function getUrlVars(url) {
+    //if no variable, set it to the URL
+    if (url === undefined) {
+        url = window.location.href;
+    }
+
+    var vars = {};
+    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = decodeURIComponent(value);
+    });
+    return vars;
+}
+
+//Create a CSV from a text area field or anywhere else!
+function createNewCSV(passedVal){
+    var s = passedVal;
+
+    //delete any leading spaces
+    while(s.charAt(0) === ' '){
+        s = s.substr(1);
+    }
+
+    //delete and leadning new lines
+    while(s.charAt(0) === '\n'){
+        s = s.substr(1);
+    }
+
+    //if the val is CSV then split and return
+    if(s.indexOf(',') > s.indexOf('\n')){
+        return s.split(',');
+    }else{ // Else if the array is new line, then split and return
+        return s.split('\n');
+    }
+}
+
+//Determine the means of the change, and update the display log
+function update_sis_id(userArray, canvasOrSIS, whatToChange) {
+    if(canvasOrSIS === 'sis_id'){
+        updateDgConsole('Updating ' + whatToChange + ' using SIS ID...');
+        update_using_sis(userArray, whatToChange);
+    }else{
+        updateDgConsole('Updating ' + whatToChange + ' using Canvas ID...');
+        update_using_canvas(userArray, whatToChange);
+    }
+}
+
+//Update the item using SIS ID as reference
+function update_using_sis(userArray, whatToChange) {
+    var getURL = '';
+    var afterGetURL = '';
+    var postURL = '';
+    switch(whatToChange) {
+        case "user":
+            getURL = "/api/v1/users/sis_user_id:";
+            afterGetURL = /logins/;
+            postURL = "/api/v1/accounts/1/logins/";
+            afterPostURL = "?login[sis_user_id]=";
+            break;
+        case "course":
+            return 0;
+            break;
+        case "section":
+            return 0;
+            break;
+        default:
+            updateDgConsole('ERROR - Must explode!');
+            return 0;
+    }
+
+    //itterate through the array of canvas IDs
+    $.each(userArray, function(index, element) {
+        var settingsGET = {
+            "async": true,
+            "url": getURL + element.old + afterGetURL,
+            "method": "GET",
+            "headers": {
+                "authorization": "Bearer " + userToken,
+                "cache-control": "no-cache"
+            },
+            "error": function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 404 || errorThrown == 'Not Found') {
+                    updateDgConsole("Error: " + jqXHR.status + " - " + whatToChange + " not found: " + element.old);
+                }
+            }
+        };
+        $.ajax(settingsGET).done(function (response) {
+            var ajaxPostURL = encodeURI(postURL + response[0].id + afterPostURL + element.new);
+            update_using_canvas_ajax(ajaxPostURL);
+            //updating console and log 
+            updateDgConsole("Processing for: " + element.new + " [Old: " + element.old + "]");
+        });
+    });
+}
+
+function update_using_canvas_ajax(ajaxPostURL){
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+        if (this.readyState === 4) {
+            var reString = JSON.parse(this.responseText);
+            updateDgConsole("Completed id update for: " + reString.sis_user_id);
+        }
+    });
+
+    xhr.open("PUT", ajaxPostURL);
+    xhr.setRequestHeader("authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.send(data);
+}
+
+function update_using_canvas(userArray, whatToChange){
+    var postURL = '';
+    var afterPostURL = '';
+    switch(whatToChange) {
+        case "user":
+            postURL = "/api/v1/accounts/1/logins/";
+            afterPostURL = encodeURI("?login[sis_user_id]=");
+            break;
+        case "course":
+            return 0;
+            break;
+        case "section":
+            return 0;
+            break;
+        default:
+            updateDgConsole('ERROR - Must explode!');
+            return 0;
+    }
+
+    $.each(userArray, function(index, element) {
+        var ajaxPostURL = postURL + element.old + afterPostURL + element.new;
+        update_using_canvas_ajax(ajaxPostURL);
+        updateDgConsole("Processing for: " + element.new + " [Old: " + element.old + "]");
+    });
+}
+
+function updateDgConsole(s){
+    var date = new Date().toLocaleString() + " | " + s;
+    console.log(date + s);
+    $('#dg_console_log').val(date + "\n" + $('#dg_console_log').val());
 }
