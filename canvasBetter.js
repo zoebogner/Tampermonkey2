@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.05.08
+// @version      2017.07.19
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -12,91 +12,6 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
-// My functions
-function storeItem(storeName, storeValue) {
-    storeValue = btoa(storeValue);
-    //localStorage.setItem(storeName, storeValue);
-    GM_setValue(storeName, storeValue);
-    //console.log("Encoded name: " + storeName + "\nEncoded Value: " + storeValue);
-    return true;
-}
-
-function getItem(itemName) {
-    //var retrievedObject = localStorage.getItem(itemName);
-    var retrievedObject = GM_getValue(itemName, null);
-    if (retrievedObject !== null) retrievedObject = atob(retrievedObject);
-    //console.log("Decoded itme Name: " + itemName + "\nDecoded value: " + retrievedObject);
-    return retrievedObject;
-}
-
-function update_sis_id(userArray) {
-    //itterate through the array of canvas IDs
-    $.each(userArray, function(index, element) {
-        var settingsGET = {
-            "async": true,
-            "url": "/api/v1/users/sis_user_id:" + element.old + '/logins/',
-            "method": "GET",
-            "headers": {
-                "authorization": "Bearer " + userToken,
-                "cache-control": "no-cache"
-            },
-            "error": function(jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status == 404 || errorThrown == 'Not Found') {
-                    console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
-                    $('#dg_console_log').val("Error: " + jqXHR.status + " - User not found: " + element.old + " \n" + $('#dg_console_log').val());
-                }
-            }
-        };
-
-        $.ajax(settingsGET).done(function(response) {
-            var data = null;
-
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-
-            xhr.addEventListener("readystatechange", function() {
-                if (this.readyState === 4) {
-                    console.log("Completed id update for: " + this.responseText);
-                    $('#dg_console_log').val("Completed id update for: " + element.new + " [" + element.old + "]\n" + $('#dg_console_log').val());
-                }
-            });
-
-
-            xhr.open("PUT", "/api/v1/accounts/1/logins/" + response[0].id + encodeURI("?login[sis_user_id]=") + element.new);
-            xhr.setRequestHeader("authorization", "Bearer " + userToken);
-            xhr.setRequestHeader("cache-control", "no-cache");
-            xhr.send(data);
-            console.log("Processing for: " + element.new + "[" + element.old + "]");
-            $('#dg_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#dg_console_log').val());
-        });
-    });
-}
-
-//build the URI string from the object array
-function buildURI(passedObject, baseURL) {
-    var str = "?" + Object.keys(passedObject).map(function(prop) {
-        return [prop, passedObject[prop]].map(encodeURIComponent).join("=");
-    }).join("&");
-
-    if (baseURL === null || baseURL === undefined || baseURL === '' || baseURL === 'undefined')
-        return str;
-    else
-        return baseURL + str;
-}
-
-//Get parametrs from url
-function getUrlVars(url) {
-    //if no variable, set it to the URL
-    if (url === undefined) {
-        url = window.location.href;
-    }
-
-    var vars = {};
-    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-        vars[key] = decodeURIComponent(value);
-    });
-    return vars;
-}
 
 //global variables
 var domain = 'https://' + document.location.hostname;
@@ -326,7 +241,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
             document.title = "Update User SIS id from one to another";
-            $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;">Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> <table> <tr> <th>Old SIS ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <br> <button type="button" id="dg_updateGo">Update IDs</button> </td> </tr> </table> </div> </div>');
+            $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="dg_apiToken">SIS ID or Canvas ID:</label> <br> <select id="dg_canvasOrSIS" name="dg_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="dg_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
 
             $('button#dg_updateGo').click(function(e) {
                 e.preventDefault();
@@ -334,8 +249,8 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                 $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id').attr('disabled', 'disabled');
 
                 //get the arrays and confrim that they match
-                var old_sis_ID = $('#dg_old_sis_id').val().split(',');
-                var new_sis_ID = $('#dg_new_sis_id').val().split(',');
+                var old_sis_ID = csvOrNot($('#dg_old_sis_id').val());
+                var new_sis_ID = csvOrNot($('#dg_new_sis_id').val());
 
                 //create new object array
                 var newObjectArray = [];
@@ -348,8 +263,8 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                         };
                         newObjectArray.push(tmp);
                     });
-                    if (confirm("Are you sure?")) {
-                        update_sis_id(newObjectArray);
+                    if (confirm("Are you sure?\nThis can't be undone?")) {
+                        update_sis_id(newObjectArray, $('#dg_canvasOrSIS').val());
                     } else {
                         return 0;
                     }
@@ -430,7 +345,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('.form-control:not(:last)').css({"display":"-webkit-inline-box","width":"inherit","max-width":"100%", "height": "inherit","padding":"inherit"});
             $('.help-block, #other_details_chars_label').hide();
             $('.form-horizontal, .form-group').css({'margin-right':'inherit','margin-left':'inherit'});
-            
+
 
             var icSupportObject = getUrlVars();
 
@@ -450,5 +365,107 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                 $('#other_details').val('\n\n\n===================================\n' + supportDetails);
             }
         });
+    }
+}
+
+// My functions
+function storeItem(storeName, storeValue) {
+    storeValue = btoa(storeValue);
+    //localStorage.setItem(storeName, storeValue);
+    GM_setValue(storeName, storeValue);
+    //console.log("Encoded name: " + storeName + "\nEncoded Value: " + storeValue);
+    return true;
+}
+
+function getItem(itemName) {
+    //var retrievedObject = localStorage.getItem(itemName);
+    var retrievedObject = GM_getValue(itemName, null);
+    if (retrievedObject !== null) retrievedObject = atob(retrievedObject);
+    //console.log("Decoded itme Name: " + itemName + "\nDecoded value: " + retrievedObject);
+    return retrievedObject;
+}
+
+function update_sis_id(userArray, sisOrNot) {
+    //itterate through the array of canvas IDs
+    $.each(userArray, function(index, element) {
+        var settingsGET = {
+            "async": true,
+            "url": "/api/v1/users/"+ sisOrNot + element.old + '/logins/',
+            "method": "GET",
+            "headers": {
+                "authorization": "Bearer " + userToken,
+                "cache-control": "no-cache"
+            },
+            "error": function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 404 || errorThrown == 'Not Found') {
+                    console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
+                    $('#dg_console_log').val("Error: " + jqXHR.status + " - User not found: " + element.old + " \n" + $('#dg_console_log').val());
+                }
+            }
+        };
+
+        $.ajax(settingsGET).done(function(response) {
+            var data = null;
+
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener("readystatechange", function() {
+                if (this.readyState === 4) {
+                    console.log("Completed id update for: " + this.responseText);
+                    $('#dg_console_log').val("Completed id update for: " + element.new + " [" + element.old + "]\n" + $('#dg_console_log').val());
+                }
+            });
+
+
+            xhr.open("PUT", "/api/v1/accounts/1/logins/" + response[0].id + encodeURI("?login[sis_user_id]=") + element.new);
+            xhr.setRequestHeader("authorization", "Bearer " + userToken);
+            xhr.setRequestHeader("cache-control", "no-cache");
+            xhr.send(data);
+            console.log("Processing for: " + element.new + "[" + element.old + "]");
+            $('#dg_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#dg_console_log').val());
+        });
+    });
+}
+
+//build the URI string from the object array
+function buildURI(passedObject, baseURL) {
+    var str = "?" + Object.keys(passedObject).map(function(prop) {
+        return [prop, passedObject[prop]].map(encodeURIComponent).join("=");
+    }).join("&");
+
+    if (baseURL === null || baseURL === undefined || baseURL === '' || baseURL === 'undefined')
+        return str;
+    else
+        return baseURL + str;
+}
+
+//Get parametrs from url
+function getUrlVars(url) {
+    //if no variable, set it to the URL
+    if (url === undefined) {
+        url = window.location.href;
+    }
+
+    var vars = {};
+    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = decodeURIComponent(value);
+    });
+    return vars;
+}
+
+//determine if the text area is new line or csv and return an array
+function csvOrNot(theTextArea){
+    var newArray = theTextArea.trim();
+    if(newArray.indexOf('\n') > newArray.indexOf(',')){
+        newArray = newArray.split(' \n').join('\n');
+        newArray = newArray.split('\n ').join('\n');
+        newArray = newArray.split('\n');
+        return newArray;
+    }else {
+        newArray = newArray.split(' ,').join(',');
+        newArray = newArray.split(', ').join(',');
+        newArray = newArray.split(',');
+        return newArray;
     }
 }
