@@ -108,6 +108,35 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     //Display Totals for "All Grading Periods"
                     $('div.row-fluid.feature.all_grading_periods_totals div.ff-background:contains("Allow") span.ui-button-text').click();
 
+                    //Apply the email display name to the account name
+                    $('#account_settings_outgoing_email_default_name_option_custom').click();
+                    $('#account_settings_outgoing_email_default_name').val($('input[name="account[name]"]').val());
+
+                    //Faculty Journel
+                    $('#account_enable_user_notes:not(:checked)').click();
+                    //Turn on Scheduler
+                    $('#account_settings_show_scheduler:not(:checked)').click();
+                    //Users cant edit their name
+                    $('#account_settings_users_can_edit_name:checked').click();
+                    //Users cant delete their default email
+                    $('#account_settings_edit_institution_email:checked').click();
+
+                    //features
+                    //LTI2 Registration
+                    $('#tab-features > div.account-feature-flags > ul > li:nth-child(8) > div.row-fluid.feature.lti2_rereg > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
+                    //Use the new scheduler
+                    $('#tab-features > div.account-feature-flags > ul > li:nth-child(12) > div.row-fluid.feature.better_scheduler > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
+                    //Student Context Card
+                    $('#tab-features > div.account-feature-flags > ul > li:nth-child(18) > div.row-fluid.feature.student_context_cards > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
+                    //Toggle feature details for New User Tutorial
+                    $('#tab-features > div.account-feature-flags > ul > li:nth-child(19) > div.row-fluid.feature.new_user_tutorial > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
+                    //Send Authorization URL in LTI2 Registration
+                    $('#tab-features > div.account-feature-flags > ul > li:nth-child(21) > div.row-fluid.feature.lti_2_auth_url_registration > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
                 } else {
                     return 0;
                 }
@@ -246,7 +275,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('button#dg_updateGo').click(function(e) {
                 e.preventDefault();
                 //disable fields and buttons
-                $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id').attr('disabled', 'disabled');
+                $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id, #dg_canvasOrSIS').attr('disabled', 'disabled');
 
                 //get the arrays and confrim that they match
                 var old_sis_ID = csvOrNot($('#dg_old_sis_id').val());
