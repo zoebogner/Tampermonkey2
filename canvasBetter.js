@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.08.01
+// @version      2017.08.02
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -110,7 +110,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
 
                     //Apply the email display name to the account name
                     $('#account_settings_outgoing_email_default_name_option_custom').click();
-                    $('#account_settings_outgoing_email_default_name').val($('input[name="account[name]"]').val());
+                    $('#account_settings_outgoing_email_default_name').val('Canvas @ ' + $('input[name="account[name]"]').val());
 
                     //Faculty Journel
                     $('#account_enable_user_notes:not(:checked)').click();
