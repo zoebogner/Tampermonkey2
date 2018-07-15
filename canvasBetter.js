@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments 2!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2018.07.15
+// @version      2018.07.15v2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
