@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Canvas betterments!
+// @name         Canvas betterments 2!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2017.08.02
+// @version      2018.07.15
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -21,10 +21,10 @@ var userToken = getItem('token');
 if (document.location.hostname.indexOf('instructure.com') >= 0) {
     $(document).ready(function() {
         //add the settings link
-        $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/1/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
+        $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
 
         //add the DG Tools link
-        $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
+        $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
 
         //remove the images if on the old UI remove the images
         if ($('#menu > li:contains("Dashboard")').length <= 0) {
@@ -32,10 +32,13 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('#dg_link_self, #dg_link_settings').attr('class', 'menu-item-no-drop');
         }
 
-        if (document.location.pathname === "/accounts/1/settings" || document.location.pathname === "/accounts/1/settings/configurations") { //if on the settings page
+        if (document.location.pathname === "/accounts/self/settings" || document.location.pathname === "/accounts/self/settings/configurations" || document.location.pathname === "/accounts/1/settings" || document.location.pathname === "/accounts/1/settings/configurations") { //if on the settings page
             //focus on the settings link
             $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
             $('li#dg_li_settings').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
+
+            //Add a Salesforce link to the Account at the bottom of the page
+            $('#account_external_integration_keys_salesforce_account_id').after('<a href="http://instructure.my.salesforce.com/' + $('#account_external_integration_keys_salesforce_account_id').val() + '" target="_blank"><img src="https://cdn.iconverticons.com/files/png/d5b8bf83e9b980e5_256x256.png" style="width: 5%;padding-left: 5px;">');
 
             //---------On the main Settings page of 'Settings-----------------
             //create the button to do the default settings
@@ -177,7 +180,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
         }
 
         //Add Auth changer to users
-        if (document.location.pathname.indexOf("/accounts/1/users/") >= 0) {
+        if (document.location.pathname.indexOf("/accounts/self/users/") >= 0 || document.location.pathname.indexOf("/users/") >=0 || document.location.pathname.indexOf("/accounts/1/users/") >= 0) {
             //figure out how many logins there are and create a select list for them
             var optionCountHTML = '<option value="null">Select a login</option>';
             for (var i = 1; i <= $('fieldset#login_information > table.ic-Table > tbody > tr.login:not(:last)').length; i++) {
@@ -204,7 +207,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     alert('No Auth method or Number selected!');
                     return;
                 } else {
-                    var currentUserID = document.location.pathname.split("/accounts/1/users/").join('');
+                    var currentUserID = ENV.USER_ID;
                     var authMethodSelected = $('#dg_changeAuth').val();
                     var authMethodNumber = $('#dg_changeAuthCount').val();
                     var authDeleteOld = $('#dg_deleteOldAuthMethod:checked').length;
@@ -228,7 +231,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     }
 
                     //build the string for the POST
-                    var postString = '/api/v1/accounts/1/logins?' + encodeURI('user[id]=' + currentUserID); //which users
+                    var postString = '/api/v1/accounts/self/logins?' + encodeURI('user[id]=' + currentUserID); //which users
                     postString += encodeURI("&login[authentication_provider_id]=" + authMethodSelected); //login[authentication_provider_id]
                     postString += encodeURI("&login[unique_id]=" + loginID); //login ID
                     postString += encodeURI("&login[sis_user_id]=" + sisID); //login[sis_user_id]
@@ -252,7 +255,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     xhr.send(data);
                 }
             });
-        } else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations" || document.location.pathname.toLowerCase() === "/accounts/1/settings") {
+        } else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations" || document.location.pathname.toLowerCase() === "/accounts/1/settings" || document.location.pathname.toLowerCase().indexOf("/accounts/self/") >=0 ) {
             //token storage and update
             var tokenInputHTML = '<label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="dg_apiTokenButton">Update</button></div><br>';
             $('#right-side').prepend(tokenInputHTML);
@@ -301,6 +304,55 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     return alert('Array lengths do not match!');
                 }
             });
+        } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
+            document.title = "DG Tools";
+            $('#main').html('<center>       <h1>DG Tools</h1>       <div><em>DG Tools are the best!</em></div>      </center>   <div style="padding-left:50px">     <hr>        <h2>Links</h2>      <ul>            <li><a href="/dgtools">Update User SIS id from one to another</a></li>          <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>         <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>     </ul>       <h2>Tools</h2>      <ul>            <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>          <li><strong>Sydney</strong></li>            <ul>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>              <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button></li>             <li class="dg_action_outcome"><button class="Button"type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>             <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LIT (SYD)</button></li>              <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LIT (SYD)</button></li>          </ul>           <li><strong>Singapore</strong></li>         <ul>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button></li>              <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>                    <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LIT (SG)</button></li>                <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LIT (SG)</button></li>            </ul>       </ul>   </div>  <hr>    <div style="padding-left:50px;width: 40%">      <label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="dg_apiTokenButton">Update API Token</button></div><br><br></div>');
+
+            //LTI Buttons Function
+            $('li.dg_action_lti').click(function(e){
+                e.preventDefault();
+                console.log("Installing this Tool: " + $(this).text());
+                console.log("Key: " + $("button", this).attr("key"));
+                console.log("Secret: " + $("button", this).attr("secret"));
+                console.log("URL: " + $("button", this).attr("url"));
+
+                //Disable the button
+                $("button", this).attr("disabled","disabled");
+
+                //Call the function to insall LTI based on the paramters in the HTML Buttons
+                installLTI($(this).text(), $("button", this).attr('key'), $("button", this).attr('secret'), $("button", this).attr('url'));
+            });
+
+            //Outcomes Install
+            $('li.dg_action_outcome').click(function(e){
+                e.preventDefault();
+                console.log('Installing outcomes: ' + $(this).text());
+                //Disable the button
+                $("button", this).attr("disabled","disabled");
+                outcomesAPI($('button',this).attr('guid'));
+            });
+
+            //External tool link (Office365 / GAFE)
+            $('li.dg_action_externalTool').click(function(e){
+                e.preventDefault();
+                $("button", this).attr("disabled","disabled");
+                // ========= WIP ================
+                // ==============================
+                //Just open up thr right pages for now
+                window.open($('button',this).attr('destination'), "_blank"); //Place to Generate tokens
+                window.open($('button',this).attr('url'), "_blank"); //Config XML
+                window.open("/accounts/self/settings/configurations#tab-tools", "_blank"); //Config Page
+            });
+
+            //Update Token function
+            $('#dg_apiTokenButton').click(function(e) {
+                e.preventDefault();
+                if (confirm("Update token with: " + $('#dg_apiToken').val())) {
+                    storeItem('token', $('#dg_apiToken').val());
+                    location.reload();
+                }
+                return;
+            });
         }
 
         //link to the IC support page within the Canvas help
@@ -315,7 +367,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                 var settings = {
                     "async": true,
                     "crossDomain": false,
-                    "url": "/api/v1/accounts/1",
+                    "url": "/api/v1/accounts/self",
                     "method": "GET",
                     "headers": {
                         "cache-control": "no-cache",
@@ -343,6 +395,18 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             return;
         });
 
+        //if within a course
+        if(document.location.pathname.toLowerCase().indexOf('/courses/') >= 0){
+
+            if(document.location.pathname.toLowerCase() === "/courses/" + ENV.course_id){
+                //If on the homepage of the course
+
+                //Settings link above the options on RHS
+                $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/settings" class="btn button-sidebar-wide course-home-sub-navigation-lti"><i class="icon-link"></i> Course Settings</a>');
+                //Undelete option
+                $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/undelete" class="btn button-sidebar-wide course-home-sub-navigation-lti"><i class="icon-link"></i> Undelete Course Content</a>');
+            }
+        }
 
     });
     // ELSE if on the IC request page
@@ -447,7 +511,7 @@ function update_sis_id(userArray, sisOrNot) {
             });
 
 
-            xhr.open("PUT", "/api/v1/accounts/1/logins/" + response[0].id + encodeURI("?login[sis_user_id]=") + element.new);
+            xhr.open("PUT", "/api/v1/accounts/self/logins/" + response[0].id + encodeURI("?login[sis_user_id]=") + element.new);
             xhr.setRequestHeader("authorization", "Bearer " + userToken);
             xhr.setRequestHeader("cache-control", "no-cache");
             xhr.send(data);
@@ -497,4 +561,56 @@ function csvOrNot(theTextArea){
         newArray = newArray.split(',');
         return newArray;
     }
+}
+
+//Install LTIs that use URL Install
+function installLTI(name,consumer_key,shared_secret,config_url){
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            console.log(this.responseText);
+            alert(this.responseText);
+            if(name === "Canvas Commons"){
+                window.open("/accounts/self/settings/configurations#tab-tools", "_blank");
+            }
+        }
+    });
+
+    //Build the API Call
+    var apiURL = "/api/v1/accounts/self/external_tools?name=";
+    apiURL += encodeURI(name) + "&privacy_level=public&consumer_key=";
+    apiURL += encodeURI(consumer_key) + "&shared_secret=" + encodeURI(shared_secret);
+    apiURL += "&tool_configuration[enabled]=true&config_type=by_url&config_url=" + encodeURI(config_url);
+    console.log("API URL: " + apiURL + "\n");
+
+    xhr.open("POST", apiURL);
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    xhr.send(data);
+}
+
+//Import Outcomes Function
+function outcomesAPI(guid){
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            console.log(this.responseText);
+            alert("The outcomes are being imported. This may take 24/48hrs to show up in the client's instance.\n" + this.responseText);
+        }
+    });
+
+    xhr.open("POST", "/api/v1/global/outcomes_import?guid=" + encodeURI(guid));
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    xhr.send(data);
 }
