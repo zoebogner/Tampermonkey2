@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Canvas betterments 2!
+// @name         Canvas betterments 2 - Create users!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2018.07.16
+// @version      2018.09.26
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -272,7 +272,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
             $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-            document.title = "Update User SIS id from one to another";
+            document.title = "DG - Update User SIS id from one to another";
             $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="dg_apiToken">SIS ID or Canvas ID:</label> <br> <select id="dg_canvasOrSIS" name="dg_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="dg_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
 
             $('button#dg_updateGo').click(function(e) {
@@ -306,7 +306,7 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
             });
         } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
             document.title = "DG Tools";
-            $('#main').html('<center>       <h1>DG Tools</h1>       <div><em>DG Tools are the best!</em></div>      </center>   <div style="padding-left:50px">     <hr>        <h2>Links</h2>      <ul>            <li><a href="/dgtools">Update User SIS id from one to another</a></li>          <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>         <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>     </ul>       <h2>Tools</h2>      <ul>            <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>          <li><strong>Sydney</strong></li>            <ul>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>              <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button></li>             <li class="dg_action_outcome"><button class="Button"type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>             <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>              <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button></li>          </ul>           <li><strong>Singapore</strong></li>         <ul>                <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button></li>              <li class="dg_action_lti"><button class="Button"type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>                    <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>                <li class="dg_action_externalTool"><button class="Button"type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button></li>            </ul>       </ul>   </div>  <hr>    <div style="padding-left:50px;width: 40%">      <label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="dg_apiTokenButton">Update API Token</button></div><br><br></div>');
+            $('#main').html('<center>    <h1>DG Tools</h1>    <div><em>DG Tools are the best!</em></div></center><div style="padding-left:50px">    <hr>    <h2>Links</h2>    <ul>        <li><a href="/dgtools">Update User SIS id from one to another</a></li>        <li><a href="/dgtools3">Create Users</a></li>        <li><a href="/dgtools4">Create Sandboxes</a></li>        <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>        <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>    </ul>    <h2>Tools</h2>    <ul>        <li class="dg_action_lti">            <button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button>        </li>        <li><strong>Sydney</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button>            </li>            <li class="dg_action_outcome">                <button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button>            </li>        </ul>        <li><strong>Singapore</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button>            </li>        </ul>    </ul></div><hr><div style="padding-left:50px;width: 40%">    <label for="dg_apiToken">API token:</label>    <div class="ic-Input-group">        <input name="focus" type="hidden" value="' + userToken + '">        <input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">        <button class="Button" id="dg_apiTokenButton">Update API Token</button>    </div>    <br>    <br></div>');
 
             //LTI Buttons Function
             $('li.dg_action_lti').click(function(e){
@@ -352,6 +352,72 @@ if (document.location.hostname.indexOf('instructure.com') >= 0) {
                     location.reload();
                 }
                 return;
+            });
+        }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
+            //Create users page
+            document.title="DG - Create Users"
+            $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>            <th>First Name</th>            <th>Last Name</th>            <th>User ID</th>            <th>Login ID</th>            <th>Email Address</th>         </tr>         <tr>            <td><textarea rows="10" id="dg_first_name" ></textarea></td>            <td><textarea rows="10"id="dg_last_name"></textarea></td>            <td><textarea id="dg_user_id" rows="10"></textarea></td>            <td><textarea id="dg_login_id" rows="10"></textarea></td>            <td><textarea id="dg_email" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_apiToken">Auth Provider ID:</label> <br>                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                  <option value="">Null</option>                  <option value="canvas">Canvas</option>                  <option value="ldap">LDAP</option>                  <option value="saml">SAML</option>                  <option value="microsoft">Microsoft (Office 365)</option>                  <option value="google">Google</option>                  <option value="openid_connect">OpenID Connect</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div><br><br></div>');
+            $('button#dg_create_users').click(function(e) {
+                e.preventDefault();
+                //disable fields and buttons
+                $('#dg_create_users,#dg_set_auth,#dg_first_name,#dg_last_name,#dg_login_id,#dg_user_id,#dg_email').attr('disabled', 'disabled');
+
+                //get the arrays and confrim that they match
+                var first_name = csvOrNot($('#dg_first_name').val());
+                var last_name = csvOrNot($('#dg_last_name').val());
+                var login_id = csvOrNot($('#dg_login_id').val());
+                var user_id = csvOrNot($('#dg_user_id').val());
+                var email = csvOrNot($('#dg_email').val());
+                var auth_id = $('#dg_set_auth').val();
+
+                //create new object array
+                var createNewUserArray = [];
+
+                if (user_id.length === first_name.length) {
+                    $.each(user_id, function(i, e) {
+                        var tmp = {
+                            first_name: user_id[i].trim(),
+                            last_name: last_name[i].trim(),
+                            full_name: first_name[i].trim() + ' ' + last_name[i].trim(),
+                            login_id: login_id[i].trim(),
+                            user_id: user_id[i].trim(),
+                            email: email[i].trim(),
+                            auth_id:auth_id
+                        };
+                        createNewUserArray.push(tmp);
+                    });
+                    if (confirm("Are you sure?\nThis can't be undone?")) {
+                        //main function
+                        //Main create users
+                        createUsers(createNewUserArray);
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return alert('Array lengths do not match!');
+                }
+            });
+        }if(document.location.pathname.toLowerCase() === "/dgtools4") {
+            document.title="DG - Create Sandboxes";
+            $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="dg_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="dg_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="dg_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="dg_canvas101" id="dg_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
+            //Create canavs101 Button
+            $('#dg_button_create_canvas101').click(function(){
+                $('#dg_button_create_canvas101').attr('disabled','disabled');
+                var createCanvas101 = createCanvasCourse("Canvas 101","canvas101","sandbox","Growing With Canvas",null);
+            });
+
+            //Create Sandbox Account
+            $('#dg_button_create_sandbox').click(function(){
+                $('#dg_button_create_sandbox').attr('disabled','disabled');
+                var createSandbox = createSandboxAccount();
+            });
+
+            //create Sandboxes function
+            $('#dg_create_sandboxes').click(function(){
+                $('#dg_create_sandboxes, #dg_user_id, #dg_canvas101').attr('disabled','disabled');
+                var userID_array = csvOrNot($('#dg_user_id').val());
+                var alsoCanvas101 = $('#dg_canvas101').val();
+                sandboxCreate(userID_array,alsoCanvas101);
             });
         }
 
@@ -614,3 +680,165 @@ function outcomesAPI(guid){
 
     xhr.send(data);
 }
+
+function createUsers(newUserArray){
+    updateConsoleLog('Start creating users');
+    //updateConsoleLog(newUserArray);
+    $.each(newUserArray, function(i,e) {
+        updateConsoleLog('Processing user: ' + e.full_name + ' [' + e.user_id + ']');
+        //API Call
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        //What do do upon call competion
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                updateConsoleLog("Completed user: " + e.full_name + ' [' + e.user_id + '] ');//& Canvas ID = ' + this.responseText.id);
+                console.log(this.responseText);
+            }else if(this.readyState === 404){
+                updateConsoleLog("Error Message: " + this.responseText);
+                console.log(this.responseText);
+            }
+        });
+        //Build Post Call
+        var postCall = "/api/v1/accounts/self/users?user[name]=" + encodeURIComponent(e.full_name);
+        postCall += "&user[skip_registration]=true&pseudonym[send_confirmation]=false&pseudonym[unique_id]=" + encodeURIComponent(e.login_id);
+        postCall += "&pseudonym[sis_user_id]=" + encodeURIComponent(e.user_id);
+        postCall += "&pseudonym[authentication_provider_id]=" + encodeURIComponent(e.auth_id);
+        postCall += "&communication_channel[skip_confirmation]=true&communication_channel[type]=email&communication_channel[address]=" + encodeURIComponent(e.email);
+        postCall += "&enable_sis_reactivation=true";
+
+        xhr.open("POST", postCall);
+        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+
+        xhr.send(data);
+    });
+}
+
+function updateConsoleLog(newVal){
+    $('#dg_console_log').val(timeStamp() + " | " + newVal + "\n" + $('#dg_console_log').val());
+}
+
+function timeStamp() {
+    var now = new Date();
+    var date = [ now.getMonth() + 1, now.getDate(), now.getFullYear() ];
+    var time = [ now.getHours(), now.getMinutes(), now.getSeconds() ];
+    var suffix = ( time[0] < 12 ) ? "AM" : "PM";
+    time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
+    time[0] = time[0] || 12;
+    for ( var i = 1; i < 3; i++ ) {
+        if ( time[i] < 10 ) {
+            time[i] = "0" + time[i];
+        }
+    }
+    return date.join("/") + " " + time.join(":") + " " + suffix;
+}
+
+function createCanvasCourse(courseCode,courseID,accountID,longName,userID){
+    updateConsoleLog("Begin create "+longName+" ["+courseID+"]...");
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            console.log(this.responseText);
+            //If ther user ID is null, then it's for create Canvas101
+            if(userID === null){
+                updateConsoleLog("Created Canvas101 with message: " + this.responseText);
+                //alert(this.responseText);
+                window.open("/courses/sis_course_id:canvas101/settings","_blank");
+                return this.responseText;
+            }else{
+                //If user ID is not Null, then its for Enrollment
+                updateConsoleLog("Completed course create: " + longName + " [" + courseID +"]");
+                enrollUser(userID,courseID,"TeacherEnrollment");
+            }
+        }
+    });
+
+    var buildPost = "/api/v1/accounts/sis_account_id:" + encodeURIComponent(accountID);
+    buildPost +="/courses?course[name]=" + encodeURIComponent(longName);
+    buildPost += "&course[course_code]=" + encodeURIComponent(courseCode);
+    buildPost += "&course[sis_course_id]=" + encodeURIComponent(courseID);
+
+    xhr.open("POST", buildPost);
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    xhr.send(data);
+}
+
+function createSandboxAccount(){
+    // /api/v1/accounts/:account_id/sub_accounts
+    updateConsoleLog('Begin create Sandbox account...');
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            //console.log(this.responseText);
+            updateConsoleLog("Completed Sandbox Account with message: " + this.responseText);
+            return this.responseText
+        }
+    });
+
+    var buildPost = "/api/v1/accounts/1/sub_accounts?account[name]=" + encodeURIComponent('Sandbox');
+    buildPost += "&account[sis_account_id]=" + encodeURIComponent('sandbox');
+
+    xhr.open("POST", buildPost);
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    xhr.send(data);
+}
+
+function sandboxCreate(sandboxUserArray,canvas101){
+    $.each(sandboxUserArray,function(user_index,user_element){
+        if(canvas101 == "true"){
+            enrollUser(user_element,"canvas101","StudentEnrollment");
+        }
+
+        var sandboxCourseCode = "My Sandbox";
+        var sandboxCourseID=user_element+"_sandbox";
+        var sandboxAccountID = "sandbox";
+        var sandboxLongName = user_element + "'s Sandbox Course";
+
+        createCanvasCourse(sandboxCourseCode,sandboxCourseID,sandboxAccountID,sandboxLongName,user_element);
+    });
+}
+
+function enrollUser(user_id,course_id,role){
+    updateConsoleLog('Begin enrolling user: ' + user_id + "; For course: " + course_id + "[" + role +"]");
+
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            //console.log(this.responseText);
+            updateConsoleLog('Completed enrolling user: ' + user_id + "; For course: " + course_id + "[" + role +"]");
+        }
+    });
+
+    var buildPost = "/api/v1/courses/sis_course_id:" + encodeURIComponent(course_id);
+    buildPost += "/enrollments?enrollment[user_id]=sis_user_id:" + encodeURIComponent(user_id);
+    buildPost += "&enrollment[type]=" + encodeURIComponent(role);
+    buildPost += "&enrollment[enrollment_state]=active";
+
+    xhr.open("POST", buildPost);
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    xhr.send(data);
+}
+
+
