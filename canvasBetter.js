@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments 2 - Create users!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2018.09.26
+// @version      2018.09.27
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -695,18 +695,25 @@ function createUsers(newUserArray){
         //What do do upon call competion
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                updateConsoleLog("Completed user: " + e.full_name + ' [' + e.user_id + '] ');//& Canvas ID = ' + this.responseText.id);
+                //if there is an error
+                if(this.responseText.toLowerCase().indexOf('error') >=0 ){
+                    updateConsoleLog("Failed to create user: " + e.full_name + ' [' + e.user_id + '] with error message\n' + this.responseText);
+                }else{
+                    //No errors (One hopes!)
+                    updateConsoleLog("Completed user: " + e.full_name + ' [' + e.user_id + '] ');//& Canvas ID = ' + this.responseText.id);
+                }
                 console.log(this.responseText);
-            }else if(this.readyState === 404){
+                return this.responseText;
+            }/*else if(this.readyState === 404){
                 updateConsoleLog("Error Message: " + this.responseText);
                 console.log(this.responseText);
-            }
+            }*/
         });
         //Build Post Call
-        var postCall = "/api/v1/accounts/self/users?user[name]=" + encodeURIComponent(e.full_name);
+        var postCall = "/api/v1/accounts/1/users?user[name]=" + encodeURIComponent(e.full_name);
         postCall += "&user[skip_registration]=true&pseudonym[send_confirmation]=false&pseudonym[unique_id]=" + encodeURIComponent(e.login_id);
         postCall += "&pseudonym[sis_user_id]=" + encodeURIComponent(e.user_id);
-        postCall += "&pseudonym[authentication_provider_id]=" + encodeURIComponent(e.auth_id);
+        if(e.auth_id != "") postCall += "&pseudonym[authentication_provider_id]=" + encodeURIComponent(e.auth_id);
         postCall += "&communication_channel[skip_confirmation]=true&communication_channel[type]=email&communication_channel[address]=" + encodeURIComponent(e.email);
         postCall += "&enable_sis_reactivation=true";
 
@@ -748,15 +755,19 @@ function createCanvasCourse(courseCode,courseID,accountID,longName,userID){
         if (this.readyState === 4) {
             console.log(this.responseText);
             //If ther user ID is null, then it's for create Canvas101
-            if(userID === null){
-                updateConsoleLog("Created Canvas101 with message: " + this.responseText);
-                //alert(this.responseText);
-                window.open("/courses/sis_course_id:canvas101/settings","_blank");
-                return this.responseText;
+            if(this.responseText.toLowerCase().indexOf('error') >=0 ){
+                updateConsoleLog("Failed to course create: " + longName + " [" + courseID +"] with error message\n" + this.responseText);
             }else{
-                //If user ID is not Null, then its for Enrollment
-                updateConsoleLog("Completed course create: " + longName + " [" + courseID +"]");
-                enrollUser(userID,courseID,"TeacherEnrollment");
+                if(userID === null){
+                    updateConsoleLog("Created Canvas101 with message: " + this.responseText);
+                    //alert(this.responseText);
+                    window.open("/courses/sis_course_id:canvas101/settings","_blank");
+                    return this.responseText;
+                }else{
+                    //If user ID is not Null, then its for Enrollment
+                    updateConsoleLog("Completed course create: " + longName + " [" + courseID +"]");
+                    enrollUser(userID,courseID,"TeacherEnrollment");
+                }
             }
         }
     });
@@ -783,8 +794,12 @@ function createSandboxAccount(){
 
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
-            //console.log(this.responseText);
-            updateConsoleLog("Completed Sandbox Account with message: " + this.responseText);
+            if(this.responseText.toLowerCase().indexOf('error') >=0 ){
+                updateConsoleLog("Failed to create Sandbox Account with message: " + this.responseText);
+            }else {
+                //console.log(this.responseText);
+                updateConsoleLog("Completed Sandbox Account with message: " + this.responseText);
+            }
             return this.responseText
         }
     });
@@ -825,7 +840,11 @@ function enrollUser(user_id,course_id,role){
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
             //console.log(this.responseText);
-            updateConsoleLog('Completed enrolling user: ' + user_id + "; For course: " + course_id + "[" + role +"]");
+            if(this.responseText.toLowerCase().indexOf('error') >=0 ){
+                updateConsoleLog('Failed enrolling user: ' + user_id + "; For course: " + course_id + "[" + role +"] with message\n" + this.responseText);
+            }else{
+                updateConsoleLog('Completed enrolling user: ' + user_id + "; For course: " + course_id + "[" + role +"]");
+            }
         }
     });
 
