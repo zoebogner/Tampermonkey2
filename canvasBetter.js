@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Canvas betterments 2.1 - LTI Install! [PROD]
+// @name         Canvas betterments 2.1 - Trust! [PROD]
 // @namespace    https://siteadmin.instructure.com/
-// @version      2019.03.21
+// @version      2020.04.06
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -319,7 +319,7 @@ function myJQueryCode() {
                 });
             } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
                 document.title = "DG Tools";
-                $('#main').html('<center>    <h1>DG Tools</h1>    <div><em>DG Tools are the best!</em></div></center><div style="padding-left:50px">    <hr>    <h2>Links</h2>    <ul>        <li><a href="/dgtools">Update User SIS id from one to another</a></li>        <li><a href="/dgtools3">Create Users</a></li>        <li><a href="/dgtools4">Create Sandboxes</a></li>        <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>        <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>    </ul>    <h2>Tools</h2>    <ul>        <li class="dg_action_lti">            <button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button>        </li>        <li><strong>Sydney</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button>            </li>            <li class="dg_action_outcome">                <button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button>            </li>        </ul>        <li><strong>Singapore</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button>            </li>        </ul>    </ul></div><hr><div style="padding-left:50px;width: 40%">    <label for="dg_apiToken">API token:</label>    <div class="ic-Input-group">        <input name="focus" type="hidden" value="' + userToken + '">        <input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">        <button class="Button" id="dg_apiTokenButton">Update API Token</button>    </div>    <br>    <br></div>');
+                $('#main').html('<center>    <h1>DG Tools</h1>    <div><em>DG Tools are the best!</em></div></center><div style="padding-left:50px">    <hr>    <h2>Links</h2>    <ul>        <li><a href="/dgtools">Update User SIS id from one to another</a></li>        <li><a href="/dgtools3">Create Users</a></li>        <li><a href="/dgtools4">Create Sandboxes</a></li>        <li><a href="/dgtools5">Trust Account</a></li>        <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>        <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>        <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Studio GUID</a></li>    </ul>    <h2>Tools</h2>    <ul>        <li class="dg_action_lti">            <button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button>        </li>        <li><strong>Sydney</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button>            </li>            <li class="dg_action_outcome">                <button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button>            </li>        </ul>        <li><strong>Singapore</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button>            </li>        </ul>    </ul></div><hr><div style="padding-left:50px;width: 40%">    <label for="dg_apiToken">API token:</label>    <div class="ic-Input-group">        <input name="focus" type="hidden" value="' + userToken + '">        <input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">        <button class="Button" id="dg_apiTokenButton">Update API Token</button>    </div>    <br>    <br></div>');
 
                 //LTI Buttons Function
                 $('li.dg_action_lti').click(function(e){
@@ -408,7 +408,7 @@ function myJQueryCode() {
                         return alert('Array lengths do not match!');
                     }
                 });
-            }if(document.location.pathname.toLowerCase() === "/dgtools4") {
+            }else if(document.location.pathname.toLowerCase() === "/dgtools4") {
                 document.title="DG - Create Sandboxes";
                 $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="dg_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="dg_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="dg_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="dg_canvas101" id="dg_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
                 //Create canavs101 Button
@@ -429,6 +429,23 @@ function myJQueryCode() {
                     var userID_array = csvOrNot($('#dg_user_id').val());
                     var alsoCanvas101 = $('#dg_canvas101').val();
                     sandboxCreate(userID_array,alsoCanvas101);
+                });
+            }else if(document.location.pathname.toLowerCase() === "/dgtools5") {
+                document.title="DG - Create Trust";
+                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td>            </tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
+
+                //When the user clicks "Create trust"
+                $('#dg_createTrust').click(function(e){
+                    e.preventDefault();
+                    //disbaled the button and fields
+                    $('#dg_createTrust, #dg_trustID, #dg_shard').attr('disabled','disabled');
+
+                    //action the function to create the trust
+                    var trustID = $('#dg_trustID').val();
+                    var shardID = $('#dg_shard').val();
+                    createTrust(trustID,shardID);
+
+                    return 0;
                 });
             }
 
@@ -871,6 +888,42 @@ function myJQueryCode() {
         xhr.open("POST", buildPost);
         xhr.setRequestHeader("Authorization", "Bearer " + userToken);
         xhr.setRequestHeader("Cache-Control", "no-cache");
+
+        xhr.send(data);
+    }
+
+
+    //Create trust function
+    function createTrust(targetID,shardID){
+        //build Post URL
+        //Example post: "https://apaccs.instructure.com/api/v1/accounts/13677~1/trust_links?trust_link%5Bmanaging_account_id%5D=16292~1"
+
+        var buildPost = "/api/v1/accounts/";
+        //add this accounts ID
+        buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
+        buildPost += "/trust_links?trust_link%5Bmanaging_account_id%5D=";
+
+        //Add the trust from ID and Shard
+        buildPost += targetID + "~" + shardID;
+
+        var data = new FormData();
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function() {
+            if(this.readyState === 4) {
+                console.log(this.responseText);
+                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
+                    updateConsoleLog('Failed creating Trust with error: ' + this.responseText);
+                }else{
+                    updateConsoleLog('Success! Creating Trust with message: ' + this.responseText);
+                }
+            }
+        });
+
+        xhr.open("POST", buildPost);
+        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
 
         xhr.send(data);
     }
