@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments 2.2 - Trust! [PROD]
 // @namespace    https://siteadmin.instructure.com/
-// @version      2020.04.08
+// @version      2020.04.09
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -375,7 +375,8 @@ function myJQueryCode() {
 
                     //check the "Notify" flag
                     var notifyCheck = $('#dg_notifyUsers').prop('checked');
-
+                    //if its not null or canvas, then u can't notify
+                    if($('#dg_set_auth').val() == '' || $('#dg_set_auth').val() == 'canvas' || $('#dg_set_auth').val() == 'Null') notifyCheck = false;
 
                     //get the arrays and confrim that they match
                     var first_name = csvOrNot($('#dg_first_name').val());
@@ -1054,4 +1055,3 @@ function myJQueryCode() {
     jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
     headTag.appendChild(jqTag);
     jqTag.onload = myJQueryCode;}
-
