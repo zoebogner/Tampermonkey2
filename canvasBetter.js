@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Canvas betterments 2.1 - Trust! [PROD]
+// @name         Canvas betterments 2.2 - Trust! [PROD]
 // @namespace    https://siteadmin.instructure.com/
-// @version      2020.04.06
+// @version      2020.04.08
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -367,11 +367,15 @@ function myJQueryCode() {
             }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
                 //Create users page
                 document.title="DG - Create Users"
-                $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>            <th>First Name</th>            <th>Last Name</th>            <th>User ID</th>            <th>Login ID</th>            <th>Email Address</th>         </tr>         <tr>            <td><textarea rows="10" id="dg_first_name" ></textarea></td>            <td><textarea rows="10"id="dg_last_name"></textarea></td>            <td><textarea id="dg_user_id" rows="10"></textarea></td>            <td><textarea id="dg_login_id" rows="10"></textarea></td>            <td><textarea id="dg_email" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_apiToken">Auth Provider ID:</label> <br>                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                  <option value="">Null</option>                  <option value="canvas">Canvas</option>                  <option value="ldap">LDAP</option>                  <option value="saml">SAML</option>                  <option value="microsoft">Microsoft (Office 365)</option>                  <option value="google">Google</option>                  <option value="openid_connect">OpenID Connect</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div><br><br></div>');
+                $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="dg_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="dg_last_name"></textarea>                </td>                <td>                    <textarea id="dg_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                        <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="dg_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="dg_notifyUsers" type="checkbox" name="dg_notifyUsers" value="dg_notifyUsers">Notify?                                     </label>                                     <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
                 $('button#dg_create_users').click(function(e) {
                     e.preventDefault();
                     //disable fields and buttons
-                    $('#dg_create_users,#dg_set_auth,#dg_first_name,#dg_last_name,#dg_login_id,#dg_user_id,#dg_email').attr('disabled', 'disabled');
+                    $('#dg_create_users,#dg_set_auth,#dg_first_name,#dg_last_name,#dg_login_id,#dg_user_id,#dg_email,#dg_notifyUsers').attr('disabled', 'disabled');
+
+                    //check the "Notify" flag
+                    var notifyCheck = $('#dg_notifyUsers').prop('checked');
+
 
                     //get the arrays and confrim that they match
                     var first_name = csvOrNot($('#dg_first_name').val());
@@ -400,7 +404,7 @@ function myJQueryCode() {
                         if (confirm("Are you sure?\nThis can't be undone?")) {
                             //main function
                             //Main create users
-                            createUsers(createNewUserArray);
+                            createUsers(createNewUserArray,notifyCheck);
                         } else {
                             return 0;
                         }
@@ -713,7 +717,7 @@ function myJQueryCode() {
         xhr.send(data);
     }
 
-    function createUsers(newUserArray){
+    function createUsers(newUserArray, notifyCheck){
         updateConsoleLog('Start creating users');
         //updateConsoleLog(newUserArray);
         $.each(newUserArray, function(i,e) {
@@ -743,11 +747,17 @@ function myJQueryCode() {
             });
             //Build Post Call
             var postCall = "/api/v1/accounts/1/users?user[name]=" + encodeURIComponent(e.full_name);
-            postCall += "&user[skip_registration]=true&pseudonym[send_confirmation]=false&pseudonym[unique_id]=" + encodeURIComponent(e.login_id);
+            postCall += "&user[skip_registration]="+!notifyCheck;
+            postCall += "&pseudonym[send_confirmation]="+notifyCheck;
+            //postCall += "&pseudonym[force_self_registration]=" + notifyCheck;
+            postCall += "&pseudonym[unique_id]=" + encodeURIComponent(e.login_id);
             postCall += "&pseudonym[sis_user_id]=" + encodeURIComponent(e.user_id);
             if(e.auth_id != "") postCall += "&pseudonym[authentication_provider_id]=" + encodeURIComponent(e.auth_id);
-            postCall += "&communication_channel[skip_confirmation]=true&communication_channel[type]=email&communication_channel[address]=" + encodeURIComponent(e.email);
+            if(!notifyCheck)postCall += "&communication_channel[skip_confirmation]=true";
+            postCall += "&communication_channel[type]=email&communication_channel[address]=" + encodeURIComponent(e.email);
             postCall += "&enable_sis_reactivation=true";
+
+            console.log("Create user PostCall: " + postCall);
 
             xhr.open("POST", postCall);
             xhr.setRequestHeader("Authorization", "Bearer " + userToken);
