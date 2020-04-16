@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Canvas betterments 2.2 - Trust! [PROD]
 // @namespace    https://siteadmin.instructure.com/
-// @version      2020.04.09
+// @version      2020.04.17
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -437,7 +437,7 @@ function myJQueryCode() {
                 });
             }else if(document.location.pathname.toLowerCase() === "/dgtools5") {
                 document.title="DG - Create Trust";
-                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td>            </tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
+                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="dg_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
 
                 //When the user clicks "Create trust"
                 $('#dg_createTrust').click(function(e){
@@ -451,6 +451,13 @@ function myJQueryCode() {
                     createTrust(trustID,shardID);
 
                     return 0;
+                });
+
+                //List trusts attached to the Canvas
+                $('#dg_ListTrust').click(function(e){
+                    e.preventDefault();
+                    $('#dg_ListTrust').attr('disabled','disabled');
+                    listTrusts();
                 });
             }
 
@@ -774,7 +781,9 @@ function myJQueryCode() {
 
     function timeStamp() {
         var now = new Date();
-        var date = [ now.getMonth() + 1, now.getDate(), now.getFullYear() ];
+        var currentMonth = now.getMonth() + 1;
+        if (currentMonth < 10) currentMonth = "0" + currentMonth;
+        var date = [ now.getDate(), currentMonth, now.getFullYear() ];
         var time = [ now.getHours(), now.getMinutes(), now.getSeconds() ];
         var suffix = ( time[0] < 12 ) ? "AM" : "PM";
         time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
@@ -864,9 +873,12 @@ function myJQueryCode() {
             }
 
             var sandboxCourseCode = "My Sandbox";
-            var sandboxCourseID=user_element+"_sandbox";
+            var sandboxCourseID = user_element+"_sandbox";
             var sandboxAccountID = "sandbox";
-            var sandboxLongName = user_element + "'s Sandbox Course";
+            var userDisplayName = getUsersFullName(user_element);
+            //console.log('Display name: ' + userDisplayName);
+            var sandboxLongName = userDisplayName + "'s Sandbox Course";
+            //console.log('Course long name: ' + sandboxLongName);
 
             createCanvasCourse(sandboxCourseCode,sandboxCourseID,sandboxAccountID,sandboxLongName,user_element);
         });
@@ -935,9 +947,65 @@ function myJQueryCode() {
 
         xhr.open("POST", buildPost);
         xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
 
         xhr.send(data);
     }
+
+    function listTrusts(){
+        var buildPost = "/api/v1/accounts/";
+        buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
+        buildPost += '/trust_links';
+
+        //build call
+        var data = new FormData();
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function() {
+            if(this.readyState === 4) {
+                console.log(this.responseText);
+                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
+                    updateConsoleLog('Failed with error: ' + this.responseText);
+                }else{
+                    var newLineReply = this.responseText.split('}').join('}\n').split(',').join('');
+                    newLineReply = newLineReply.split('[').join('').split(']').join('');
+                    updateConsoleLog('Success! Listing IDs of trusted Canvi:\n ' + newLineReply);
+                }
+            }
+        });
+
+        xhr.open("GET", buildPost);
+        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getUsersFullName(sisUserId){
+        var returnName;
+
+        // ===== AJAX ===
+        var settings = {
+            url: "/api/v1/users/sis_user_id:" + encodeURI(sisUserId),
+            method: "GET",
+            timeout: 0,
+            async: false,
+            cache: false,
+            headers: {
+                Authorization: "Bearer " + userToken
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            returnName = response.name;
+            //updateConsoleLog('Users name:' + returnName);
+        });
+
+        return returnName;
+    }
+
 
     //======== Begin Google / Office LTI Auto Install ========
 
