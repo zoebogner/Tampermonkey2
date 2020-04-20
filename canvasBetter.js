@@ -2,7 +2,7 @@
 // @name         DG Tools - Add users from SF!
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2020.04.20
+// @version      2020.04.20v2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -370,6 +370,23 @@ function myJQueryCode() {
                 //Create users page
                 document.title="DG - Create Users"
                 $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="dg_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="dg_last_name"></textarea>                </td>                <td>                    <textarea id="dg_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                        <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="dg_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="dg_notifyUsers" type="checkbox" name="dg_notifyUsers" value="dg_notifyUsers">Notify?                                     </label>                                     <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
+
+                //getting the auto created users from SF
+                var urlVars = getUrlVars();
+                if(urlVars.sfUsers == "true"){
+                    var splitUsers = urlVars.userData.split('|');
+                    $.each(splitUsers,function(){
+                        var thisUser = this.split('~');
+                        if(thisUser[0]!="undefined" && thisUser[0]!="" && thisUser[1]!="undefined" && thisUser[1]!="" && thisUser[2]!="undefined" && thisUser[2]!=""){
+                            $('#dg_first_name').val($('#dg_first_name').val() + thisUser[0] + '\n');
+                            $('#dg_last_name').val($('#dg_last_name').val() + thisUser[1] + '\n');
+                            $('#dg_user_id').val($('#dg_user_id').val() + thisUser[2] + '\n');
+                            $('#dg_login_id').val($('#dg_login_id').val() + thisUser[2] + '\n');
+                            $('#dg_email').val($('#dg_email').val() + thisUser[2] + '\n');
+                        }
+                    });
+                }
+
                 $('button#dg_create_users').click(function(e) {
                     e.preventDefault();
                     //disable fields and buttons
