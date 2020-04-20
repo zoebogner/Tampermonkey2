@@ -1,13 +1,15 @@
 // ==UserScript==
-// @name         Canvas betterments 2.2 - Trust! [PROD]
+// @name         DG Tools - Add users from SF!
 // @namespace    https://siteadmin.instructure.com/
-// @version      2020.04.17
+// @namespace    https://instructure.my.salesforce.com/*
+// @version      2020.04.20
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
 // @match        https://*.instructure.com/*
 // @match        https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html*
+// @match        https://instructure.my.salesforce.com/*
 // @exclude      https://siteadmin*instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -442,6 +444,7 @@ function myJQueryCode() {
                 //When the user clicks "Create trust"
                 $('#dg_createTrust').click(function(e){
                     e.preventDefault();
+                    updateConsoleLog('Start creating trust...');
                     //disbaled the button and fields
                     $('#dg_createTrust, #dg_trustID, #dg_shard').attr('disabled','disabled');
 
@@ -456,6 +459,7 @@ function myJQueryCode() {
                 //List trusts attached to the Canvas
                 $('#dg_ListTrust').click(function(e){
                     e.preventDefault();
+                    updateConsoleLog('Checking trusts...');
                     $('#dg_ListTrust').attr('disabled','disabled');
                     listTrusts();
                 });
@@ -564,6 +568,54 @@ function myJQueryCode() {
                     $('#other_details').val('\n\n\n===================================\n' + supportDetails);
                 }
             });
+        }
+    }else if(window.location.hostname === "instructure.my.salesforce.com"){
+        //If in Salesforce, load some of the salesforce stuff
+        if($('div.pbBody table:contains("Contact Status")').length > 0 ){
+            //Put the action box at the top
+            $('div.pbHeader:first').append('<input type="text"  id="dg_canvasURL"></input>');
+            $('div.pbHeader:first').append('<input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
+
+            //put the checkboxes in
+            $('#bodyCell div.pbBody table:contains("Contact Status") th.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked id="dg_checkUsersMaster">'); //Master checkbox
+            //user array
+            $('#bodyCell div.pbBody table:contains("Contact Status") td.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked>');
+
+            //function to check, or uncheck all based on the master checkbox
+            $('#dg_checkUsersMaster').change(function(e){
+                e.preventDefault();
+                //console.log('here');
+                var checkBoxes = $('input.dg_checkUsers:not(:first)');
+                checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+            });
+
+
+            $('#dg_userToCanvas').click(function(e){
+                $('#dg_canvasURL, #dg_userToCanvas, input.dg_checkUsers').attr('disabled','disabled');
+                e.preventDefault();
+                //sessionStorage.setItem('userArrayString',getUsers()); //Local storage doesnt seem to be working adding it to the link
+                var userString = getUsers();
+                userString = userString.trim();
+                userString = encodeURI(userString);
+                var buildCanvasURL = "https://" + $('#dg_canvasURL').val() + ".instructure.com/dgtools3?sfUsers=true&userData=" + userString;
+                openInNewTab(buildCanvasURL);
+            });
+        }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
+            //Once on the create users page
+            var urlVars = getUrlVars();
+            if(urlVars.sfUsers == "true"){
+                var splitUsers = urlVars.userData.split('|');
+                $.each(splitUsers,function(){
+                    var thisUser = this.split('~');
+                    if(thisUser[0]!="undefined" && thisUser[0]!="" && thisUser[1]!="undefined" && thisUser[1]!="" && thisUser[2]!="undefined" && thisUser[2]!=""){
+                        $('#dg_first_name').val($('#dg_first_name').val() + thisUser[0] + '\n');
+                        $('#dg_last_name').val($('#dg_last_name').val() + thisUser[1] + '\n');
+                        $('#dg_user_id').val($('#dg_user_id').val() + thisUser[2] + '\n');
+                        $('#dg_login_id').val($('#dg_login_id').val() + thisUser[2] + '\n');
+                        $('#dg_email').val($('#dg_email').val() + thisUser[2] + '\n');
+                    }
+                });
+            }
         }
     }
 
@@ -1123,3 +1175,55 @@ function myJQueryCode() {
     jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
     headTag.appendChild(jqTag);
     jqTag.onload = myJQueryCode;}
+
+
+function openInNewTab(url) {
+    var win = window.open(url, '_blank');
+    win.focus();
+}
+
+function getUsers(){
+    var contactTable = $('div.pbBody table:contains("Contact Status") tr:not(:first):has(:checkbox:checked)');
+    var contactArray = [];
+    var userArrayString ="";
+
+    for(var i=0; i < contactTable.length; i++){
+
+        var firstName;
+        var lastName;
+        var email;
+        var checkEmail;
+
+
+        checkEmail = $('td:eq(2)',contactTable[i]).text();
+        email = checkEmail.toString();
+        checkEmail = email.split('[Gmail]').join('');
+        email = checkEmail.trim();
+
+        if(email != ""){
+
+            var name = $('th',contactTable[i]).text();
+
+            //if the name doesnt have a "," to seperate the names
+            if(name.indexOf(',')<0){
+                firstName = name;
+                lastName = name;
+            }else {
+                var splitName = name.toString().split(', ');
+
+                lastName = splitName[0];
+                lastName = lastName.trim();
+
+                firstName = splitName[1];
+                firstName = firstName.trim();
+            }
+            var jsonPush = {"firstName":firstName, "lastName":lastName, "email":email}
+
+            userArrayString = userArrayString + firstName + "~" + lastName + "~" + email + "|";
+
+            //contactArray.push(jsonPush);
+        }//*/
+    }
+    //console.log(userArrayString);
+    return userArrayString;
+}
