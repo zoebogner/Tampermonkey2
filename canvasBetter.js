@@ -2,7 +2,7 @@
 // @name         DG Tools - Add users from SF!
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2020.04.20v2
+// @version      2020.04.20.2
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
