@@ -2,7 +2,7 @@
 // @name         DG Tools - Add users from SF!
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2020.04.20.2
+// @version      2020.04.21
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -588,35 +588,16 @@ function myJQueryCode() {
         }
     }else if(window.location.hostname === "instructure.my.salesforce.com"){
         //If in Salesforce, load some of the salesforce stuff
-        if($('div.pbBody table:contains("Contact Status")').length > 0 ){
-            //Put the action box at the top
-            $('div.pbHeader:first').append('<input type="text"  id="dg_canvasURL"></input>');
-            $('div.pbHeader:first').append('<input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
-
-            //put the checkboxes in
-            $('#bodyCell div.pbBody table:contains("Contact Status") th.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked id="dg_checkUsersMaster">'); //Master checkbox
-            //user array
-            $('#bodyCell div.pbBody table:contains("Contact Status") td.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked>');
-
-            //function to check, or uncheck all based on the master checkbox
-            $('#dg_checkUsersMaster').change(function(e){
-                e.preventDefault();
-                //console.log('here');
-                var checkBoxes = $('input.dg_checkUsers:not(:first)');
-                checkBoxes.prop("checked", !checkBoxes.prop("checked"));
-            });
-
-
-            $('#dg_userToCanvas').click(function(e){
-                $('#dg_canvasURL, #dg_userToCanvas, input.dg_checkUsers').attr('disabled','disabled');
-                e.preventDefault();
-                //sessionStorage.setItem('userArrayString',getUsers()); //Local storage doesnt seem to be working adding it to the link
-                var userString = getUsers();
-                userString = userString.trim();
-                userString = encodeURI(userString);
-                var buildCanvasURL = "https://" + $('#dg_canvasURL').val() + ".instructure.com/dgtools3?sfUsers=true&userData=" + userString;
-                openInNewTab(buildCanvasURL);
-            });
+        if($('div.pbBody table:contains("Contact Status")').length > 0 || $('h2.mainTitle').text() === "Account Detail"){
+            buildTheContactsTableUI();
+            if($('h2.mainTitle').text() === "Account Detail"){
+                setTimeout(
+                    function() {
+                        console.log('here');
+                        buildTheContactsTableUI();
+                    }, 5000
+                );
+            }
         }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
             //Once on the create users page
             var urlVars = getUrlVars();
@@ -636,7 +617,7 @@ function myJQueryCode() {
         }
     }
 
-    // My functions
+    // ============== My functions =====================
     function storeItem(storeName, storeValue) {
         storeValue = btoa(storeValue);
         //localStorage.setItem(storeName, storeValue);
@@ -1243,4 +1224,38 @@ function getUsers(){
     }
     //console.log(userArrayString);
     return userArrayString;
+}
+
+function buildTheContactsTableUI(){
+    //Put the action box at the top
+    if($('h2.mainTitle').text() === "Account Detail"){
+        $('div.listRelatedObject.contactBlock input[value="New Contact"]').after('<input type="text"  id="dg_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
+    }else{
+        $('div.pbHeader:first').after('<input type="text"  id="dg_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
+    }
+
+    //put the checkboxes in
+    $('#bodyCell div.pbBody table:contains("Contact Status") th.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked id="dg_checkUsersMaster">'); //Master checkbox
+    //user array
+    $('#bodyCell div.pbBody table:contains("Contact Status") td.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked>');
+
+    //function to check, or uncheck all based on the master checkbox
+    $('#dg_checkUsersMaster').change(function(e){
+        e.preventDefault();
+        //console.log('here');
+        var checkBoxes = $('input.dg_checkUsers:not(:first)');
+        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+    });
+
+
+    $('#dg_userToCanvas').click(function(e){
+        $('#dg_canvasURL, #dg_userToCanvas, input.dg_checkUsers').attr('disabled','disabled');
+        e.preventDefault();
+        //sessionStorage.setItem('userArrayString',getUsers()); //Local storage doesnt seem to be working adding it to the link
+        var userString = getUsers();
+        userString = userString.trim();
+        userString = encodeURI(userString);
+        var buildCanvasURL = "https://" + $('#dg_canvasURL').val() + ".instructure.com/dgtools3?sfUsers=true&userData=" + userString;
+        openInNewTab(buildCanvasURL);
+    });
 }
