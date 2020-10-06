@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         DG Tools - Add users from SF!
+// @name         DG Tools - LTI Hiding!
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2020.04.21
+// @version      2020.10.07
 // @description  try to take over the world!
 // @author       Daniel Gilogley
 // @match        https://*.test.instructure.com/*
@@ -31,6 +31,7 @@ function myJQueryCode() {
     //global variables
     var domain = 'https://' + document.location.hostname;
     var userToken = getItem('token');
+    var token = userToken;
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -154,6 +155,18 @@ function myJQueryCode() {
 
                         //Send Authorization URL in LTI2 Registration
                         $('#tab-features > div.account-feature-flags > ul > li:nth-child(21) > div.row-fluid.feature.lti_2_auth_url_registration > div.span5.text-right > label > div > div > div.ic-Super-toggle__option--RIGHT').click();
+
+                        //Add the show LTIs button on the settings page
+                        //users must first be on the page before pressing the button
+                        if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
+                          $('nav#breadcrumbs').after('<br><button type="button" id="dg_listLti_ID">Show the LTI IDs</button><br>');
+                          $("#dg_listLti_ID").click(function(e){
+                            e.preventDefault();
+                            $("#dg_listLti_ID").attr('disabled','disabled');
+                            listLtiID();
+                            return 0;
+                          });
+                        }
 
                     } else {
                         return 0;
@@ -321,7 +334,7 @@ function myJQueryCode() {
                 });
             } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
                 document.title = "DG Tools";
-                $('#main').html('<center>    <h1>DG Tools</h1>    <div><em>DG Tools are the best!</em></div></center><div style="padding-left:50px">    <hr>    <h2>Links</h2>    <ul>        <li><a href="/dgtools">Update User SIS id from one to another</a></li>        <li><a href="/dgtools3">Create Users</a></li>        <li><a href="/dgtools4">Create Sandboxes</a></li>        <li><a href="/dgtools5">Trust Account</a></li>        <li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>        <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>        <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Studio GUID</a></li>    </ul>    <h2>Tools</h2>    <ul>        <li class="dg_action_lti">            <button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button>        </li>        <li><strong>Sydney</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button>            </li>            <li class="dg_action_outcome">                <button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button>            </li>        </ul>        <li><strong>Singapore</strong></li>        <ul>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button>            </li>            <li class="dg_action_lti">                <button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button>            </li>            <li class="dg_action_externalTool">                <button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button>            </li>        </ul>    </ul></div><hr><div style="padding-left:50px;width: 40%">    <label for="dg_apiToken">API token:</label>    <div class="ic-Input-group">        <input name="focus" type="hidden" value="' + userToken + '">        <input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">        <button class="Button" id="dg_apiTokenButton">Update API Token</button>    </div>    <br>    <br></div>');
+                $('#main').html('<center>   <h1>DG Tools</h1>   <div>       <em>DG Tools are the best!</em> </div></center><div style="padding-left:50px">  <hr>        <h2>Links</h2>      <ul>            <li>                <a href="/dgtools">Update User SIS id from one to another</a>           </li>           <li>                <a href="/dgtools3">Create Users</a>            </li>           <li>                <a href="/dgtools4">Create Sandboxes</a>            </li>           <li>                <a href="/dgtools5">Trust Account</a>           </li>           <li>                <a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a>          </li>           <li>                <a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a>            </li>           <li>                <a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Studio GUID</a>         </li>       </ul>       <h2>Tools</h2>      <ul>            <li class="dg_action_lti">              <button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button>            </li>           <li>                <strong>Sydney</strong>         </li>           <ul>                <li class="dg_action_lti">                  <button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button>              </li>               <li class="dg_action_lti">                  <button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button>                </li>               <li class="dg_action_lti">                  <button class="Button" type="button" id="dg_button_syd_arcApac" key="2289-1ed35fef912ddbda644bac58387a3cb124b18c3d9fbca935ebda2822e13f4f52" secret="5df67ea01c3fc7ed632b177a8255210bd8397b9f749778ca608a8b062a6cedfb" url="https://apaccs.instructuremedia.com/lti/config.xml">ARC for APAC CS New Employees</button>               </li>               <li class="dg_action_outcome">                  <button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button>               </li>               <li class="dg_action_externalTool">                 <button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button>             </li>               <li class="dg_action_externalTool">                 <button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button>             </li>           </ul>           <li>                <strong>Singapore</strong>          </li>           <ul>                <li class="dg_action_lti">                  <button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://rollcall-sin.instructure.com/configure.xml">Chat LTI (SG)</button>                </li>               <li class="dg_action_lti">                  <button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button>              </li>               <li class="dg_action_externalTool">                 <button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button>               </li>               <li class="dg_action_externalTool">                 <button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button>               </li>           </ul>      <li><strong>EUROPE (Dublin)</strong></li>    <ul>        <li class="dg_action_lti">                          <button class="Button" type="button" id="dg_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button>                   </li>       <li class="dg_action_lti">                          <button class="Button" type="button" id="dg_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button>     </li>       <li class="dg_action_externalTool">         <button class="Button" type="button" id="dg_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button>                 </li>       <li class="dg_action_externalTool">                         <button class="Button" type="button" id="dg_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button>                 </li>   </ul>       </ul>   </div>  <hr>        <div style="padding-left:50px;width: 40%">          <label for="dg_apiToken">API token:</label>         <div class="ic-Input-group">                <input name="focus" type="hidden" value="' + userToken + '">                    <input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">                     <button class="Button" id="dg_apiTokenButton">Update API Token</button>                 </div>                  <br>                        <br>                        </div>');
 
                 //LTI Buttons Function
                 $('li.dg_action_lti').click(function(e){
@@ -618,6 +631,89 @@ function myJQueryCode() {
     }
 
     // ============== My functions =====================
+
+    //get all the LTIs installed
+    function listLtiID(){
+      var form = new FormData();
+      var settings = {
+        "url": "/api/v1/accounts/1/external_tools?per_page=100",
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "Authorization": "Bearer " + userToken
+        },
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "data": form
+      };
+
+      $.ajax(settings).done(function (response) {
+        console.log(response);
+        apiReply = JSON.parse(response);
+        if(apiReply.length > 0){
+          $.each(apiReply,function(index,element){
+            console.log(element);
+            $("td.external_tool.e-tool-table-data[title='"+ element.name + "']").append(' - LTI ID #' + element.id);
+          });
+
+          //add the hide button too
+          var buildHideButton = '<form id="dg_hideLTI" autocomplete="off"><label for="lti_id" style="display: initial;">LTI ID:</label><input autocomplete="off" type="text" id="lti_id" name="lti_id"><label for="lti_name" style="display: initial;"> New Name:</label><input autocomplete="off" type="text" id="lti_name" name="lti_name"> <button type="button" id="dg_hideLTI_submit">Hide this LTI!</button>';
+
+          $('div.Header > div > p:last').after(buildHideButton);
+
+          $("#dg_hideLTI_submit").click(function(e){
+            e.preventDefault();
+            $("#dg_hideLTI_submit").attr('disabled','disabled');
+            if(confirm("Are you sure you want to do this?! It cannot be undone!") === true) hideElement();
+          });
+        }
+      });
+    }
+
+
+    //function to hide and rename an LTI based on the LTI's ID within the Canvas
+    function hideElement(){
+      var data = new FormData();
+
+      var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+
+      xhr.addEventListener("readystatechange", function() {
+        if(this.readyState === 4) {
+          console.log(this.responseText);
+          //refresh the page after success
+          location.replace("/accounts/self/settings/configurations#tab-tools");
+          window.location.href = window.location.origin + "/accounts/self/settings/configurations#tab-tools";
+        }
+      });
+
+      var xhrBuild = "/api/v1/accounts/1/external_tools/" + $('input#lti_id').val();
+      xhrBuild += "?course_navigation%5Benabled%5D=false&account_navigation%5Benabled%5D=false&user_navigation%5Benabled%5D=false&course_home_sub_navigation%5Benabled%5D=false&editor_button%5Benabled%5D=false&homework_submission%5Benabled%5D=false&link_selection%5Benabled%5D=false&migration_selection%5Benabled%5D=false&tool_configuration%5Benabled%5D=false&resource_selection%5Benabled%5D=false&global_navigation=false&assignment_selection=false&collaboration=false"
+
+      if($('input#lti_id').val() !== null){
+        xhrBuild+= "&name=";
+        xhrBuild+= encodeURI($('input#lti_name').val());
+      }
+
+      xhr.open("PUT", xhrBuild);
+      xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+
+      xhr.send(data);
+    }
+
+    //Add the show LTIs button on the settings page
+    //users must first be on the page before pressing the button
+    if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
+      $('nav#breadcrumbs').after('<br><button type="button" id="dg_listLti_ID">Show the LTI IDs</button><br>');
+      $("#dg_listLti_ID").click(function(e){
+        e.preventDefault();
+        $("#dg_listLti_ID").attr('disabled','disabled');
+        listLtiID();
+        return 0;
+      });
+    }
+
     function storeItem(storeName, storeValue) {
         storeValue = btoa(storeValue);
         //localStorage.setItem(storeName, storeValue);
@@ -1259,3 +1355,5 @@ function buildTheContactsTableUI(){
         openInNewTab(buildCanvasURL);
     });
 }
+
+
