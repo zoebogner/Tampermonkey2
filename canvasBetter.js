@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         DG Tools - LTI Hiding!
+// @name         DG Tools - New boginnings
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2020.10.07
+// @version      2021.07.06
 // @description  try to take over the world!
-// @author       Daniel Gilogley
+// @author       Daniel Gilogley, Zoe Bogner
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
 // @match        https://*.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
 
             //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://static1.squarespace.com/static/55751873e4b04dc410497087/t/5599db23e4b0af241ed85154/1436146468429/27ef868543abf9c4e16439c1aeb8f0bd.jpg?format=500w" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/zoebogner/Tampermonkey2/dgtools_newboginnings/dabpanda.jpg" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
