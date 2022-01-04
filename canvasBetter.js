@@ -11,6 +11,7 @@
 // @match        https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html*
 // @match        https://instructure.my.salesforce.com/*
 // @exclude      https://siteadmin*instructure.com/*
+// @exclude      https://reports.instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
