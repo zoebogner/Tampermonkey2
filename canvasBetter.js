@@ -2,7 +2,7 @@
 // @name         DG Tools - PAW-15414
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      20220104_01
+// @version      20220104_02
 // @description  try to take over the world!
 // @author       Daniel Gilogley, Zoe Bogner
 // @match        https://*.test.instructure.com/*
