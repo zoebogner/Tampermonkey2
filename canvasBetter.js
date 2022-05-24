@@ -2,7 +2,7 @@
 // @name         Solutions Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      20220524-01
+// @version      2022052402
 // @description  try to take over the world!
 // @author       Daniel Gilogley, Zoe Bogner
 // @match        https://*.test.instructure.com/*
