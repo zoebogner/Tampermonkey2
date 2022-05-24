@@ -2,9 +2,9 @@
 // @name         Solutions Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052402
+// @version      2022052403
 // @description  try to take over the world!
-// @author       Daniel Gilogley, Zoe Bogner
+// @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
 // @match        https://*.instructure.com/*
@@ -57,7 +57,7 @@ function myJQueryCode() {
                 $('li#dg_li_settings').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
                 //Add a Salesforce link to the Account at the bottom of the page
-                $('#account_external_integration_keys_salesforce_account_id').after('<a href="http://instructure.my.salesforce.com/' + $('#account_external_integration_keys_salesforce_account_id').val() + '" target="_blank"><img src="https://cdn.iconverticons.com/files/png/d5b8bf83e9b980e5_256x256.png" style="width: 5%;padding-left: 5px;">');
+                $('#account_external_integration_keys_salesforce_account_id').after('<a href="http://instructure.my.salesforce.com/' + $('#account_external_integration_keys_salesforce_account_id').val() + '" target="_blank" title="link to Salesforce Account ID"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" style="width: 5%; padding-left: 5px;">');
 
                 //---------On the main Settings page of 'Settings-----------------
                 //create the button to do the default settings
