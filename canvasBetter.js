@@ -2,7 +2,7 @@
 // @name         Solutions Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052501
+// @version      2022052502
 // @description  try to take over the world!
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -614,7 +614,7 @@ function myJQueryCode() {
 			// Turn on ribbon if a page has modification through the CB Tools
 			if (_cb_tools_on == true) {
                 // put the banner div after the body
-                $('body').prepend('<div class="cb-env-banner"><img src="https://raw.githubusercontent.com/clmcavaney/Solutions-Tools/master/dabpanda-cropped-16x16.png" /> CB Tools ON</div>');
+                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/Solutions-Tools/master/dabpanda-cropped-16x16.png" /> CB Tools ON</div>');
 			}
 
         });
