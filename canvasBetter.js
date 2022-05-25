@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052503
+// @version      2022052504
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -172,7 +172,7 @@ function myJQueryCode() {
                         //Add the show LTIs button on the settings page
                         //users must first be on the page before pressing the button
                         if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID">Show the LTI IDs</button></div>');
+                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
                           $("#dg_listLti_ID").click(function(e){
                             e.preventDefault();
                             $("#dg_listLti_ID").attr('disabled','disabled');
@@ -774,7 +774,7 @@ function myJQueryCode() {
     //Add the show LTIs button on the settings page
     //users must first be on the page before pressing the button
     if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-      $('nav#breadcrumbs').after('<br><button type="button" id="dg_listLti_ID">Show the LTI IDs</button><br>');
+      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
       $("#dg_listLti_ID").click(function(e){
         e.preventDefault();
         $("#dg_listLti_ID").attr('disabled','disabled');
