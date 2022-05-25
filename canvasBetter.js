@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052601
+// @version      2022052602
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
