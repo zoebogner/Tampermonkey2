@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052504
+// @version      2022052601
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -233,7 +233,7 @@ function myJQueryCode() {
                 //Create the auth method select for Canvas, LDAP, SAML, Microsoft, and Google
                 var changeAuthSelect = '<select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select>';
                 //Put in the option to the page for the  auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><br><td><label for="dg_changeAuth">Change authentication:</label></td><td>' + changeAuthSelect + '</td></tr>');
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Change authentication:</label></th><td>' + changeAuthSelect + '</td></tr>');
                 //put in the options dropdown
                 $('#dg_changeAuth_tr').append('<td id="dg_changeAuthCount_td">' + optionCountHTML + '</td>');
                 //add the 'Go' button
