@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Solutions Tools
+// @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
 // @version      2022052502
-// @description  try to take over the world!
+// @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
@@ -50,7 +50,7 @@ function myJQueryCode() {
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title="Settings"></div></div><div class="menu-item__text"> Solutions Settings </div></a></li>');
 
             //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/zoebogner/Tampermonkey2/master/dabpanda.jpg" alt="Solutions Tools" title="Solutions Tools"> </div> </div> <div class="menu-item__text"> Solutions Tools </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/zoebogner/Tampermonkey2/master/dabpanda.jpg" alt="CB Tools" title="Canvas Better (CB) Tools"> </div> </div> <div class="menu-item__text"> CB Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
@@ -319,7 +319,7 @@ function myJQueryCode() {
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
                 $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-                document.title = "Solutions Tools - Update User SIS id from one to another";
+                document.title = "CB Tools - Update User SIS id from one to another";
                 $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="dg_apiToken">SIS ID or Canvas ID:</label> <br> <select id="dg_canvasOrSIS" name="dg_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="dg_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
 
                 $('button#dg_updateGo').click(function(e) {
@@ -354,8 +354,8 @@ function myJQueryCode() {
             } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
 				_cb_tools_on = true;
 
-                document.title = "Solutions Tools";
-                $('#main').html('<center><h1>Solutions Tools</h1><div><em>Solutions Tools are the best!</em></div></center>' + 
+                document.title = "CB Tools";
+                $('#main').html('<center><h1>Canvas Better (CB) Tools</h1><div><em>CB Tools are the best!</em></div></center>' + 
                     '<div style="padding-left:50px"><hr><h2>Links</h2><ul>' + 
                         '<li><a href="/dgtools">Update User SIS id from one to another</a></li>' + 
                         '<li><a href="/dgtools3">Create Users</a></li>' + 
@@ -432,7 +432,7 @@ function myJQueryCode() {
 				_cb_tools_on = true;
 
                 //Create users page
-                document.title="Solutions Tools - Create Users"
+                document.title="CB Tools - Create Users"
                 $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="dg_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="dg_last_name"></textarea>                </td>                <td>                    <textarea id="dg_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                        <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="dg_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="dg_notifyUsers" type="checkbox" name="dg_notifyUsers" value="dg_notifyUsers">Notify?                                     </label>                                     <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
 
                 //getting the auto created users from SF
@@ -499,7 +499,7 @@ function myJQueryCode() {
             }else if(document.location.pathname.toLowerCase() === "/dgtools4") {
 				_cb_tools_on = true;
 
-                document.title="Solutions Tools - Create Sandboxes";
+                document.title="CB Tools - Create Sandboxes";
                 $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="dg_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="dg_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="dg_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="dg_canvas101" id="dg_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
                 //Create canavs101 Button
                 $('#dg_button_create_canvas101').click(function(){
@@ -523,7 +523,7 @@ function myJQueryCode() {
             }else if(document.location.pathname.toLowerCase() === "/dgtools5") {
 				_cb_tools_on = true;
 
-                document.title="Solutions Tools - Create Trust";
+                document.title="CB Tools - Create Trust";
                 $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="dg_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
 
                 //When the user clicks "Create trust"
