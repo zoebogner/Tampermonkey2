@@ -237,7 +237,7 @@ function myJQueryCode() {
                 //put in the options dropdown
                 $('#dg_changeAuth_tr').append('<td id="dg_changeAuthCount_td">' + optionCountHTML + '</td>');
                 //add the 'Go' button
-                $('#dg_changeAuthCount_td').after('<td><input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"><span>Delete old Method</span></td><td><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;">Go</button></td>');
+                $('#dg_changeAuthCount_td').after('<td><input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"><span>Delete old Method</span></td><td><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Go</button></td>');
                 //When you click the 'Go' button
                 $('#dg_changeAuth_button').click(function(e) {
                     e.preventDefault();
