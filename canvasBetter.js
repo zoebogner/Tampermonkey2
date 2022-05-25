@@ -18,7 +18,7 @@
 // @grant        GM_addStyle
 // @run-at       document-idle
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @resource     customCSS https://raw.githubusercontent.com/clmcavaney/Solutions-Tools/master/canvasBetter.css
+// @resource     customCSS https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/canvasBetter.css
 // ==/UserScript==
 
 
@@ -50,7 +50,7 @@ function myJQueryCode() {
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CB Settings" title="Canvas Better (CB) Settings"></div></div><div class="menu-item__text"> CB Settings </div></a></li>');
 
             //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/zoebogner/Tampermonkey2/master/dabpanda.jpg" alt="CB Tools" title="Canvas Better (CB) Tools"> </div> </div> <div class="menu-item__text"> CB Tools </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda.jpg" alt="CB Tools" title="Canvas Better (CB) Tools"> </div> </div> <div class="menu-item__text"> CB Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
@@ -614,7 +614,7 @@ function myJQueryCode() {
 			// Turn on ribbon if a page has modification through the CB Tools
 			if (_cb_tools_on == true) {
                 // put the banner div after the body
-                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/Solutions-Tools/master/dabpanda-cropped-16x16.png" /> CB Tools ON</div>');
+                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> CB Tools ON</div>');
 			}
 
         });
