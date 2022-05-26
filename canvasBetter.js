@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052701
+// @version      2022052702
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -71,7 +71,7 @@ function myJQueryCode() {
 
                 //---------On the main Settings page of 'Settings-----------------
                 //create the button to do the default settings
-                $('#account_settings > legend').after('<button type="button" class="btn" id="dg_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
+                $('#account_settings > legend').after('<button type="button" class="btn" id="dg_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
                 //apply the action of clicking the default button
                 $('#dg_button_applyDefaults_settings').click(function(e) {
                     e.preventDefault();
@@ -172,7 +172,7 @@ function myJQueryCode() {
                         //Add the show LTIs button on the settings page
                         //users must first be on the page before pressing the button
                         if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
                           $("#dg_listLti_ID").click(function(e){
                             e.preventDefault();
                             $("#dg_listLti_ID").attr('disabled','disabled');
@@ -236,7 +236,7 @@ function myJQueryCode() {
                 var td_details = changeAuthSelect + optionCountHTML + deleteAndGoButton;
 
                 //Put in the option to the page for the auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
 
                 //put in the options dropdown
                 $('#dg_changeAuth_tr').append('<td>' + td_details + '</td>');
@@ -617,7 +617,7 @@ function myJQueryCode() {
 			// Turn on ribbon if a page has modification through the CX Tools
 			if (_cb_tools_on == true) {
                 // put the banner div after the body
-                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> CX Tools ON</div>');
+                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> CX Tools ON</div>');
 			}
 
         });
@@ -777,7 +777,7 @@ function myJQueryCode() {
     //Add the show LTIs button on the settings page
     //users must first be on the page before pressing the button
     if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
       $("#dg_listLti_ID").click(function(e){
         e.preventDefault();
         $("#dg_listLti_ID").attr('disabled','disabled');
