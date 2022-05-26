@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052604
+// @version      2022052605
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -71,7 +71,7 @@ function myJQueryCode() {
 
                 //---------On the main Settings page of 'Settings-----------------
                 //create the button to do the default settings
-                $('#account_settings > legend').after('<button type="button" class ="btn" id="dg_button_applyDefaults_settings">Apply defaults</button>');
+                $('#account_settings > legend').after('<button type="button" class="btn" id="dg_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
                 //apply the action of clicking the default button
                 $('#dg_button_applyDefaults_settings').click(function(e) {
                     e.preventDefault();
