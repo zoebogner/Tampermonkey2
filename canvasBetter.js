@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052605
+// @version      2022052606
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -236,7 +236,7 @@ function myJQueryCode() {
                 var td_details = changeAuthSelect + optionCountHTML + deleteAndGoButton;
 
                 //Put in the option to the page for the auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Change authentication:</label></th></tr>');
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
 
                 //put in the options dropdown
                 $('#dg_changeAuth_tr').append('<td>' + td_details + '</td>');
