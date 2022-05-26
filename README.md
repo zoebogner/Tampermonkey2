@@ -8,3 +8,5 @@ In a browser add on like GreaseMonkey (FireFox) or TamperMonkey (Chrome) you can
 ![Tampermonkey Utilities button](assets/TM-utilities.png)
 ![Tampermonkey Import from URL](assets/TM-install-from-URL.png)
 
+The URL to install from is:
+https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/canvasBetter.js
