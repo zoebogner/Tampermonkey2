@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Canvas Better (CB) Tools
+// @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052606
-// @description  Trying to take over the world! "Canvas Better (CB) Tools"
+// @version      2022052701
+// @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
@@ -18,7 +18,7 @@
 // @grant        GM_addStyle
 // @run-at       document-idle
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @resource     customCSS https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/canvasBetter.css
+// @resource     customCSS https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/canvasBetter.css
 // ==/UserScript==
 
 
@@ -47,10 +47,10 @@ function myJQueryCode() {
             GM_addStyle(cssTxt);
 
             //add the settings link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CB Settings" title="Canvas Better (CB) Settings"></div></div><div class="menu-item__text"> CB Settings </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CX Settings" title="Canvas Experience (CX) Settings"></div></div><div class="menu-item__text"> CX Settings </div></a></li>');
 
             //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda.jpg" alt="CB Tools" title="Canvas Better (CB) Tools"> </div> </div> <div class="menu-item__text"> CB Tools </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda.jpg" alt="CX Tools" title="Canvas Experience (CX) Tools"> </div> </div> <div class="menu-item__text"> CX Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
@@ -71,7 +71,7 @@ function myJQueryCode() {
 
                 //---------On the main Settings page of 'Settings-----------------
                 //create the button to do the default settings
-                $('#account_settings > legend').after('<button type="button" class="btn" id="dg_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
+                $('#account_settings > legend').after('<button type="button" class="btn" id="dg_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
                 //apply the action of clicking the default button
                 $('#dg_button_applyDefaults_settings').click(function(e) {
                     e.preventDefault();
@@ -172,7 +172,7 @@ function myJQueryCode() {
                         //Add the show LTIs button on the settings page
                         //users must first be on the page before pressing the button
                         if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
                           $("#dg_listLti_ID").click(function(e){
                             e.preventDefault();
                             $("#dg_listLti_ID").attr('disabled','disabled');
@@ -236,7 +236,7 @@ function myJQueryCode() {
                 var td_details = changeAuthSelect + optionCountHTML + deleteAndGoButton;
 
                 //Put in the option to the page for the auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
 
                 //put in the options dropdown
                 $('#dg_changeAuth_tr').append('<td>' + td_details + '</td>');
@@ -322,7 +322,7 @@ function myJQueryCode() {
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
                 $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-                document.title = "CB Tools - Update User SIS id from one to another";
+                document.title = "CX Tools - Update User SIS id from one to another";
                 $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="dg_apiToken">SIS ID or Canvas ID:</label> <br> <select id="dg_canvasOrSIS" name="dg_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="dg_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
 
                 $('button#dg_updateGo').click(function(e) {
@@ -357,8 +357,8 @@ function myJQueryCode() {
             } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
 				_cb_tools_on = true;
 
-                document.title = "CB Tools";
-                $('#main').html('<center><h1>Canvas Better (CB) Tools</h1><div><em>CB Tools are the best!</em></div></center>' + 
+                document.title = "CX Tools";
+                $('#main').html('<center><h1>Canvas Experience (CX) Tools</h1><div><em>CX Tools are the best!</em></div></center>' + 
                     '<div style="padding-left:50px"><hr><h2>Links</h2><ul>' + 
                         '<li><a href="/dgtools">Update User SIS id from one to another</a></li>' + 
                         '<li><a href="/dgtools3">Create Users</a></li>' + 
@@ -435,7 +435,7 @@ function myJQueryCode() {
 				_cb_tools_on = true;
 
                 //Create users page
-                document.title="CB Tools - Create Users"
+                document.title="CX Tools - Create Users"
                 $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="dg_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="dg_last_name"></textarea>                </td>                <td>                    <textarea id="dg_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                        <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="dg_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="dg_notifyUsers" type="checkbox" name="dg_notifyUsers" value="dg_notifyUsers">Notify?                                     </label>                                     <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
 
                 //getting the auto created users from SF
@@ -502,7 +502,7 @@ function myJQueryCode() {
             }else if(document.location.pathname.toLowerCase() === "/dgtools4") {
 				_cb_tools_on = true;
 
-                document.title="CB Tools - Create Sandboxes";
+                document.title="CX Tools - Create Sandboxes";
                 $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="dg_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="dg_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="dg_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="dg_canvas101" id="dg_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
                 //Create canavs101 Button
                 $('#dg_button_create_canvas101').click(function(){
@@ -526,7 +526,7 @@ function myJQueryCode() {
             }else if(document.location.pathname.toLowerCase() === "/dgtools5") {
 				_cb_tools_on = true;
 
-                document.title="CB Tools - Create Trust";
+                document.title="CX Tools - Create Trust";
                 $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="dg_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
 
                 //When the user clicks "Create trust"
@@ -614,10 +614,10 @@ function myJQueryCode() {
                 waitForKeyElements("table.ic-permissions__table", fix_permission_header);
             }
 
-			// Turn on ribbon if a page has modification through the CB Tools
+			// Turn on ribbon if a page has modification through the CX Tools
 			if (_cb_tools_on == true) {
                 // put the banner div after the body
-                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> CB Tools ON</div>');
+                $('body').prepend('<div class="cb-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> CX Tools ON</div>');
 			}
 
         });
@@ -777,7 +777,7 @@ function myJQueryCode() {
     //Add the show LTIs button on the settings page
     //users must first be on the page before pressing the button
     if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="dg_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
       $("#dg_listLti_ID").click(function(e){
         e.preventDefault();
         $("#dg_listLti_ID").attr('disabled','disabled');
