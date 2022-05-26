@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052603
+// @version      2022052604
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -229,31 +229,18 @@ function myJQueryCode() {
                 for (var i = 1; i <= $('fieldset#login_information > table.ic-Table > tbody > tr.login:not(:last)').length; i++) {
                     optionCountHTML += '<option value="' + i + '">' + i + '</option>';
                 }
-                optionCountHTML = '<select class="locale" id="dg_changeAuthCount" style="width:initial;">' + optionCountHTML + '</select>';
+                optionCountHTML = '<span style="margin-right: 0.5rem;"><select class="locale" id="dg_changeAuthCount" style="width:initial;">' + optionCountHTML + '</select></span>';
                 //Create the auth method select for Canvas, LDAP, SAML, Microsoft, and Google
-                var changeAuthSelect = '<select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select>';
+                var changeAuthSelect = '<span style="margin-right: 0.5rem;"><select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select></span>';
+                var deleteAndGoButton = '<span style="margin-right: 0.5rem;"><input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"> <label for="dg_deleteOldAuthMethod">Delete old Method</label></span><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;">Go</button>';
+                var td_details = changeAuthSelect + optionCountHTML + deleteAndGoButton;
 
-//
-<tr id="dg_changeAuth_tr">
-    <th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png"> Change authentication:</label></th>
-    <td>
-        <select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;">
-            <option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option>
-        </select>
-        <select class="locale" id="dg_changeAuthCount" style="width:initial;">
-            <option value="null">Select a login</option><option value="1">1</option>
-        </select>
-        <input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"> <label for="db_deleteOldAuthMethod">Delete old Method</label>
-        <button id="dg_changeAuth_button" class="btn" style="bottom: 5px;"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png"> Go</button>
-    </td>
-</tr>
-//
                 //Put in the option to the page for the auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Change authentication:</label></th><td>' + changeAuthSelect + '</td></tr>');
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Change authentication:</label></th></tr>');
+
                 //put in the options dropdown
-                $('#dg_changeAuth_tr').append('<div id="dg_changeAuthCount_div">' + optionCountHTML + '</div>');
-                //add the 'Go' button
-                $('#dg_changeAuthCount_div').after('<input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"> <label for="dg_deleteOldAuthMethod">Delete old Method</label><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;">Go</button>');
+                $('#dg_changeAuth_tr').append('<td>' + td_details + '</td>');
+
                 //When you click the 'Go' button
                 $('#dg_changeAuth_button').click(function(e) {
                     e.preventDefault();
