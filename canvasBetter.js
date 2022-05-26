@@ -2,7 +2,7 @@
 // @name         Canvas Better (CB) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052602
+// @version      2022052603
 // @description  Trying to take over the world! "Canvas Better (CB) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -232,19 +232,35 @@ function myJQueryCode() {
                 optionCountHTML = '<select class="locale" id="dg_changeAuthCount" style="width:initial;">' + optionCountHTML + '</select>';
                 //Create the auth method select for Canvas, LDAP, SAML, Microsoft, and Google
                 var changeAuthSelect = '<select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select>';
-                //Put in the option to the page for the  auth method
+
+//
+<tr id="dg_changeAuth_tr">
+    <th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png"> Change authentication:</label></th>
+    <td>
+        <select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;">
+            <option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option>
+        </select>
+        <select class="locale" id="dg_changeAuthCount" style="width:initial;">
+            <option value="null">Select a login</option><option value="1">1</option>
+        </select>
+        <input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"> <label for="db_deleteOldAuthMethod">Delete old Method</label>
+        <button id="dg_changeAuth_button" class="btn" style="bottom: 5px;"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png"> Go</button>
+    </td>
+</tr>
+//
+                //Put in the option to the page for the auth method
                 $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><th><label for="dg_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Change authentication:</label></th><td>' + changeAuthSelect + '</td></tr>');
                 //put in the options dropdown
-                $('#dg_changeAuth_tr').append('<td id="dg_changeAuthCount_td">' + optionCountHTML + '</td>');
+                $('#dg_changeAuth_tr').append('<div id="dg_changeAuthCount_div">' + optionCountHTML + '</div>');
                 //add the 'Go' button
-                $('#dg_changeAuthCount_td').after('<td><input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"><span>Delete old Method</span></td><td><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;"><img src="https://raw.githubusercontent.com/clmcavaney/CB-Tools/master/dabpanda-cropped-16x16.png" /> Go</button></td>');
+                $('#dg_changeAuthCount_div').after('<input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"> <label for="dg_deleteOldAuthMethod">Delete old Method</label><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;">Go</button>');
                 //When you click the 'Go' button
                 $('#dg_changeAuth_button').click(function(e) {
                     e.preventDefault();
                     //disable the options
                     $('#dg_changeAuth_button,#dg_changeAuth,#dg_deleteOldAuthMethod,#dg_changeAuthCount').attr('disabled', 'disabled');
                     //replace the 'Go' button with the spinny wheel
-                    $('#dg_changeAuth_button').html('<body id="dg_spin"><div class="loading_image_holder"><img src="/images/ajax-loader.gif"></div>');
+                    $('#dg_changeAuth_button').html('<body id="dg_spin"><div class="loading_image_holder"><img src="/images/ajax-loader.gif" /></div>');
                     //check to see a proper value is selected
                     if ($('#dg_changeAuth').val() === "null" || $('#dg_changeAuthCount').val() === "null") {
                         alert('No Auth method or Number selected!');
