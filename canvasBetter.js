@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022052702
+// @version      2022052703
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -50,7 +50,7 @@ function myJQueryCode() {
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CX Settings" title="Canvas Experience (CX) Settings"></div></div><div class="menu-item__text"> CX Settings </div></a></li>');
 
             //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/dabpanda.jpg" alt="CX Tools" title="Canvas Experience (CX) Tools"> </div> </div> <div class="menu-item__text"> CX Tools </div></a></li>');
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda.jpg" alt="CX Tools" title="Canvas Experience (CX) Tools"> </div> </div> <div class="menu-item__text"> CX Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
