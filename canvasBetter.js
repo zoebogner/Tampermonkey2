@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022060102
+// @version      2022060601
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -49,7 +49,7 @@ function myJQueryCode() {
             //add the settings link
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CX Settings" title="Canvas Experience (CX) Settings"></div></div><div class="menu-item__text"> CX Settings </div></a></li>');
 
-            //add the DG Tools link
+            //add the CX Tools link
             $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda.jpg" alt="CX Tools" title="Canvas Experience (CX) Tools"> </div> </div> <div class="menu-item__text"> CX Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
@@ -366,7 +366,7 @@ function myJQueryCode() {
                         '<li><a href="/dgtools5">Trust Account</a></li>' + 
                         '<li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>' + 
                         '<li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>' + 
-                        '<li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Studio GUID</a></li>' + 
+                        '<li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>' + 
                     '</ul><h2>Tools</h2><ul><li class="dg_action_lti">' + 
                     '<button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>' + 
                     '<li><strong>Sydney</strong></li><ul>' + 
@@ -1142,20 +1142,19 @@ function myJQueryCode() {
         var buildPost = "/api/v1/accounts/";
         //add this accounts ID
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
-        buildPost += "/trust_links?trust_link%5Bmanaging_account_id%5D=";
-
-        //Add the trust from ID and Shard
-        buildPost += targetID + "~" + shardID;
+        buildPost += "/trust_links?trust_link";
 
         var data = new FormData();
+        //Add the trust from ID and Shard
+		data.append("trust_link[managing_account_id]", targetID + "~" + shardID);
 
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
 
         xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === 4) {
+            if(this.readyState === xhr.DONE) {
                 console.log(this.responseText);
-                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
+                if(xhr.status !== 200) {
                     updateConsoleLog('Failed creating Trust with error: ' + this.responseText);
                 }else{
                     updateConsoleLog('Success! Creating Trust with message: ' + this.responseText);
@@ -1175,30 +1174,44 @@ function myJQueryCode() {
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
         buildPost += '/trust_links';
 
-        //build call
-        var data = new FormData();
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === 4) {
-                console.log(this.responseText);
-                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
-                    updateConsoleLog('Failed with error: ' + this.responseText);
-                }else{
-                    var newLineReply = this.responseText.split('}').join('}\n').split(',').join('');
-                    newLineReply = newLineReply.split('[').join('').split(']').join('');
-                    updateConsoleLog('Success! Listing IDs of trusted Canvi:\n ' + newLineReply);
-                }
+        $.ajaxSetup({
+            headers:{
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache"
             }
         });
 
-        xhr.open("GET", buildPost);
-        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
-        xhr.setRequestHeader("Cache-Control", "no-cache");
+        $.get( buildPost, function( data ) {
+            console.log("success");
 
-        xhr.send(data);
+            updateConsoleLog('Success! Listing IDs of trusted Canvi: (above - can take a little while)');
+            updateConsoleLog('NOTE: the managing_account_id values may be mutated due to large integers');
+
+            // Get details (i.e. name of each trusted instance)
+            // "/api/v1/accounts/<account id>";
+            // console.log(json_resp);
+            $.each(data, function( key, value ) {
+                // console.log(value);
+                // very very dodgy - the JSON sent from the request should be string values for these large numbers, not integers
+                var acct_id = String(value.managing_account_id).replace(/.$/,"1");
+                // console.log(acct_id);
+                $.get( "/api/v1/accounts/" + acct_id, function( data ) {
+                    console.log("success");
+                    updateConsoleLog(JSON.stringify(value));
+                    updateConsoleLog('ID: ' + value.id + ' Name: ' + data.name);
+                }, 'json')
+                    .fail(function() {
+                    console.log("error");
+                    updateConsoleLog('Unable to get account name for "' + acct_id + '"');
+                })
+                ;
+            });
+        }, 'json')
+            .fail(function() {
+                console.log("error");
+                updateConsoleLog('Unable to get trusts: ' + data);
+            })
+        ;
     }
 
     function getUsersFullName(sisUserId){
