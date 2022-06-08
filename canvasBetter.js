@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022060601
+// @version      2022060801
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -1177,7 +1177,8 @@ function myJQueryCode() {
         $.ajaxSetup({
             headers:{
                 "Authorization": "Bearer " + userToken,
-                "Cache-Control": "no-cache"
+                "Cache-Control": "no-cache",
+				"Accept": "application/json+canvas-string-ids"
             }
         });
 
@@ -1192,17 +1193,14 @@ function myJQueryCode() {
             // console.log(json_resp);
             $.each(data, function( key, value ) {
                 // console.log(value);
-                // very very dodgy - the JSON sent from the request should be string values for these large numbers, not integers
-                var acct_id = String(value.managing_account_id).replace(/.$/,"1");
-                // console.log(acct_id);
-                $.get( "/api/v1/accounts/" + acct_id, function( data ) {
+                $.get( "/api/v1/accounts/" + value.managing_account_id, function( data ) {
                     console.log("success");
                     updateConsoleLog(JSON.stringify(value));
                     updateConsoleLog('ID: ' + value.id + ' Name: ' + data.name);
                 }, 'json')
                     .fail(function() {
                     console.log("error");
-                    updateConsoleLog('Unable to get account name for "' + acct_id + '"');
+                    updateConsoleLog('Unable to get account name for "' + value.managing_account_id + '"');
                 })
                 ;
             });
