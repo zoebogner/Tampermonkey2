@@ -1186,7 +1186,6 @@ function myJQueryCode() {
             console.log("success");
 
             updateConsoleLog('Success! Listing IDs of trusted Canvi: (above - can take a little while)');
-            updateConsoleLog('NOTE: the managing_account_id values may be mutated due to large integers');
 
             // Get details (i.e. name of each trusted instance)
             // "/api/v1/accounts/<account id>";
