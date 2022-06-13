@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022060801
+// @version      2022061301
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -607,7 +607,8 @@ function myJQueryCode() {
                 }
             }
 
-            if (document.location.pathname.indexOf("/accounts/self/permissions") >= 0 || document.location.pathname.indexOf("/accounts/1/permissions") >= 0) {
+			const re_perms=/\/accounts\/[^\/]+\/permissions/;
+            if ( document.location.pathname.match(re_perms) !== null ) {
 				_cb_tools_on = true;
 
                 // change each header to be no longer than 18 characters followed by an ellipses - but only call the function once the table has been loaded
