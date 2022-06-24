@@ -415,7 +415,7 @@ function myJQueryCode() {
 <div style="padding-left:50px; padding-bottom: 2rem; width: 40%;">
 	<label for="cx_apiToken">API token:</label>
 	<div class="ic-Input-group">
-		<input name="focus" type="hidden" value="_userToken_"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">
+		<input name="focus" type="hidden" value="_userToken_"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="_userToken_" aria-labelledby="course_name_label" autocomplete="off">
 		<button class="Button" id="cx_apiTokenButton">Update API Token</button>
 	</div>
 </div>`.trim();
