@@ -420,8 +420,7 @@ function myJQueryCode() {
 	</div>
 </div>`.trim();
 
-				var _main_menu_html = _main_menu_html_tpl.replace("_VERSION_", _cx_tools_version);
-				var _main_menu_html = _main_menu_html_tpl.replace("_userToken", userToken);
+				var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken);
                 $('#main').html(_main_menu_html);
 
                 //LTI Buttons Function
