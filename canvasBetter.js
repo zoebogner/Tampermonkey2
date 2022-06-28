@@ -191,8 +191,24 @@ function myJQueryCode() {
 				const admin_shield_svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" width="24px" height="24px" style="padding-left: 0.25rem;" viewBox="0 0 200 224" enable-background="new 0 0 200 224" xml:space="preserve"><path d="M87,83.47a9.53,9.53,0,1,1-9.53-9.53A9.53,9.53,0,0,1,87,83.47m35.26,62.28h17.29V128.45l-40-40,.44-4.19c.11-13.94-10.3-24.37-23.1-24.37a23.22,23.22,0,0,0,0,46.44l5.31-.6,7.18,7.17h16.86V126h13.14V142.9Zm30,12.71H117l-10.3-10.29v-9.43H93.57V125.59H84.16L77.58,119h-.65a35.93,35.93,0,1,1,35.92-35.92c0,.22,0,.43,0,.64l39.44,39.45ZM99.72,220.06a6.46,6.46,0,0,1-3-.78l-3.93-2.13c-34.84-18.92-82.55-44.81-82.55-99.89V49.59a6.37,6.37,0,0,1,3.65-5.76L97,4.66a6.28,6.28,0,0,1,5.4,0L185.6,43.83a6.37,6.37,0,0,1,3.65,5.76v67.67c0,55.08-47.72,81-82.55,99.89l-3.93,2.13A6.47,6.47,0,0,1,99.72,220.06ZM22.91,53.62v63.64c0,47.52,42.09,70.37,75.9,88.73l.9.48.91-.48c33.81-18.36,75.9-41.21,75.9-88.73V53.62L99.72,17.43Z"></path></svg>';
 
 				// Adding identifiers to items that only SiteAdmin users can change
-				$('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex');
-				$('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').append(admin_shield_svg);
+				$('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg);
+
+				$('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+
+				$('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+
+				// Features - group the ones that are Site Admin specific
+				var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,16).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
+				_site_admin_div.prepend(admin_shield_svg);
+				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg);
+				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg);
+				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg);
+
+				$('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+
+				$('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+				// END - adding SiteAdmin user shield
+
 
 
                 //Changes to the 'Apps' tab  - only if you click on my settings link, and did not navigate there natuarally
