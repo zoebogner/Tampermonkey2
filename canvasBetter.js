@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022062801
+// @version      2022062901
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -39,7 +39,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
 	var _cx_tools_on = false;
-	var _cx_tools_version = '2022062801';
+	var _cx_tools_version = '2022062901';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -207,6 +207,10 @@ function myJQueryCode() {
 				$('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
 				$('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+
+				$('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+				$('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+
 				// END - adding SiteAdmin user shield
 
 
