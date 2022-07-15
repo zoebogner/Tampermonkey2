@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022062901
+// @version      2022071501
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -39,7 +39,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
 	var _cx_tools_on = false;
-	var _cx_tools_version = '2022062901';
+	var _cx_tools_version = '2022071501';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -657,6 +657,11 @@ function myJQueryCode() {
 
             //if within a course
             if(document.location.pathname.toLowerCase().indexOf('/courses/') >= 0){
+
+                // Add button to take user back to courses list for root account
+                $('div.ic-app-nav-toggle-and-crumbs > div.right-of-crumbs').append('<a class="btn" rel="nofollow" href="/accounts/1"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> View all courses</a>');
+
+
                 if(document.location.pathname.toLowerCase() === "/courses/" + ENV.course_id){
 					_cx_tools_on = true;
 
