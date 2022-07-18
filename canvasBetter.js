@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022071501
+// @version      2022071801
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -39,7 +39,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
 	var _cx_tools_on = false;
-	var _cx_tools_version = '2022071501';
+	var _cx_tools_version = '2022071801';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -405,6 +405,7 @@ function myJQueryCode() {
 			<li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
 			<li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
 			<li><a href="/plugins">Plugins for this instance</a></li>
+			<li><a href="/error_reports">Error Reports for this instance</a></li>
 		</ul>
 	<h2>Tools</h2>
 		<ul>
