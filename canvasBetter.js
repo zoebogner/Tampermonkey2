@@ -2,12 +2,13 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022071801
+// @version      2022080101
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
 // @match        https://*.instructure.com/*
+// @match        https://*.security.instructure.com/*
 // @match        https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html*
 // @match        https://instructure.my.salesforce.com/*
 // @exclude      https://siteadmin*instructure.com/*
@@ -38,8 +39,8 @@ function myJQueryCode() {
     var domain = 'https://' + document.location.hostname;
     var userToken = getItem('token');
     var token = userToken;
-	var _cx_tools_on = false;
-	var _cx_tools_version = '2022071801';
+    var _cx_tools_on = false;
+    var _cx_tools_version = '2022080101';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -59,9 +60,15 @@ function myJQueryCode() {
                 $('#cx_link_self, #cx_link_settings').attr('class', 'menu-item-no-drop');
             }
 
-			// if on the settings page
-            if (document.location.pathname === "/accounts/self/settings" || document.location.pathname === "/accounts/self/settings/configurations" || document.location.pathname === "/accounts/1/settings" || document.location.pathname === "/accounts/1/settings/configurations") {
-				_cx_tools_on = true;
+            // some regular expressions to match "users", "settings" and "permissions" pages
+            const re_users=/accounts\/(\d+|self)\/users/;
+            const re_settings=/\/accounts\/(\d+|self)\/settings/;
+            const re_perms=/\/accounts\/[^\/]+\/permissions/;
+
+
+            // if on the settings page
+            if ( document.location.pathname.toLowerCase().match(re_settings) !== null ) {
+                _cx_tools_on = true;
 
                 //focus on the settings link
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
@@ -188,30 +195,30 @@ function myJQueryCode() {
                 });
                 //----------End do the apply default button -----------------------
 
-				const admin_shield_svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" width="24px" height="24px" style="padding-left: 0.25rem;" viewBox="0 0 200 224" enable-background="new 0 0 200 224" xml:space="preserve"><path d="M87,83.47a9.53,9.53,0,1,1-9.53-9.53A9.53,9.53,0,0,1,87,83.47m35.26,62.28h17.29V128.45l-40-40,.44-4.19c.11-13.94-10.3-24.37-23.1-24.37a23.22,23.22,0,0,0,0,46.44l5.31-.6,7.18,7.17h16.86V126h13.14V142.9Zm30,12.71H117l-10.3-10.29v-9.43H93.57V125.59H84.16L77.58,119h-.65a35.93,35.93,0,1,1,35.92-35.92c0,.22,0,.43,0,.64l39.44,39.45ZM99.72,220.06a6.46,6.46,0,0,1-3-.78l-3.93-2.13c-34.84-18.92-82.55-44.81-82.55-99.89V49.59a6.37,6.37,0,0,1,3.65-5.76L97,4.66a6.28,6.28,0,0,1,5.4,0L185.6,43.83a6.37,6.37,0,0,1,3.65,5.76v67.67c0,55.08-47.72,81-82.55,99.89l-3.93,2.13A6.47,6.47,0,0,1,99.72,220.06ZM22.91,53.62v63.64c0,47.52,42.09,70.37,75.9,88.73l.9.48.91-.48c33.81-18.36,75.9-41.21,75.9-88.73V53.62L99.72,17.43Z"></path></svg>';
+                const admin_shield_svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" width="24px" height="24px" style="padding-left: 0.25rem;" viewBox="0 0 200 224" enable-background="new 0 0 200 224" xml:space="preserve"><path d="M87,83.47a9.53,9.53,0,1,1-9.53-9.53A9.53,9.53,0,0,1,87,83.47m35.26,62.28h17.29V128.45l-40-40,.44-4.19c.11-13.94-10.3-24.37-23.1-24.37a23.22,23.22,0,0,0,0,46.44l5.31-.6,7.18,7.17h16.86V126h13.14V142.9Zm30,12.71H117l-10.3-10.29v-9.43H93.57V125.59H84.16L77.58,119h-.65a35.93,35.93,0,1,1,35.92-35.92c0,.22,0,.43,0,.64l39.44,39.45ZM99.72,220.06a6.46,6.46,0,0,1-3-.78l-3.93-2.13c-34.84-18.92-82.55-44.81-82.55-99.89V49.59a6.37,6.37,0,0,1,3.65-5.76L97,4.66a6.28,6.28,0,0,1,5.4,0L185.6,43.83a6.37,6.37,0,0,1,3.65,5.76v67.67c0,55.08-47.72,81-82.55,99.89l-3.93,2.13A6.47,6.47,0,0,1,99.72,220.06ZM22.91,53.62v63.64c0,47.52,42.09,70.37,75.9,88.73l.9.48.91-.48c33.81-18.36,75.9-41.21,75.9-88.73V53.62L99.72,17.43Z"></path></svg>';
 
-				// Adding identifiers to items that only SiteAdmin users can change
-				$('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg);
+                // Adding identifiers to items that only SiteAdmin users can change
+                $('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg);
 
-				$('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
-				$('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
-				// Features - group the ones that are Site Admin specific
-				var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,16).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
-				_site_admin_div.prepend(admin_shield_svg);
-				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg);
-				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg);
-				$('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg);
+                // Features - group the ones that are Site Admin specific
+                var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,16).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
+                _site_admin_div.prepend(admin_shield_svg);
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg);
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg);
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg);
 
-				$('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
-				$('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
-				$('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
-				$('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
-				// END - adding SiteAdmin user shield
+                // END - adding SiteAdmin user shield
 
 
 
@@ -249,8 +256,8 @@ function myJQueryCode() {
             }
 
             //Add Auth changer to users
-            if (document.location.pathname.indexOf("/accounts/self/users/") >= 0 || document.location.pathname.indexOf("/users/") >=0 || document.location.pathname.indexOf("/accounts/1/users/") >= 0) {
-				_cx_tools_on = true;
+            if ( document.location.pathname.toLowerCase().match(re_users) !== null ) {
+                _cx_tools_on = true;
 
                 //figure out how many logins there are and create a select list for them
                 var optionCountHTML = '<option value="null">Select a login</option>';
@@ -329,8 +336,8 @@ function myJQueryCode() {
                         xhr.send(data);
                     }
                 });
-            } else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations" || document.location.pathname.toLowerCase() === "/accounts/1/settings" || document.location.pathname.toLowerCase().indexOf("/accounts/self/") >=0 ) {
-				_cx_tools_on = true;
+            } else if ( document.location.pathname.toLowerCase().match(re_settings) !== null ) {
+                _cx_tools_on = true;
 
                 //token storage and update
                 var tokenInputHTML = '<label for="cx_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="cx_apiTokenButton">Update</button></div><br>';
@@ -344,7 +351,7 @@ function myJQueryCode() {
                     return;
                 });
             } else if (document.location.pathname.toLowerCase() === "/cxtools1") {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 //focus on the CX Tools links page
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
@@ -383,72 +390,72 @@ function myJQueryCode() {
                     }
                 });
             } else if(document.location.pathname.toLowerCase() === "/cxtools2") {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 document.title = "CX Tools";
-				const _main_menu_html_tpl = `
+                const _main_menu_html_tpl = `
 <div style="text-align: center;">
-	<h1>Canvas Experience (CX) Tools</h1>
-	<div>
-		<em>CX Tools are the best!  Version: _VERSION_</em>
-	</div>
+    <h1>Canvas Experience (CX) Tools</h1>
+    <div>
+        <em>CX Tools are the best!  Version: _VERSION_</em>
+    </div>
 </div>
 <div style="padding-left:50px">
-	<hr />
-	<h2>Links</h2>
-		<ul>
-			<li><a href="/cxtools1">Update User SIS id from one to another</a></li>
-			<li><a href="/cxtools3">Create Users</a></li>
-			<li><a href="/cxtools4">Create Sandboxes</a></li>
-			<li><a href="/cxtools5">Trust Account</a></li>
-			<li><a href="https://instructure.atlassian.net/wiki/spaces/APACCS/pages/1314488774/SCORM+-+SCONE+Canvas+LTI" target="_blank">SCORM Setup</a></li>
-			<li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
-			<li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
-			<li><a href="/plugins">Plugins for this instance</a></li>
-			<li><a href="/error_reports">Error Reports for this instance</a></li>
-		</ul>
-	<h2>Tools</h2>
-		<ul>
-			<li class="cx_action_lti">
-				<button class="Button" type="button" id="cx_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>
-			<li><strong>Sydney</strong>
-			</li>
-				<ul>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>
-					<li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button></li>
-				</ul>
-			</li>
-			<li><strong>Singapore</strong>
-				<ul>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button></li>
-				</ul>
-			</li>
-			<li><strong>EUROPE (Dublin)</strong>
-				<ul>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>
-					<li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
-					<li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button></li>
-				</ul>
-			</li>
-		</ul>
+    <hr />
+    <h2>Links</h2>
+        <ul>
+            <li><a href="/cxtools1">Update User SIS id from one to another</a></li>
+            <li><a href="/cxtools3">Create Users</a></li>
+            <li><a href="/cxtools4">Create Sandboxes</a></li>
+            <li><a href="/cxtools5">Trust Account</a></li>
+            <li><a href="https://instructure.atlassian.net/wiki/spaces/APACCS/pages/1314488774/SCORM+-+SCONE+Canvas+LTI" target="_blank">SCORM Setup</a></li>
+            <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
+            <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
+            <li><a href="/plugins">Plugins for this instance</a></li>
+            <li><a href="/error_reports">Error Reports for this instance</a></li>
+        </ul>
+    <h2>Tools</h2>
+        <ul>
+            <li class="cx_action_lti">
+                <button class="Button" type="button" id="cx_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>
+            <li><strong>Sydney</strong>
+            </li>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>
+                    <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button></li>
+                </ul>
+            </li>
+            <li><strong>Singapore</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button></li>
+                </ul>
+            </li>
+            <li><strong>EUROPE (Dublin)</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button></li>
+                </ul>
+            </li>
+        </ul>
 </div>
 <hr />
 <div style="padding-left:50px; padding-bottom: 2rem; width: 40%;">
-	<label for="cx_apiToken">API token:</label>
-	<div class="ic-Input-group">
-		<input name="focus" type="hidden" value="_userToken_"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="_userToken_" aria-labelledby="course_name_label" autocomplete="off">
-		<button class="Button" id="cx_apiTokenButton">Update API Token</button>
-	</div>
+    <label for="cx_apiToken">API token:</label>
+    <div class="ic-Input-group">
+        <input name="focus" type="hidden" value="_userToken_"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="_userToken_" aria-labelledby="course_name_label" autocomplete="off">
+        <button class="Button" id="cx_apiTokenButton">Update API Token</button>
+    </div>
 </div>`.trim();
 
-				var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken);
+                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken);
                 $('#main').html(_main_menu_html);
 
                 //LTI Buttons Function
@@ -495,7 +502,7 @@ function myJQueryCode() {
                     return;
                 });
             }else if(document.location.pathname.toLowerCase() === "/cxtools3") {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 //Create users page
                 document.title="CX Tools - Create Users"
@@ -563,7 +570,7 @@ function myJQueryCode() {
                     }
                 });
             }else if(document.location.pathname.toLowerCase() === "/cxtools4") {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 document.title="CX Tools - Create Sandboxes";
                 $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="cx_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="cx_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="cx_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="cx_apiToken">API token:</label> <br> <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="cx_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="cx_canvas101" id="cx_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="cx_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
@@ -587,7 +594,7 @@ function myJQueryCode() {
                     sandboxCreate(userID_array,alsoCanvas101);
                 });
             }else if(document.location.pathname.toLowerCase() === "/cxtools5") {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 document.title="CX Tools - Create Trust";
                 $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                    <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="cx_apiToken">Trust users from this Account</label>                    <br>                    <label for="cx_trustID">Canvas ID</label>                    <input type="text" id="cx_trustID" name="trustID"><br><br>                    <label for="cx_shard">Shard number (usually "1")</label>                    <input type="text" id="cx_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="cx_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="cx_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
@@ -664,7 +671,7 @@ function myJQueryCode() {
 
 
                 if(document.location.pathname.toLowerCase() === "/courses/" + ENV.course_id){
-					_cx_tools_on = true;
+                    _cx_tools_on = true;
 
                     //If on the homepage of the course
 
@@ -675,19 +682,18 @@ function myJQueryCode() {
                 }
             }
 
-			const re_perms=/\/accounts\/[^\/]+\/permissions/;
             if ( document.location.pathname.match(re_perms) !== null ) {
-				_cx_tools_on = true;
+                _cx_tools_on = true;
 
                 // change each header to be no longer than 18 characters followed by an ellipses - but only call the function once the table has been loaded
                 waitForKeyElements("table.ic-permissions__table", fix_permission_header);
             }
 
-			// Turn on ribbon if a page has modification through the CX Tools
-			if (_cx_tools_on == true) {
+            // Turn on ribbon if a page has modification through the CX Tools
+            if (_cx_tools_on == true) {
                 // put the banner div after the body
                 $('body').prepend('<div class="cx-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> CX Tools ON</div>');
-			}
+            }
 
         });
         // ELSE if on the IC request page
@@ -1215,7 +1221,7 @@ function myJQueryCode() {
 
         var data = new FormData();
         //Add the trust from ID and Shard
-		data.append("trust_link[managing_account_id]", targetID + "~" + shardID);
+        data.append("trust_link[managing_account_id]", targetID + "~" + shardID);
 
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
@@ -1247,7 +1253,7 @@ function myJQueryCode() {
             headers:{
                 "Authorization": "Bearer " + userToken,
                 "Cache-Control": "no-cache",
-				"Accept": "application/json+canvas-string-ids"
+                "Accept": "application/json+canvas-string-ids"
             }
         });
 
@@ -1526,3 +1532,5 @@ function fix_permission_header() {
         $(this).html(new_label);
     });
 }
+
+// vim:expandtab ts=4 sw=4
