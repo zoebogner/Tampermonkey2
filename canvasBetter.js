@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022080101
+// @version      2022081501
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2022080101';
+    var _cx_tools_version = '2022081501';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -597,7 +597,7 @@ function myJQueryCode() {
                 _cx_tools_on = true;
 
                 document.title="CX Tools - Create Trust";
-                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                    <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="cx_apiToken">Trust users from this Account</label>                    <br>                    <label for="cx_trustID">Canvas ID</label>                    <input type="text" id="cx_trustID" name="trustID"><br><br>                    <label for="cx_shard">Shard number (usually "1")</label>                    <input type="text" id="cx_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="cx_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="cx_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
+                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                    <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="cx_apiToken">Trust users from this Account</label>                    <br>                    <label for="cx_trustID">Canvas Shard ID</label>                    <input type="text" id="cx_trustID" name="trustID"><br><br>                    <label for="cx_shard">Shard number (usually "1")</label>                    <input type="text" id="cx_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="cx_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="cx_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
 
                 //When the user clicks "Create trust"
                 $('#cx_createTrust').click(function(e){
@@ -1217,31 +1217,36 @@ function myJQueryCode() {
         var buildPost = "/api/v1/accounts/";
         //add this accounts ID
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
-        buildPost += "/trust_links?trust_link";
+        buildPost += "/trust_links";
 
-        var data = new FormData();
-        //Add the trust from ID and Shard
-        data.append("trust_link[managing_account_id]", targetID + "~" + shardID);
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === xhr.DONE) {
-                console.log(this.responseText);
-                if(xhr.status !== 200) {
-                    updateConsoleLog('Failed creating Trust with error: ' + this.responseText);
-                }else{
-                    updateConsoleLog('Success! Creating Trust with message: ' + this.responseText);
-                }
+        $.ajaxSetup({
+            headers:{
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
             }
         });
 
-        xhr.open("POST", buildPost);
-        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
-        xhr.setRequestHeader("Cache-Control", "no-cache");
-
-        xhr.send(data);
+        var trust_data = 'trust_link[managing_account_id]=' + targetID + "~" + shardID;
+        console.log(trust_data);
+        $.ajax({
+            url: buildPost,
+            type: 'POST',
+            data: trust_data,
+            success: function(response) {
+                console.log("success");
+                console.log(response);
+                updateConsoleLog('Success! Created Trust - ID:' + response['id']);
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = jQuery.parseJSON(e.responseText);
+                var err_attr = json_msg['errors']['managed_role_id'][0]['attribute'];
+                var err_msg = json_msg['errors']['managed_role_id'][0]['message'];
+                updateConsoleLog('Unable to create trust: ' + err_attr + ' - ' + err_msg);
+            },
+            dataType: "json"
+        });
     }
 
     function listTrusts(){
@@ -1260,30 +1265,34 @@ function myJQueryCode() {
         $.get( buildPost, function( data ) {
             console.log("success");
 
-            updateConsoleLog('Success! Listing IDs of trusted Canvi: (above - can take a little while)');
+            updateConsoleLog('API call success! Now listing IDs of trusted Canvi: (above - can take a little while)');
 
-            // Get details (i.e. name of each trusted instance)
-            // "/api/v1/accounts/<account id>";
-            // console.log(json_resp);
-            $.each(data, function( key, value ) {
-                // console.log(value);
-                $.get( "/api/v1/accounts/" + value.managing_account_id, function( data ) {
-                    console.log("success");
-                    updateConsoleLog(JSON.stringify(value));
-                    updateConsoleLog('ID: ' + value.id + ' Name: ' + data.name);
-                }, 'json')
-                    .fail(function() {
-                    console.log("error");
-                    updateConsoleLog('Unable to get account name for "' + value.managing_account_id + '"');
-                })
-                ;
-            });
+            console.log("length of data is " + data.length);
+
+            if ( data.length == 0 ) {
+                updateConsoleLog('No trusts found')
+            } else {
+                // Get details (i.e. name of each trusted instance)
+                // "/api/v1/accounts/<account id>";
+                // console.log(json_resp);
+                $.each(data, function( key, value ) {
+                    // console.log(value);
+                    $.get( "/api/v1/accounts/" + value.managing_account_id, function( data ) {
+                        console.log("success");
+                        updateConsoleLog(JSON.stringify(value));
+                        updateConsoleLog('ID: ' + value.id + ' Name: ' + data.name);
+                    }, 'json')
+                        .fail(function() {
+                            console.log("error");
+                            updateConsoleLog('Unable to get account name for "' + value.managing_account_id + '"');
+                        });
+                });
+            }
         }, 'json')
             .fail(function() {
                 console.log("error");
                 updateConsoleLog('Unable to get trusts: ' + data);
-            })
-        ;
+            });
     }
 
     function getUsersFullName(sisUserId){
