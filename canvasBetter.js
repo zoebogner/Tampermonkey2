@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022090601
+// @version      2022111101
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2022090601';
+    var _cx_tools_version = '2022111101';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -1051,7 +1051,7 @@ function myJQueryCode() {
             }*/
             });
             //Build Post Call
-            var postCall = "/api/v1/accounts/1/users?user[name]=" + encodeURIComponent(e.full_name);
+            var postCall = "/api/v1/accounts/self/users?user[name]=" + encodeURIComponent(e.full_name);
             postCall += "&user[skip_registration]="+!notifyCheck;
             postCall += "&pseudonym[send_confirmation]="+notifyCheck;
             //postCall += "&pseudonym[force_self_registration]=" + notifyCheck;
