@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2022111101
+// @version      2023032201
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2022111101';
+    var _cx_tools_version = '2023032201';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -209,7 +209,8 @@ function myJQueryCode() {
                 $('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
 
                 // Features - group the ones that are Site Admin specific
-                var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,16).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
+                // comment for "Canvas for Elementary"
+                var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,3).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
                 _site_admin_div.prepend(admin_shield_svg);
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg);
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg);
