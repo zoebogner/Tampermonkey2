@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023032201
+// @version      2023041901
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023032201';
+    var _cx_tools_version = '2023041901';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -179,12 +179,13 @@ function myJQueryCode() {
 
                         //Add the show LTIs button on the settings page
                         //users must first be on the page before pressing the button
-                        if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
+                        var settings_match = document.location.pathname.toLowerCase().match(re_settings);
+                        if ( settings_match !== null ) {
                           $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="cx_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
                           $("#cx_listLti_ID").click(function(e){
                             e.preventDefault();
                             $("#cx_listLti_ID").attr('disabled','disabled');
-                            listLtiID();
+                            listLtiID(settings_match[1]);
                             return 0;
                           });
                         }
@@ -785,10 +786,10 @@ function myJQueryCode() {
     // ============== My functions =====================
 
     //get all the LTIs installed
-    function listLtiID(){
+    function listLtiID(canvas_account_id){
       var form = new FormData();
       var settings = {
-        "url": "/api/v1/accounts/1/external_tools?per_page=100",
+        "url": "/api/v1/accounts/" + canvas_account_id + "/external_tools?per_page=100",
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -856,12 +857,14 @@ function myJQueryCode() {
 
     //Add the show LTIs button on the settings page
     //users must first be on the page before pressing the button
-    if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
+    const re_settings=/\/accounts\/(\d+|self)\/settings/;
+    var settings_match = document.location.pathname.toLowerCase().match(re_settings);
+    if ( settings_match !== null ) {
       $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="cx_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
       $("#cx_listLti_ID").click(function(e){
         e.preventDefault();
         $("#cx_listLti_ID").attr('disabled','disabled');
-        listLtiID();
+        listLtiID(settings_match[1]);
         return 0;
       });
     }
@@ -1439,7 +1442,8 @@ function myJQueryCode() {
     jqTag.type = 'text/javascript';
     jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
     headTag.appendChild(jqTag);
-    jqTag.onload = myJQueryCode;}
+    jqTag.onload = myJQueryCode;
+}
 
 
 function openInNewTab(url) {
