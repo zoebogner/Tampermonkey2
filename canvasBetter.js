@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023052501
+// @version      2023052502
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023052501';
+    var _cx_tools_version = '2023052502';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -403,7 +403,7 @@ function myJQueryCode() {
 <div style="text-align: center;">
     <h1>Canvas Experience (CX) Tools</h1>
     <div>
-        <em>CX Tools are the best!  Version: _VERSION_</em>
+        <em>CX Tools are the best!  Version: <a href="//github.com/clmcavaney/CX-Tools/releases/tag/_VERSION_" title="github tag reference">_VERSION_</a></em>
     </div>
 </div>
 <div style="padding-left:50px">
