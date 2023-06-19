@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Canvas Experience (CX) Tools
+// @name         Canvas Experience (CX) Tools DEV
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023052502
+// @version      2023061901
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023052502';
+    var _cx_tools_version = '2023061901';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -587,17 +587,68 @@ function myJQueryCode() {
                 _cx_tools_on = true;
 
                 document.title="CX Tools - Create Sandboxes";
-                $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="cx_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="cx_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="cx_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="cx_apiToken">API token:</label> <br> <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="cx_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="cx_canvas101" id="cx_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="cx_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
-                //Create canavs101 Button
-                $('#cx_button_create_canvas101').click(function(){
-                    $('#cx_button_create_canvas101').attr('disabled','disabled');
-                    var createCanvas101 = createCanvasCourse("Canvas 101","canvas101","sandbox","Growing With Canvas",null);
-                });
+                const _create_sandboxes_html_tpl = `
+<div>
+	<h1>Create Sandboxes</h1>
+	<div style="padding-left:50px;">
+		<h3>Actions</h3>
+		<table>
+			<tr>
+				<td>
+					<ul>
+						<li><button class="Button" type="button" id="cx_button_create_sandbox">Create &quot;Sandbox&quot; sub-account</button></li>
+						<li><button class="Button" type="button" id="cx_button_create_canvas101">Create &quot;Canvas 101&quot; course in &quot;sandbox&quot; sub-account</button></li>
+						<li>
+							<div style="border: 1px solid #c7cdd1; border-radius: 4px; padding: 0.25rem;">
+								<p style="margin-top: 0rem;">Create sandbox courses for each user below:</p>
+								<p style="font-weight: bold;">User ID(s)</p>
+								<textarea id="cx_user_id" rows="10"></textarea>
+								<p>You can choose to enrol these users into the &quot;Canvas 101 (Growing with Canvas)&quot; course too.<br />
+									<label for="cx_canvas101">Enrol user(s) in &quot;Canvas 101&quot;</label>
+								<select class="locale" name="cx_canvas101" id="cx_canvas101" style="width:initial;">
+									<option value="true">Yes</option>
+									<option value="false">No</option>
+								</select>
+								</p>
+								<button type="button" id="cx_create_sandboxes" class="btn filter_button">Create Sandboxes</button>
+							</div>
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+
+		<div><h3>API token</h3>
+			<label for="cx_apiToken">Canvas access token:</label> <input id="cx_apiToken" type="text" name="cx_apiToken" value="_userToken_" autocomplete="off" cols="50" disabled="disabled" size="60" />
+		</div>
+
+		<div><h3>Console Log</h3>
+			<textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>
+		</div>
+
+		<div>
+			<h3>Useful links</h3>
+			<ul>
+				<li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>
+				<li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>
+			</ul>
+		</div>
+	</div>
+</div>
+                `.trim();
+                var _create_sandboxes_html = _create_sandboxes_html_tpl.replaceAll('_userToken_', userToken);
+                $('#main').html(_create_sandboxes_html);
 
                 //Create Sandbox Account
                 $('#cx_button_create_sandbox').click(function(){
                     $('#cx_button_create_sandbox').attr('disabled','disabled');
                     var createSandbox = createSandboxAccount();
+                });
+
+                //Create canavs101 Button
+                $('#cx_button_create_canvas101').click(function(){
+                    $('#cx_button_create_canvas101').attr('disabled','disabled');
+                    var createCanvas101 = createCanvasCourse("Canvas 101","canvas101","sandbox","Growing With Canvas",null);
                 });
 
                 //create Sandboxes function
