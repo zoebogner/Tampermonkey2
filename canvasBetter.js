@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Canvas Experience (CX) Tools DEV
+// @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
 // @version      2023081002
