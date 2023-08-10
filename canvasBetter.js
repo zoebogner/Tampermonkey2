@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools DEV
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023061901
+// @version      2023081002
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023061901';
+    var _cx_tools_version = '2023081002';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -200,29 +200,40 @@ function myJQueryCode() {
 
                 // Adding identifiers to items that only SiteAdmin users can change
                 $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().prepend(admin_shield_svg);
-                $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().parent().css('border', '1px dashed red');
+                $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().parent().css('border', '1px dashed red').css('background-color', '#FFCECE');
 
 
-                $('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg);
+                $('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
 
-                $('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).css('background-color', '#FFCECE');
 
-                $('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).css('background-color', '#FFCECE');
 
                 // Features - group the ones that are Site Admin specific
                 // comment for "Canvas for Elementary"
                 var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,3).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
-                _site_admin_div.prepend(admin_shield_svg);
-                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg);
-                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg);
-                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg);
+                _site_admin_div.prepend(admin_shield_svg).css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_admins_can_change_passwords]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_admins_can_view_notifications]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_eportfolios]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_allow_sis_import]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_include_integration_ids_in_gradebook_exports]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_allow_invitation_previews]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_alerts]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_global_includes]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_show_scheduler]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_profiles]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_limit_parent_app_web_access]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
 
-                $('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
 
-                $('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
 
-                $('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
-                $('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg);
+                $('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
+                $('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', '#FFCECE');
 
                 // END - adding SiteAdmin user shield
 
