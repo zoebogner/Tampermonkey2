@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023081101
+// @version      2023081602
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -40,7 +40,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023081101';
+    var _cx_tools_version = '2023081602';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -205,6 +205,7 @@ function myJQueryCode() {
                 $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().parent().css('border', '1px dashed red').css('background-color', sa_setting_hl_colour);
                 $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().next().append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Xc8GJziJ">setting definition</a></div>');
 
+                $('#account_settings tr td > label[for=account_settings_include_students_in_global_survey]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/ynGUDHQ3">setting definition</a></div>');
 
                 $('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/t1xoN6TJ">setting definition</a></div>');
 
