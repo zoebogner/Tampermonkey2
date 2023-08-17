@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023081602
+// @version      2023081701
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -20,6 +20,7 @@
 // @run-at       document-idle
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @resource     customCSS https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/canvasBetter.css
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=instructure.com
 // ==/UserScript==
 
 
@@ -40,7 +41,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023081602';
+    var _cx_tools_version = '2023081701';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
