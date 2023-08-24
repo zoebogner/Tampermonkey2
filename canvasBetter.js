@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023081701
+// @version      2023082401
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -41,7 +41,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023081701';
+    var _cx_tools_version = '2023082401';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -249,6 +249,7 @@ function myJQueryCode() {
 
 
 
+                // 20230824 - I think this code below no longer works - may remove it on a future release
                 //Changes to the 'Apps' tab  - only if you click on my settings link, and did not navigate there natuarally
                 $('#account_settings_tabs > ul > li:contains("Apps"):first > a:first').click(function(a) {
                     a.preventDefault();
@@ -442,12 +443,12 @@ function myJQueryCode() {
             <li><a href="/error_reports">Error Reports for this instance</a></li>
         </ul>
     <h2>Tools</h2>
+    <div id="cx_processing" style="display: none;"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/processing-animation.gif" /></div>
         <ul>
-            <li class="cx_action_lti">
-                <button class="Button" type="button" id="cx_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>
             <li><strong>Sydney</strong>
             </li>
                 <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.sydney.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SYD)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>
                     <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
@@ -457,6 +458,7 @@ function myJQueryCode() {
             </li>
             <li><strong>Singapore</strong>
                 <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.singapore.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SG)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
@@ -469,14 +471,15 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button></li>
-		</ul>
-	    </li>
-	    <li><strong>EUROPE (Frankfurt)</strong>
-	        <ul>       
-		    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-fra.instructure.com/lti/configure.xml">Chat LTI (FRA)</button></li>       
-		    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (FRA)</button></li>       
-		    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_office365" destination="https://office365-fra-prod.instructure.com" url="https://office365-fra-prod.instructure.com/config.xml">MS Office 365 LTI (FRA)</button></li>       
-		   <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button></li>
+                </ul>
+            </li>
+            <li><strong>EUROPE (Frankfurt)</strong>
+                <ul>       
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.eu-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (FRA)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-fra.instructure.com/lti/configure.xml">Chat LTI (FRA)</button></li>       
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (FRA)</button></li>       
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_office365" destination="https://office365-fra-prod.instructure.com" url="https://office365-fra-prod.instructure.com/config.xml">MS Office 365 LTI (FRA)</button></li>       
+                   <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button></li>
                 </ul>
             </li>
         </ul>
@@ -493,19 +496,20 @@ function myJQueryCode() {
                 var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken);
                 $('#main').html(_main_menu_html);
 
-                //LTI Buttons Function
-                $('li.cx_action_lti').click(function(e){
+                // LTI Buttons Function
+                $('li.cx_action_lti button').click(function(e){
                     e.preventDefault();
                     console.log("Installing this Tool: " + $(this).text());
-                    console.log("Key: " + $("button", this).attr("key"));
-                    console.log("Secret: " + $("button", this).attr("secret"));
-                    console.log("URL: " + $("button", this).attr("url"));
+                    console.log("Key: " + $(this).attr("key"));
+                    console.log("Secret: " + $(this).attr("secret"));
+                    console.log("URL: " + $(this).attr("url"));
 
                     //Disable the button
-                    $("button", this).attr("disabled","disabled");
+                    $(this).attr("disabled","disabled");
+                    $('#cx_processing').show();
 
                     //Call the function to install LTI based on the paramters in the HTML Buttons
-                    installLTI($(this).text(), $("button", this).attr('key'), $("button", this).attr('secret'), $("button", this).attr('url'));
+                    installLTI($(this).text(), $(this).attr('key'), $(this).attr('secret'), $(this).attr('url'), "", $(this));
                 });
 
                 //Outcomes Install
@@ -1050,8 +1054,8 @@ function myJQueryCode() {
         }
     }
 
-    //Install LTIs that use URL Install
-    function installLTI(name,consumer_key,shared_secret,config_url,canvas_lti_url){
+    // Install LTIs that use URL Install
+    function installLTI(name, consumer_key, shared_secret, config_url, canvas_lti_url, button_trigger) {
         var data = null;
 
         var xhr = new XMLHttpRequest();
@@ -1060,16 +1064,6 @@ function myJQueryCode() {
         if(canvas_lti_url === null || canvas_lti_url === undefined){
             canvas_lti_url = "";
         }
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-                alert(this.responseText);
-                if(name === "Canvas Commons"){
-                    window.open("/accounts/self/settings/configurations#tab-tools", "_blank");
-                }
-            }
-        });
 
         //Build the API Call
         var apiURL = canvas_lti_url + "/api/v1/accounts/self/external_tools?name=";
@@ -1083,6 +1077,21 @@ function myJQueryCode() {
         xhr.setRequestHeader("Cache-Control", "no-cache");
 
         xhr.send(data);
+
+        xhr.onload = function() {
+            if ( xhr.status != 200 ) {
+                alert(`${xhr.status}: ${xhr.statusText}`);
+            }
+            $(button_trigger).removeAttr("disabled");
+            $('#cx_processing').hide();
+
+            // LTI specific code can go here if required
+
+            // If the LTI is Canvas Commons, there is one more step so present the link to head on over and complete that step
+            if ( name.match('Canvas Commons') != null ) {
+                $(button_trigger).parent().append(' LTI installed. Now <a href="/accounts/self/settings/configurations#tab-tools">complete configuration via root account settings/apps area</a>');
+            }
+        };
     }
 
     //Import Outcomes Function
