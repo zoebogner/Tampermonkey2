@@ -29,3 +29,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
+
+#cx_processing {
+	position: fixed;
+	top: 115;
+	right: 55px;
+	z-index: 999;
+}
+
+#cx_processing img {
+	width: 128px;
+}
