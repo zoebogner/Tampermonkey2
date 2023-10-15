@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023100601
+// @version      2023101601
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -41,7 +41,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023100601';
+    var _cx_tools_version = '2023101601';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -459,7 +459,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>
                     <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
-                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - inherited developer key)</li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
                 </ul>
             </li>
             <li><strong>Singapore</strong>
@@ -468,7 +468,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
-                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - inherited developer key)</li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
                 </ul>
             </li>
             <li><strong>EUROPE (Dublin)</strong>
@@ -476,7 +476,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
-                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - inherited developer key)</li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
                 </ul>
             </li>
             <li><strong>EUROPE (Frankfurt)</strong>
@@ -485,7 +485,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-fra.instructure.com/lti/configure.xml">Chat LTI (FRA)</button></li>       
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (FRA)</button></li>       
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_office365" destination="https://office365-fra-prod.instructure.com" url="https://office365-fra-prod.instructure.com/config.xml">MS Office 365 LTI (FRA)</button></li>       
-                   <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - inherited developer key)</li>
+                   <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
                 </ul>
             </li>
         </ul>
@@ -519,7 +519,7 @@ function myJQueryCode() {
                 });
 
                 //Outcomes Install
-                $('li.cx_action_outcome').click(function(e){
+                $('li.cx_action_outcome button').click(function(e){
                     e.preventDefault();
                     console.log('Installing outcomes: ' + $(this).text());
                     //Disable the button
@@ -528,7 +528,7 @@ function myJQueryCode() {
                 });
 
                 //External tool link (Office365 / GAFE)
-                $('li.cx_action_externalTool').click(function(e){
+                $('li.cx_action_externalTool button').click(function(e){
                     e.preventDefault();
                     $("button", this).attr("disabled","disabled");
 
