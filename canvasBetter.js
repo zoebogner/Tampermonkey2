@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023101601
+// @version      2023102001
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -41,7 +41,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023101601';
+    var _cx_tools_version = '2023102001';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -451,8 +451,11 @@ function myJQueryCode() {
     <h2>Tools</h2>
     <div id="cx_processing" style="display: none;"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/processing-animation.gif" /></div>
         <ul>
+            <li><strong>Generic</strong>
+            <ul>
+                <li class="cx_enable_inherited_lti"><button class="Button" type="button" id="cx_button_google_assignments" client_id="170000000000573">Google Assignments (LTI 1.3)</button></li>
+            </ul>
             <li><strong>Sydney</strong>
-            </li>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.sydney.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SYD)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
@@ -512,6 +515,8 @@ function myJQueryCode() {
 
                     //Disable the button
                     $(this).attr("disabled","disabled");
+
+                    // show the user something is happening
                     $('#cx_processing').show();
 
                     //Call the function to install LTI based on the paramters in the HTML Buttons
@@ -535,6 +540,20 @@ function myJQueryCode() {
                     window.open($('button',this).attr('destination') + "?canvasurl=" + document.location.hostname.split('.instructure.com').join(''), "_blank"); //Place to Generate tokens -
                     //window.open($('button',this).attr('url'), "_blank"); //Config XML - Not needed in 2.1
                     //window.open("/accounts/self/settings/configurations#tab-tools", "_blank"); //Config Page - Not needed in 2.1
+                });
+
+                // Inherited LTI developer key
+                $('li.cx_enable_inherited_lti button').click(function(e){
+                    e.preventDefault();
+
+                    // disable the button
+                    $(this).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $(this));
                 });
 
                 //Update Token function
@@ -1098,6 +1117,80 @@ function myJQueryCode() {
                 $(button_trigger).parent().append(' LTI installed. Now <a href="/accounts/self/settings/configurations#tab-tools">complete configuration via root account settings/apps area</a>');
             }
         };
+    }
+
+    // enable an inherited LTI developer key
+    function enableLTIKeyandInstallLTI(client_id, button_trigger) {
+        // relative to the domain of the Canvas instance being browsed
+        var apiURL = '/api/v1/accounts/self/developer_keys/' + client_id + '/developer_key_account_bindings';
+        // JSON body
+        var payload = JSON.stringify({developer_key_account_binding:{workflow_state:'on'}});
+
+        // debugging
+        // alert('enableLTIKey(): apiURL == ' + apiURL);
+        // alert('enableLTIKey(): payload == ' + payload);
+
+        $.ajax({
+            type: "POST",
+            url: apiURL,
+            headers: {
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
+            },
+            data: payload,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log('successfully enabled developer LTI key: ' + client_id);
+                parsed_response = $.parseJSON(JSON.stringify(response));
+                console.log('developer LTI key: ' + parsed_response.workflow_state);
+                // debugging
+                // alert('at this point make a HTTP POST request to install the app/LTI');
+                installLTIviaClientID(client_id, button_trigger);
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = $.parseJSON(e.responseText);
+                var err_msg = json_msg['errors']['base'];
+                console.log('Unable to enable developer LTI key: ' + err_msg);
+            }
+        });
+    }
+
+    // install LTI via client_id
+    function installLTIviaClientID(client_id, button_trigger) {
+        // relative to the domain of the Canvas instance being browsed
+        var apiURL = '/api/v1/accounts/1/external_tools/';
+
+        // debugging
+        // alert('installLTIviaClientID(): client_id == ' + client_id);
+
+        $.ajax({
+            type: "POST",
+            url: apiURL + '?' + $.param({client_id: client_id}),
+            headers: {
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
+            },
+            success: function(response) {
+                console.log('successfully installed external tool (aka LTI)');
+                parsed_response = $.parseJSON(JSON.stringify(response));
+                console.log('name of installed LTI: ' + parsed_response.name);
+
+                $(button_trigger).removeAttr("disabled");
+                $('#cx_processing').hide();
+
+                $(button_trigger).parent().append(' LTI installed');
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = $.parseJSON(e.responseText);
+                var err_msg = json_msg['errors']['base'];
+                console.log('Unable to install external tool: ' + err_msg);
+            }
+        });
     }
 
     //Import Outcomes Function
