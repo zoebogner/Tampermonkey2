@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023102001
+// @version      2023102601
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -41,7 +41,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023102001';
+    var _cx_tools_version = '2023102601';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -443,6 +443,8 @@ function myJQueryCode() {
             <li><a href="/cxtools4">Create Sandboxes</a></li>
             <li><a href="/cxtools5">Trust Account</a></li>
             <li><a href="https://instructure.atlassian.net/wiki/spaces/APACCS/pages/1314488774/SCORM+-+SCONE+Canvas+LTI" target="_blank">SCORM Setup</a></li>
+            <li><a href="/catalog" target="_blank">Catalog Setup</a></li>
+            <li><a href="/uuid.quiz.next" target="_blank">New Quizzes Setup</a></li>
             <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
             <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
             <li><a href="/plugins">Plugins for this instance</a></li>
