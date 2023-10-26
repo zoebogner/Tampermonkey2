@@ -445,6 +445,7 @@ function myJQueryCode() {
             <li><a href="https://instructure.atlassian.net/wiki/spaces/APACCS/pages/1314488774/SCORM+-+SCONE+Canvas+LTI" target="_blank">SCORM Setup</a></li>
             <li><a href="/catalog" target="_blank">Catalog Setup</a></li>
             <li><a href="/uuid.quiz.next" target="_blank">New Quizzes Setup</a></li>
+            <li><a href="https://learn.microsoft.com/en-us/microsoft-365/lti/onedrive-lti?view=o365-worldwide" target="_blank">Microsoft OneDrive install documentation</a></li>
             <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
             <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
             <li><a href="/plugins">Plugins for this instance</a></li>
@@ -455,7 +456,9 @@ function myJQueryCode() {
         <ul>
             <li><strong>Generic</strong>
             <ul>
-                <li class="cx_enable_inherited_lti"><button class="Button" type="button" id="cx_button_google_assignments" client_id="170000000000573">Google Assignments (LTI 1.3)</button></li>
+                <li class="cx_enable_inherited_lti_and_app"><button class="Button" type="button" id="cx_button_google_assignments" client_id="170000000000573">Google Assignments (LTI 1.3)</button></li>
+                <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_classes" client_id="170000000000570">Microsoft Teams classes</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-classes-with-canvas?view=o365-worldwide#enable-the-microsoft-teams-app-in-canvas" target="_blank">Microsoft documentation</a> step 5 onwards)</li>
+                <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_meetings" client_id="170000000000703">Microsoft Teams meetings</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-meetings-with-canvas?view=o365-worldwide#microsoft-office-365-admin" target="_blank">Microsoft documentation</a> - note: this may have been done already if Microsoft Teams classes has been already configured)</li>
             </ul>
             <li><strong>Sydney</strong>
                 <ul>
@@ -465,6 +468,7 @@ function myJQueryCode() {
                     <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_au" client_id_api="170000000000731" client_id_lti="170000000000730">Canvas Credentials AU</button> (this will enable the <span id="cx_credentials_au_api_lbl">API <input type="checkbox" id="cx_credentials_au_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_au_lti_lbl">LTI <input type="checkbox" id="cx_credentials_au_lti_chkbx" disabled="disabled" /></span> key)</li>
                 </ul>
             </li>
             <li><strong>Singapore</strong>
@@ -482,6 +486,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_dub" client_id_api="170000000000731" client_id_lti="170000000000728">Canvas Credentials EU/Ireland</button> (this will enable the <span id="cx_credentials_dub_api_lbl">API <input type="checkbox" id="cx_credentials_dub_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_dub_lti_lbl">LTI <input type="checkbox" id="cx_credentials_dub_lti_chkbx" disabled="disabled" /></span> key)</li>
                 </ul>
             </li>
             <li><strong>EUROPE (Frankfurt)</strong>
@@ -545,17 +550,51 @@ function myJQueryCode() {
                 });
 
                 // Inherited LTI developer key
-                $('li.cx_enable_inherited_lti button').click(function(e){
+                $('li.cx_enable_inherited_lti_and_app button').click(function(e){
                     e.preventDefault();
 
+                    // need to get the specific button
+                    var id = $(this).prop('id');
                     // disable the button
-                    $(this).attr("disabled","disabled");
+                    $('#'+id).attr("disabled","disabled");
 
                     // show the user something is happening
                     $('#cx_processing').show();
 
                     // proposed function
-                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $(this));
+                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $('#'+id));
+                });
+
+                $('li.cx_enable_inherited_lti_only button').click(function(e){
+                    e.preventDefault();
+
+                    // need to get the specific button
+                    var id = $(this).prop('id');
+                    // disable the button
+                    $('#'+id).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $('#'+id), false);
+                });
+
+                $('li.cx_enable_credentials button').click(function(e){
+                    e.preventDefault();
+
+                    // need to get the specific button
+                    var id = $(this).prop('id');
+
+                    // disable the button
+                    $('#'+id).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id_api'), $('#'+id), false, handle_credentials_api_key_enable);
+                    enableLTIKeyandInstallLTI($(this).attr('client_id_lti'), $('#'+id), false, handle_credentials_lti_key_enable);
                 });
 
                 //Update Token function
@@ -914,7 +953,7 @@ function myJQueryCode() {
 
       $.ajax(settings).done(function (response) {
         console.log(response);
-        apiReply = JSON.parse(response);
+        var apiReply = JSON.parse(response);
         if(apiReply.length > 0){
           $.each(apiReply,function(index,element){
             console.log(element);
@@ -1122,7 +1161,8 @@ function myJQueryCode() {
     }
 
     // enable an inherited LTI developer key
-    function enableLTIKeyandInstallLTI(client_id, button_trigger) {
+    // Note: this will install the LTI, unless install_lti == false
+    function enableLTIKeyandInstallLTI(client_id, button_trigger, install_lti = true, s_func = null) {
         // relative to the domain of the Canvas instance being browsed
         var apiURL = '/api/v1/accounts/self/developer_keys/' + client_id + '/developer_key_account_bindings';
         // JSON body
@@ -1146,9 +1186,21 @@ function myJQueryCode() {
                 console.log('successfully enabled developer LTI key: ' + client_id);
                 parsed_response = $.parseJSON(JSON.stringify(response));
                 console.log('developer LTI key: ' + parsed_response.workflow_state);
-                // debugging
-                // alert('at this point make a HTTP POST request to install the app/LTI');
-                installLTIviaClientID(client_id, button_trigger);
+                if ( install_lti == true ) {
+                    // debugging
+                    // alert('at this point make a HTTP POST request to install the app/LTI');
+                    installLTIviaClientID(client_id, button_trigger);
+                } else {
+                    $(button_trigger).removeAttr("disabled");
+                    $('#cx_processing').hide();
+
+                    $(button_trigger).parent().append(' <strong>developer key (' + client_id + ') enabled</strong>');
+
+                    // call additional "success function" if one supplied
+                    if ( s_func != null ) {
+                        s_func(button_trigger);
+                    }
+                }
             },
             error: function(e) {
                 console.log(e);
@@ -1183,7 +1235,7 @@ function myJQueryCode() {
                 $(button_trigger).removeAttr("disabled");
                 $('#cx_processing').hide();
 
-                $(button_trigger).parent().append(' LTI installed');
+                $(button_trigger).parent().append(' <strong>LTI "' + parsed_response.name + '" installed</strong>');
             },
             error: function(e) {
                 console.log(e);
@@ -1193,6 +1245,19 @@ function myJQueryCode() {
                 console.log('Unable to install external tool: ' + err_msg);
             }
         });
+    }
+
+    // Note: this are very specific to the Credentials button
+    function handle_credentials_api_key_enable(button_trigger) {
+        var lti_span;
+        lti_span=$(button_trigger).parent().find("span:nth-of-type(1)").css('padding', '0.25rem').css('background-color','lightgreen').css('color', 'white');
+        $(lti_span).find("input").prop('checked', true);
+    }
+    // Note: this are very specific to the Credentials button
+    function handle_credentials_lti_key_enable(button_trigger) {
+        var lti_span;
+        lti_span=$(button_trigger).parent().find("span:nth-of-type(2)").css('padding', '0.25rem').css('background-color','lightgreen').css('color', 'white');
+        $(lti_span).find("input").prop('checked', true);
     }
 
     //Import Outcomes Function
