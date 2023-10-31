@@ -14,6 +14,7 @@
 // @exclude      https://siteadmin*instructure.com/*
 // @exclude      https://reports.instructure.com/*
 // @exclude      https://gerrit.instructure.com/*
+// @exclude      https://identity.instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_getResourceText
