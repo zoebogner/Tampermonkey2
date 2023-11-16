@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023102601
+// @version      2023111601
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023102601';
+    var _cx_tools_version = '2023111601';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -462,7 +462,7 @@ function myJQueryCode() {
                 <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_classes" client_id="170000000000570">Microsoft Teams classes</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-classes-with-canvas?view=o365-worldwide#enable-the-microsoft-teams-app-in-canvas" target="_blank">Microsoft documentation</a> step 5 onwards)</li>
                 <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_meetings" client_id="170000000000703">Microsoft Teams meetings</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-meetings-with-canvas?view=o365-worldwide#microsoft-office-365-admin" target="_blank">Microsoft documentation</a> - note: this may have been done already if Microsoft Teams classes has been already configured)</li>
             </ul>
-            <li><strong>Sydney</strong>
+            <li><strong>APAC - Sydney</strong>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.sydney.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SYD)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
@@ -473,7 +473,7 @@ function myJQueryCode() {
                     <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_au" client_id_api="170000000000731" client_id_lti="170000000000730">Canvas Credentials AU</button> (this will enable the <span id="cx_credentials_au_api_lbl">API <input type="checkbox" id="cx_credentials_au_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_au_lti_lbl">LTI <input type="checkbox" id="cx_credentials_au_lti_chkbx" disabled="disabled" /></span> key)</li>
                 </ul>
             </li>
-            <li><strong>Singapore</strong>
+            <li><strong>APAC - Singapore</strong>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.singapore.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SG)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
@@ -482,7 +482,7 @@ function myJQueryCode() {
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
                 </ul>
             </li>
-            <li><strong>EUROPE (Dublin)</strong>
+            <li><strong>EMEA - Dublin</strong>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
@@ -491,13 +491,23 @@ function myJQueryCode() {
                     <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_dub" client_id_api="170000000000731" client_id_lti="170000000000728">Canvas Credentials EU/Ireland</button> (this will enable the <span id="cx_credentials_dub_api_lbl">API <input type="checkbox" id="cx_credentials_dub_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_dub_lti_lbl">LTI <input type="checkbox" id="cx_credentials_dub_lti_chkbx" disabled="disabled" /></span> key)</li>
                 </ul>
             </li>
-            <li><strong>EUROPE (Frankfurt)</strong>
+            <li><strong>EMEA - Frankfurt</strong>
                 <ul>       
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.eu-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (FRA)</button></li>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-fra.instructure.com/lti/configure.xml">Chat LTI (FRA)</button></li>       
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (FRA)</button></li>       
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_office365" destination="https://office365-fra-prod.instructure.com" url="https://office365-fra-prod.instructure.com/config.xml">MS Office 365 LTI (FRA)</button></li>       
                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                </ul>
+            </li>
+            <li><strong>NORAM - Canada</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_ca_central_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.ca-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (CA-CENTRAL)</button></li>
+                </ul>
+            </li>
+            <li><strong>NORAM - USA</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_us_east_1_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons (US-EAST-1)</button></li>
                 </ul>
             </li>
         </ul>
