@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023111601
+// @version      2023122101
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023111601';
+    var _cx_tools_version = '2023122101';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -452,6 +452,7 @@ function myJQueryCode() {
             <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
             <li><a href="/plugins">Plugins for this instance</a></li>
             <li><a href="/error_reports">Error Reports for this instance</a></li>
+            <li><a href="https://www.sslshopper.com/ssl-checker.html?hostname=_INSTANCE_URL_">SSL/TLS check of the certificate for this instance</a></li>
         </ul>
     <h2>Tools</h2>
     <div id="cx_processing" style="display: none;"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/processing-animation.gif" /></div>
@@ -521,7 +522,8 @@ function myJQueryCode() {
     </div>
 </div>`.trim();
 
-                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken);
+
+                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken).replaceAll("_INSTANCE_URL_", document.location.hostname);
                 $('#main').html(_main_menu_html);
 
                 // LTI Buttons Function
