@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2023122101
+// @version      2024022101
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2023122101';
+    var _cx_tools_version = '2024022101';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -449,7 +449,11 @@ function myJQueryCode() {
             <li><a href="/uuid.quiz.next" target="_blank">New Quizzes Setup</a></li>
             <li><a href="https://learn.microsoft.com/en-us/microsoft-365/lti/onedrive-lti?view=o365-worldwide" target="_blank">Microsoft OneDrive install documentation</a></li>
             <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
-            <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a></li>
+            <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a>
+                <ul>
+                    <li><a href="https://_INSTANCE_SUBDOMAIN_.instructuremedia.com/lti/config.xml" target="_blank">Canvas Studio config URL</a> (you can right click this to &quot;Copy Link Address&quot; and then paste into the LTI install process)
+                </ul>
+            </li>
             <li><a href="/plugins">Plugins for this instance</a></li>
             <li><a href="/error_reports">Error Reports for this instance</a></li>
             <li><a href="https://www.sslshopper.com/ssl-checker.html?hostname=_INSTANCE_URL_">SSL/TLS check of the certificate for this instance</a></li>
@@ -523,7 +527,8 @@ function myJQueryCode() {
 </div>`.trim();
 
 
-                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken).replaceAll("_INSTANCE_URL_", document.location.hostname);
+                var _subdomain = document.location.hostname.split('.')[0];
+                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken).replaceAll('_INSTANCE_URL_', document.location.hostname).replaceAll('_INSTANCE_SUBDOMAIN_', _subdomain);
                 $('#main').html(_main_menu_html);
 
                 // LTI Buttons Function
