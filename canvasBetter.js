@@ -38,7 +38,7 @@ if (typeof jQuery == 'undefined' || typeof jQuery === undefined || typeof jQuery
 }
 
 function myJQueryCode() {
-    //global variables
+    // global variables
     var domain = 'https://' + document.location.hostname;
     var userToken = getItem('token');
     var token = userToken;
