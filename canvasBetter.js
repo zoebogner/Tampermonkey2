@@ -783,7 +783,7 @@ function myJQueryCode() {
                 document.title="CX Tools - Create Trust";
                 $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                    <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="cx_apiToken">Trust users from this Account</label>                    <br>                    <label for="cx_trustID">Canvas Shard ID</label>                    <input type="text" id="cx_trustID" name="trustID"><br><br>                    <label for="cx_shard">Shard number (usually "1")</label>                    <input type="text" id="cx_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="cx_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="cx_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
 
-                //When the user clicks "Create trust"
+                // When the user clicks "Create trust"
                 $('#cx_createTrust').click(function(e){
                     e.preventDefault();
                     updateConsoleLog('Start creating trust...');
@@ -1503,13 +1503,13 @@ function myJQueryCode() {
     }
 
 
-    //Create trust function
+    // Create trust function
     function createTrust(targetID,shardID){
-        //build Post URL
-        //Example post: "https://apaccs.instructure.com/api/v1/accounts/13677~1/trust_links?trust_link%5Bmanaging_account_id%5D=16292~1"
+        // build Post URL
+        // Example post: "https://apaccs.instructure.com/api/v1/accounts/13677~1/trust_links?trust_link%5Bmanaging_account_id%5D=16292~1"
 
         var buildPost = "/api/v1/accounts/";
-        //add this accounts ID
+        // add this accounts ID
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
         buildPost += "/trust_links";
 
