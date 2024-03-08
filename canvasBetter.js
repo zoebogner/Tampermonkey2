@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2024022101
+// @version      2024030801
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2024022101';
+    var _cx_tools_version = '2024030801';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -475,7 +475,7 @@ function myJQueryCode() {
                     <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
-                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_au" client_id_api="170000000000731" client_id_lti="170000000000730">Canvas Credentials AU</button> (this will enable the <span id="cx_credentials_au_api_lbl">API <input type="checkbox" id="cx_credentials_au_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_au_lti_lbl">LTI <input type="checkbox" id="cx_credentials_au_lti_chkbx" disabled="disabled" /></span> key)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_au" client_id_api="170000000000731" client_id_lti="170000000000730">Canvas Credentials AU</button> (this will enable the <span id="cx_credentials_au_api_lbl">API <input type="checkbox" id="cx_credentials_au_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_au_lti_lbl">LTI <input type="checkbox" id="cx_credentials_au_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
                 </ul>
             </li>
             <li><strong>APAC - Singapore</strong>
@@ -485,6 +485,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_sg" client_id_api="170000000000731" client_id_lti="170000000000822">Canvas Credentials SG</button> (this will enable the <span id="cx_credentials_sg_api_lbl">API <input type="checkbox" id="cx_credentials_sg_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_sg_lti_lbl">LTI <input type="checkbox" id="cx_credentials_sg_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
                 </ul>
             </li>
             <li><strong>EMEA - Dublin</strong>
@@ -493,7 +494,7 @@ function myJQueryCode() {
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
                     <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
-                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_dub" client_id_api="170000000000731" client_id_lti="170000000000728">Canvas Credentials EU/Ireland</button> (this will enable the <span id="cx_credentials_dub_api_lbl">API <input type="checkbox" id="cx_credentials_dub_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_dub_lti_lbl">LTI <input type="checkbox" id="cx_credentials_dub_lti_chkbx" disabled="disabled" /></span> key)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_dub" client_id_api="170000000000731" client_id_lti="170000000000728">Canvas Credentials EU/Ireland</button> (this will enable the <span id="cx_credentials_dub_api_lbl">API <input type="checkbox" id="cx_credentials_dub_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_dub_lti_lbl">LTI <input type="checkbox" id="cx_credentials_dub_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
                 </ul>
             </li>
             <li><strong>EMEA - Frankfurt</strong>
@@ -508,14 +509,22 @@ function myJQueryCode() {
             <li><strong>NORAM - Canada</strong>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_ca_central_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.ca-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (CA-CENTRAL)</button></li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_ca" client_id_api="170000000000731" client_id_lti="170000000000729">Canvas Credentials CA</button> (this will enable the <span id="cx_credentials_ca_api_lbl">API <input type="checkbox" id="cx_credentials_ca_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_ca_lti_lbl">LTI <input type="checkbox" id="cx_credentials_ca_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
                 </ul>
             </li>
             <li><strong>NORAM - USA</strong>
                 <ul>
                     <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_us_east_1_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons (US-EAST-1)</button></li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_us" client_id_api="170000000000731" client_id_lti="170000000000727">Canvas Credentials US</button> (this will enable the <span id="cx_credentials_us_api_lbl">API <input type="checkbox" id="cx_credentials_us_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_us_lti_lbl">LTI <input type="checkbox" id="cx_credentials_us_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
                 </ul>
             </li>
         </ul>
+    <div>
+    <p>Acknowledgements:</p>
+    <ul>
+    <li><a href="https://www.flaticon.com/free-icons/tick" title="tick icons">Tick icons created by Octopocto - Flaticon</a></li>
+    </ul>
+    </div>
 </div>
 <hr />
 <div style="padding-left:50px; padding-bottom: 2rem; width: 40%;">
@@ -1170,11 +1179,14 @@ function myJQueryCode() {
             $(button_trigger).removeAttr("disabled");
             $('#cx_processing').hide();
 
+            // Show the user something
+            $(button_trigger).parent().append(' LTI installed <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/check-mark-64x64.png" style="width: 16px; height: 16px;" />');
+
             // LTI specific code can go here if required
 
             // If the LTI is Canvas Commons, there is one more step so present the link to head on over and complete that step
             if ( name.match('Canvas Commons') != null ) {
-                $(button_trigger).parent().append(' LTI installed. Now <a href="/accounts/self/settings/configurations#tab-tools">complete configuration via root account settings/apps area</a>');
+                $(button_trigger).parent().append(' &mdash; now <a href="/accounts/self/settings/configurations#tab-tools">complete configuration via root account settings/apps area</a>');
             }
         };
     }
