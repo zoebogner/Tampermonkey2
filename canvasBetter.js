@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2024030801
+// @version      2024032001
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2024030801';
+    var _cx_tools_version = '2024032001';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -456,6 +456,7 @@ function myJQueryCode() {
             </li>
             <li><a href="/plugins">Plugins for this instance</a></li>
             <li><a href="/error_reports">Error Reports for this instance</a></li>
+            <li><a href="/graphiql">Graph<em>i</em>QL playground (i.e. GraphQL playground) for this Canvas instance</a></li>
             <li><a href="https://www.sslshopper.com/ssl-checker.html?hostname=_INSTANCE_URL_">SSL/TLS check of the certificate for this instance</a></li>
         </ul>
     <h2>Tools</h2>
