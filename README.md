@@ -15,6 +15,6 @@ That URL points to a cached copy of the script.  The cached copy should update s
 
 ## Notes
 When a setting is only visible to a SiteAdmin, it is highlighted like this:
-![SiteAdmin highlighting example](assets/siteadmin-highted-setting-example.png)
+![SiteAdmin highlighting example](assets/siteadmin-highlighted-setting-example.png)
 
 Note that there is also reference to some internal documentation on what this setting is for.
