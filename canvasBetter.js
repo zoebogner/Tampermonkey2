@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2024032001
+// @version      2024052701
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2024032001';
+    var _cx_tools_version = '2024052701';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -467,6 +467,7 @@ function myJQueryCode() {
                 <li class="cx_enable_inherited_lti_and_app"><button class="Button" type="button" id="cx_button_google_assignments" client_id="170000000000573">Google Assignments (LTI 1.3)</button></li>
                 <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_classes" client_id="170000000000570">Microsoft Teams classes</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-classes-with-canvas?view=o365-worldwide#enable-the-microsoft-teams-app-in-canvas" target="_blank">Microsoft documentation</a> step 5 onwards)</li>
                 <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_meetings" client_id="170000000000703">Microsoft Teams meetings</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-meetings-with-canvas?view=o365-worldwide#microsoft-office-365-admin" target="_blank">Microsoft documentation</a> - note: this may have been done already if Microsoft Teams classes has been already configured)</li>
+                <li class="cx_enable_inherited_lti_and_app"><button class="Button" type="button" id="cx_button_lucid" client_id="170000000001855">Lucid Integration</button></li>
             </ul>
             <li><strong>APAC - Sydney</strong>
                 <ul>
