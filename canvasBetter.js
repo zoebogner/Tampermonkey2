@@ -2,7 +2,7 @@
 // @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      2024052702
+// @version      2024110601
 // @description  Trying to take over the world! "Canvas Experience (CX) Tools"
 // @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
@@ -43,7 +43,7 @@ function myJQueryCode() {
     var userToken = getItem('token');
     var token = userToken;
     var _cx_tools_on = false;
-    var _cx_tools_version = '2024052702';
+    var _cx_tools_version = '2024110601';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
@@ -236,6 +236,7 @@ function myJQueryCode() {
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_show_scheduler]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/U9DAmX1f">setting definition</a></div>');
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_profiles]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Umzv8NX0">setting definition</a></div>');
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_limit_parent_app_web_access]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/AgAj5S5d">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=enable_equella]').parent().append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/diKiq3YV">setting definition</a></div>');
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/U0Qkmi00">setting definition</a></div>');
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Kj0HXUgo">setting definition</a></div>');
                 $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/L9qMTWxU">setting definition</a></div>');
