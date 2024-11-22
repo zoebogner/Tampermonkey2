@@ -1,19 +1,28 @@
 // ==UserScript==
-// @name         DG Tools - PAW-15414
+// @name         Canvas Experience (CX) Tools
 // @namespace    https://siteadmin.instructure.com/
 // @namespace    https://instructure.my.salesforce.com/*
-// @version      20220104_01
-// @description  try to take over the world!
-// @author       Daniel Gilogley, Zoe Bogner
+// @version      2024110601
+// @description  Trying to take over the world! "Canvas Experience (CX) Tools"
+// @author       Daniel Gilogley, Zoe Bogner and Christopher McAvaney
 // @match        https://*.test.instructure.com/*
 // @match        https://*.beta.instructure.com/*
 // @match        https://*.instructure.com/*
+// @match        https://*.security.instructure.com/*
 // @match        https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html*
 // @match        https://instructure.my.salesforce.com/*
 // @exclude      https://siteadmin*instructure.com/*
 // @exclude      https://reports.instructure.com/*
+// @exclude      https://gerrit.instructure.com/*
+// @exclude      https://identity.instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_getResourceText
+// @grant        GM_addStyle
+// @run-at       document-idle
+// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
+// @resource     customCSS https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/canvasBetter.css
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=instructure.com
 // ==/UserScript==
 
 
@@ -29,42 +38,58 @@ if (typeof jQuery == 'undefined' || typeof jQuery === undefined || typeof jQuery
 }
 
 function myJQueryCode() {
-    //global variables
+    // global variables
     var domain = 'https://' + document.location.hostname;
     var userToken = getItem('token');
     var token = userToken;
+    var _cx_tools_on = false;
+    var _cx_tools_version = '2024110601';
 
     // If on an instructure page
     if (document.location.hostname.indexOf('instructure.com') >= 0) {
         $(document).ready(function() {
-            //add the settings link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_settings"> <a id="dg_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="Settings" title = "Settings"></div></div><div class="menu-item__text"> Settings </div></a></li>');
+            var cssTxt = GM_getResourceText("customCSS");
+            GM_addStyle(cssTxt);
 
-            //add the DG Tools link
-            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="dg_li_self"> <a id="dg_link_self" href="/dgtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/zoebogner/Tampermonkey2/master/dabpanda.jpg" alt="DG Tools" title = "DG Tools"> </div> </div> <div class="menu-item__text"> DG Tools </div></a></li>');
+            //add the settings link
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="cx_li_settings"> <a id="cx_link_settings" href="' + domain + '/accounts/self/settings/configurations" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://cdn3.iconfinder.com/data/icons/fez/512/FEZ-04-128.png" alt="CX Settings" title="Canvas Experience (CX) Settings"></div></div><div class="menu-item__text"> CX Settings </div></a></li>');
+
+            //add the CX Tools link
+            $('#menu > li:last').after('<li class="menu-item ic-app-header__menu-list-item" id="cx_li_self"> <a id="cx_link_self" href="/cxtools2" class="ic-app-header__menu-list-link"> <div class="menu-item-icon-container" aria-hidden="true"> <div class="ic-avatar "> <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda.jpg" alt="CX Tools" title="Canvas Experience (CX) Tools"> </div> </div> <div class="menu-item__text"> CX Tools </div></a></li>');
 
             //remove the images if on the old UI remove the images
             if ($('#menu > li:contains("Dashboard")').length <= 0) {
-                $('#dg_li_self img, #dg_li_settings img').hide();
-                $('#dg_link_self, #dg_link_settings').attr('class', 'menu-item-no-drop');
+                $('#cx_li_self img, #cx_li_settings img').hide();
+                $('#cx_link_self, #cx_link_settings').attr('class', 'menu-item-no-drop');
             }
 
-            if (document.location.pathname === "/accounts/self/settings" || document.location.pathname === "/accounts/self/settings/configurations" || document.location.pathname === "/accounts/1/settings" || document.location.pathname === "/accounts/1/settings/configurations") { //if on the settings page
+            // some regular expressions to match "users", "settings" and "permissions" pages
+            const re_users=/accounts\/(\d+|self)\/users/;
+            const re_settings=/\/accounts\/(\d+|self)\/settings/;
+            const re_perms=/\/accounts\/[^\/]+\/permissions/;
+
+            const sa_setting_hl_colour='#fdf3f3';
+
+
+            // if on the settings page
+            if ( document.location.pathname.toLowerCase().match(re_settings) !== null ) {
+                _cx_tools_on = true;
+
                 //focus on the settings link
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
-                $('li#dg_li_settings').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
+                $('li#cx_li_settings').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
                 //Add a Salesforce link to the Account at the bottom of the page
-                $('#account_external_integration_keys_salesforce_account_id').after('<a href="http://instructure.my.salesforce.com/' + $('#account_external_integration_keys_salesforce_account_id').val() + '" target="_blank"><img src="https://cdn.iconverticons.com/files/png/d5b8bf83e9b980e5_256x256.png" style="width: 5%;padding-left: 5px;">');
+                $('#account_external_integration_keys_salesforce_account_id').after('<a href="http://instructure.my.salesforce.com/' + $('#account_external_integration_keys_salesforce_account_id').val() + '" target="_blank" title="link to Salesforce Account ID"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" style="width: 5%; padding-left: 5px;">');
 
                 //---------On the main Settings page of 'Settings-----------------
                 //create the button to do the default settings
-                $('#account_settings > legend').after('<button type="button" class ="btn" id="dg_button_applyDefaults_settings">Apply defaults</button>');
+                $('#account_settings > legend').after('<button type="button" class="btn" id="cx_button_applyDefaults_settings"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Apply defaults</button>');
                 //apply the action of clicking the default button
-                $('#dg_button_applyDefaults_settings').click(function(e) {
+                $('#cx_button_applyDefaults_settings').click(function(e) {
                     e.preventDefault();
                     if (confirm("Are you sure?")) {
-                        $('#dg_button_applyDefaults_settings').attr('disabled', 'disabled').css('cursor', 'default'); //Disable the button after click
+                        $('#cx_button_applyDefaults_settings').attr('disabled', 'disabled').css('cursor', 'default'); //Disable the button after click
 
                         //apply the defaults on the settings page
                         $('#account_default_locale').val($('#account_default_locale > option:contains("English (Australia)")').val()); //Default Language
@@ -159,12 +184,13 @@ function myJQueryCode() {
 
                         //Add the show LTIs button on the settings page
                         //users must first be on the page before pressing the button
-                        if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-                          $('nav#breadcrumbs').after('<br><button type="button" id="dg_listLti_ID">Show the LTI IDs</button><br>');
-                          $("#dg_listLti_ID").click(function(e){
+                        var settings_match = document.location.pathname.toLowerCase().match(re_settings);
+                        if ( settings_match !== null ) {
+                          $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="cx_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+                          $("#cx_listLti_ID").click(function(e){
                             e.preventDefault();
-                            $("#dg_listLti_ID").attr('disabled','disabled');
-                            listLtiID();
+                            $("#cx_listLti_ID").attr('disabled','disabled');
+                            listLtiID(settings_match[1]);
                             return 0;
                           });
                         }
@@ -175,6 +201,64 @@ function myJQueryCode() {
                 });
                 //----------End do the apply default button -----------------------
 
+                const admin_shield_svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" width="24px" height="24px" style="padding-left: 0.25rem; vertical-align: middle;" viewBox="0 0 200 224" enable-background="new 0 0 200 224" xml:space="preserve"><path d="M87,83.47a9.53,9.53,0,1,1-9.53-9.53A9.53,9.53,0,0,1,87,83.47m35.26,62.28h17.29V128.45l-40-40,.44-4.19c.11-13.94-10.3-24.37-23.1-24.37a23.22,23.22,0,0,0,0,46.44l5.31-.6,7.18,7.17h16.86V126h13.14V142.9Zm30,12.71H117l-10.3-10.29v-9.43H93.57V125.59H84.16L77.58,119h-.65a35.93,35.93,0,1,1,35.92-35.92c0,.22,0,.43,0,.64l39.44,39.45ZM99.72,220.06a6.46,6.46,0,0,1-3-.78l-3.93-2.13c-34.84-18.92-82.55-44.81-82.55-99.89V49.59a6.37,6.37,0,0,1,3.65-5.76L97,4.66a6.28,6.28,0,0,1,5.4,0L185.6,43.83a6.37,6.37,0,0,1,3.65,5.76v67.67c0,55.08-47.72,81-82.55,99.89l-3.93,2.13A6.47,6.47,0,0,1,99.72,220.06ZM22.91,53.62v63.64c0,47.52,42.09,70.37,75.9,88.73l.9.48.91-.48c33.81-18.36,75.9-41.21,75.9-88.73V53.62L99.72,17.43Z"></path></svg>';
+
+                // Adding identifiers to items that only SiteAdmin users can change
+                $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().prepend(admin_shield_svg);
+                $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().parent().css('border', '1px dashed red').css('background-color', sa_setting_hl_colour);
+                $('#account_settings tr td > label[for=account_settings_mfa_settings]').parent().next().append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Xc8GJziJ">setting definition</a></div>');
+
+                $('#account_settings tr td > label[for=account_settings_include_students_in_global_survey]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/ynGUDHQ3">setting definition</a></div>');
+
+                $('#account_settings > div > label[for=account_settings_increase_calendar_limit]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/t1xoN6TJ">setting definition</a></div>');
+
+                $('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).css('background-color', sa_setting_hl_colour).next().append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/pmiRD7wo">setting definition</a></div>');
+                $('#account_settings > fieldset.account_domains > legend:contains(Canvas Cloud Information)').next().append(admin_shield_svg).css('background-color', sa_setting_hl_colour);
+                $('#account_settings > fieldset.account_domains > select').after(admin_shield_svg).css('background-color', sa_setting_hl_colour);
+                $('#account_settings > fieldset.account_domains > ul li.new_domain button.add_domain_button').after(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour);
+                $('#account_settings > fieldset.account_domains > div').append(admin_shield_svg).css('background-color', sa_setting_hl_colour);
+
+                $('#account_settings > fieldset > legend:contains(Acceptable Use Policy)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).css('background-color', sa_setting_hl_colour).after('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/1jA350b2">setting definition</a></div>');
+
+// Canvas for Elementary is available to an account admin, removing this one
+//                // Features - group the ones that are Site Admin specific
+//                // comment for "Canvas for Elementary"
+//                var _site_admin_div = $('#account_settings > fieldset > legend:contains(Features)').parent('fieldset').find('div').slice(1,3).wrapAll('<div style="border: 1px dashed red; padding: 0.5rem 0 0 0.5rem; margin-bottom: 1rem;"></div>').parent();
+ //               _site_admin_div.prepend(admin_shield_svg).css('background-color', sa_setting_hl_colour).prepend('<div style="float: right;"><a href="/">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_admins_can_change_passwords]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/dRycRojP">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_admins_can_view_notifications]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/i5Z1RDRu">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_eportfolios]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/DVQSqzHM">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_allow_sis_import]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/tryFZ8mx">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_include_integration_ids_in_gradebook_exports]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/5KRTXr2e">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_allow_invitation_previews]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/7JLfs9XN">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_alerts]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/zE5KQ311">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_global_includes]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).prepend('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/E9gmSBu7">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_show_scheduler]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/U9DAmX1f">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_profiles]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Umzv8NX0">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_limit_parent_app_web_access]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/AgAj5S5d">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=enable_equella]').parent().append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/diKiq3YV">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_settings_enable_turnitin]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/U0Qkmi00">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_account_survey_notifications]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Kj0HXUgo">setting definition</a></div>');
+                $('#account_settings > fieldset > legend:contains(Features)').parent().find('div > label[for=account_services_beta_for_students]').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).append('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/L9qMTWxU">setting definition</a></div>');
+
+                $('#account_settings > fieldset#add_sis_app_token > legend:contains(SIS Agent Token Authentication)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).prepend('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/Hh9AEtzz">setting definition</a></div>');
+
+                $('#account_settings > fieldset#external_integration_keys > legend:contains(External Integration Keys)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour).prepend('<div style="float: right;"><a href="https://instructure.atlassian.net/l/cp/tPJFF3wG">setting definition</a></div>');
+
+                $('nav ul#section-tabs > li > a:contains(Domain Lookups)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour);
+                $('nav ul#section-tabs > li > a:contains(SFTP User)').css('align-items', 'center').css('display', 'flex').append(admin_shield_svg).parent().css('background-color', sa_setting_hl_colour);
+
+
+                // reference to the Canvas Feature Option Summary
+                waitForKeyElements("#tab-features > div > span", append_feature_details);
+                // 20231006 - can't get the correct trigger for this to work correctly
+                // waitForKeyElements('#tab-features > div > table > tbody', append_feature_account_details);
+
+                // END - adding SiteAdmin user shield
+
+
+
+                // 20230824 - I think this code below no longer works - may remove it on a future release
                 //Changes to the 'Apps' tab  - only if you click on my settings link, and did not navigate there natuarally
                 $('#account_settings_tabs > ul > li:contains("Apps"):first > a:first').click(function(a) {
                     a.preventDefault();
@@ -182,14 +266,14 @@ function myJQueryCode() {
                         $('#external_tools > div > div > div.Header > h2 > div > span.AddExternalToolButton > a.btn.btn-primary.add_tool_link.lm').click(function(b) {
                             b.preventDefault();
                             setTimeout(function() {
-                                $('body > div.ReactModalPortal > div > div > div > div > div.ReactModal__Header-Title > h4').after('<button type="button" id="dg_button_canvasCommons">Canvas Commons</button>');
+                                $('body > div.ReactModalPortal > div > div > div > div > div.ReactModal__Header-Title > h4').after('<button type="button" id="cx_button_canvasCommons">Canvas Commons</button>');
                                 var name = "Commons Setup";
                                 var consumerKey = "1";
                                 var sharedSecret = "c9b6c488-4750-48ce-897c-b919ff3cb0f1";
                                 var configURL = "https://lor.instructure.com/api/account-setup/tool-config";
-                                $('#dg_button_canvasCommons').click(function(c) {
+                                $('#cx_button_canvasCommons').click(function(c) {
                                     c.preventDefault();
-                                    $('#dg_button_canvasCommons').attr('disabled', 'disabled').css('cursor', 'default'); //Disable the button after click
+                                    $('#cx_button_canvasCommons').attr('disabled', 'disabled').css('cursor', 'default'); //Disable the button after click
 
                                     //select URL
                                     $('#configuration_type_selector-bs > ul > li:nth-child(2) > a').click();
@@ -209,37 +293,42 @@ function myJQueryCode() {
             }
 
             //Add Auth changer to users
-            if (document.location.pathname.indexOf("/accounts/self/users/") >= 0 || document.location.pathname.indexOf("/users/") >=0 || document.location.pathname.indexOf("/accounts/1/users/") >= 0) {
+            if ( document.location.pathname.toLowerCase().match(re_users) !== null ) {
+                _cx_tools_on = true;
+
                 //figure out how many logins there are and create a select list for them
                 var optionCountHTML = '<option value="null">Select a login</option>';
                 for (var i = 1; i <= $('fieldset#login_information > table.ic-Table > tbody > tr.login:not(:last)').length; i++) {
                     optionCountHTML += '<option value="' + i + '">' + i + '</option>';
                 }
-                optionCountHTML = '<select class="locale" id="dg_changeAuthCount" style="width:initial;">' + optionCountHTML + '</select>';
+                optionCountHTML = '<span style="margin-right: 0.5rem;"><select class="locale" id="cx_changeAuthCount" style="width:initial;">' + optionCountHTML + '</select></span>';
                 //Create the auth method select for Canvas, LDAP, SAML, Microsoft, and Google
-                var changeAuthSelect = '<select class="locale" name="dg_changeAuth" id="dg_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select>';
-                //Put in the option to the page for the  auth method
-                $('#name_and_email > table > tbody > tr:last').after('<tr id="dg_changeAuth_tr"><br><td><label for="dg_changeAuth">Change authentication:</label></td><td>' + changeAuthSelect + '</td></tr>');
+                var changeAuthSelect = '<span style="margin-right: 0.5rem;"><select class="locale" name="cx_changeAuth" id="cx_changeAuth" style="width:initial;"><option value="null">Select an Auth method</option><option value="canvas">Canvas</option><option value="ldap">LDAP</option><option value="saml">SAML</option><option value="microsoft">Microsoft (Office 365)</option><option value="google">Google</option></select></span>';
+                var deleteAndGoButton = '<span style="margin-right: 0.5rem;"><input type="checkbox" value="true" unchecked="true" name="cx_deleteOldAuthMethod" id="cx_deleteOldAuthMethod"> <label for="cx_deleteOldAuthMethod">Delete old Method</label></span><button id="cx_changeAuth_button" class="btn" style="bottom: 5px;">Go</button>';
+                var td_details = changeAuthSelect + optionCountHTML + deleteAndGoButton;
+
+                //Put in the option to the page for the auth method
+                $('#name_and_email > table > tbody > tr:last').after('<tr id="cx_changeAuth_tr"><th><label for="cx_changeAuth"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Add login:</label></th></tr>');
+
                 //put in the options dropdown
-                $('#dg_changeAuth_tr').append('<td id="dg_changeAuthCount_td">' + optionCountHTML + '</td>');
-                //add the 'Go' button
-                $('#dg_changeAuthCount_td').after('<td><input type="checkbox" value="true" unchecked="true" name="dg_deleteOldAuthMethod" id="dg_deleteOldAuthMethod"><span>Delete old Method</span></td><td><button id="dg_changeAuth_button" class="btn" style="bottom: 5px;">Go</button></td>');
+                $('#cx_changeAuth_tr').append('<td>' + td_details + '</td>');
+
                 //When you click the 'Go' button
-                $('#dg_changeAuth_button').click(function(e) {
+                $('#cx_changeAuth_button').click(function(e) {
                     e.preventDefault();
                     //disable the options
-                    $('#dg_changeAuth_button,#dg_changeAuth,#dg_deleteOldAuthMethod,#dg_changeAuthCount').attr('disabled', 'disabled');
+                    $('#cx_changeAuth_button,#cx_changeAuth,#cx_deleteOldAuthMethod,#cx_changeAuthCount').attr('disabled', 'disabled');
                     //replace the 'Go' button with the spinny wheel
-                    $('#dg_changeAuth_button').html('<body id="dg_spin"><div class="loading_image_holder"><img src="/images/ajax-loader.gif"></div>');
+                    $('#cx_changeAuth_button').html('<body id="cx_spin"><div class="loading_image_holder"><img src="/images/ajax-loader.gif" /></div>');
                     //check to see a proper value is selected
-                    if ($('#dg_changeAuth').val() === "null" || $('#dg_changeAuthCount').val() === "null") {
+                    if ($('#cx_changeAuth').val() === "null" || $('#cx_changeAuthCount').val() === "null") {
                         alert('No Auth method or Number selected!');
                         return;
                     } else {
                         var currentUserID = ENV.USER_ID;
-                        var authMethodSelected = $('#dg_changeAuth').val();
-                        var authMethodNumber = $('#dg_changeAuthCount').val();
-                        var authDeleteOld = $('#dg_deleteOldAuthMethod:checked').length;
+                        var authMethodSelected = $('#cx_changeAuth').val();
+                        var authMethodNumber = $('#cx_changeAuthCount').val();
+                        var authDeleteOld = $('#cx_deleteOldAuthMethod:checked').length;
                         var loginID = $('fieldset#login_information > table.ic-Table > tbody > tr.login:eq(' + (authMethodNumber - 1) + ') b.unique_id').text().trim();
                         var sisID = $('fieldset#login_information > table.ic-Table > tbody > tr.login:eq(' + (authMethodNumber - 1) + ') th[scope="row"] div:eq(0)').text().trim().split('SIS ID: ').join('');
 
@@ -284,34 +373,38 @@ function myJQueryCode() {
                         xhr.send(data);
                     }
                 });
-            } else if (document.location.pathname.toLowerCase() === "/accounts/1/settings/configurations" || document.location.pathname.toLowerCase() === "/accounts/1/settings" || document.location.pathname.toLowerCase().indexOf("/accounts/self/") >=0 ) {
+            } else if ( document.location.pathname.toLowerCase().match(re_settings) !== null ) {
+                _cx_tools_on = true;
+
                 //token storage and update
-                var tokenInputHTML = '<label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="dg_apiTokenButton">Update</button></div><br>';
+                var tokenInputHTML = '<label for="cx_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off"><button class="Button" id="cx_apiTokenButton">Update</button></div><br>';
                 $('#right-side').prepend(tokenInputHTML);
-                $('#dg_apiTokenButton').click(function(e) {
+                $('#cx_apiTokenButton').click(function(e) {
                     e.preventDefault();
-                    if (confirm("Update token with: " + $('#dg_apiToken').val())) {
-                        storeItem('token', $('#dg_apiToken').val());
+                    if (confirm("Update token with: " + $('#cx_apiToken').val())) {
+                        storeItem('token', $('#cx_apiToken').val());
                         location.reload();
                     }
                     return;
                 });
-            } else if (document.location.pathname.toLowerCase() === "/dgtools") {
-                //focus on the DG links page
+            } else if (document.location.pathname.toLowerCase() === "/cxtools1") {
+                _cx_tools_on = true;
+
+                //focus on the CX Tools links page
                 $('li.ic-app-header__menu-list-item--active').attr('class', "menu-item ic-app-header__menu-list-item");
-                $('li#dg_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
+                $('li#cx_li_self').attr('class', "menu-item ic-app-header__menu-list-item  ic-app-header__menu-list-item--active");
 
-                document.title = "DG - Update User SIS id from one to another";
-                $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="dg_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="dg_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="dg_apiToken">SIS ID or Canvas ID:</label> <br> <select id="dg_canvasOrSIS" name="dg_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="dg_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
+                document.title = "CX Tools - Update User SIS id from one to another";
+                $('#main').html('<div> <h1>Update User SIS id from one to another</h1> <div style="padding-left:50px;"> <table> <tr> <th>Old SIS ID / Canvas ID</th> <th>New SIS ID</th> <th>Console Log</th> </tr> <tr> <td> <textarea id="cx_old_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="cx_new_sis_id" rows="20" cols="50"></textarea> </td> <td> <textarea id="cx_console_log" rows="20" cols="150" disabled="disabled" style="width:100%;"></textarea> </td> </tr> <tr> <td> <label for="cx_apiToken">API token:</label> <br> <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td> <td> <label for="cx_apiToken">SIS ID or Canvas ID:</label> <br> <select id="cx_canvasOrSIS" name="cx_canvasOrSIS"> <option value="sis_user_id:">SIS ID</option> <option value="">Canvas ID</option> </select> </td> <td> <br> <button type="button" id="cx_updateGo" class="btn filter_button">Update IDs</button> </td> </tr> </table> </div> <div style="padding-left:50px;" >Useful links; <ul> <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li> <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li> </ul> </div> </div>');
 
-                $('button#dg_updateGo').click(function(e) {
+                $('button#cx_updateGo').click(function(e) {
                     e.preventDefault();
                     //disable fields and buttons
-                    $('button#dg_updateGo, #dg_old_sis_id, #dg_new_sis_id, #dg_canvasOrSIS').attr('disabled', 'disabled');
+                    $('button#cx_updateGo, #cx_old_sis_id, #cx_new_sis_id, #cx_canvasOrSIS').attr('disabled', 'disabled');
 
                     //get the arrays and confrim that they match
-                    var old_sis_ID = csvOrNot($('#dg_old_sis_id').val());
-                    var new_sis_ID = csvOrNot($('#dg_new_sis_id').val());
+                    var old_sis_ID = csvOrNot($('#cx_old_sis_id').val());
+                    var new_sis_ID = csvOrNot($('#cx_new_sis_id').val());
 
                     //create new object array
                     var newObjectArray = [];
@@ -325,7 +418,7 @@ function myJQueryCode() {
                             newObjectArray.push(tmp);
                         });
                         if (confirm("Are you sure?\nThis can't be undone?")) {
-                            update_sis_id(newObjectArray, $('#dg_canvasOrSIS').val());
+                            update_sis_id(newObjectArray, $('#cx_canvasOrSIS').val());
                         } else {
                             return 0;
                         }
@@ -333,55 +426,144 @@ function myJQueryCode() {
                         return alert('Array lengths do not match!');
                     }
                 });
-            } else if(document.location.pathname.toLowerCase() === "/dgtools2") {
-                document.title = "DG Tools";
-                $('#main').html('<center><h1>DG Tools</h1><div><em>DG Tools are the best!</em></div></center>' + 
-                    '<div style="padding-left:50px"><hr><h2>Links</h2><ul>' + 
-                        '<li><a href="/dgtools">Update User SIS id from one to another</a></li>' + 
-                        '<li><a href="/dgtools3">Create Users</a></li>' + 
-                        '<li><a href="/dgtools4">Create Sandboxes</a></li>' + 
-                        '<li><a href="/dgtools5">Trust Account</a></li>' + 
-                        '<li><a href="https://instructure.atlassian.net/wiki/display/ENG/SCORM" target="_blank">SCORM Setup</a></li>' + 
-                        '<li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>' + 
-                        '<li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Studio GUID</a></li>' + 
-                    '</ul><h2>Tools</h2><ul><li class="dg_action_lti">' + 
-                    '<button class="Button" type="button" id="dg_button_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons</button></li>' + 
-                    '<li><strong>Sydney</strong></li><ul>' + 
-                        '<li class="dg_action_lti"><button class="Button" type="button" id="dg_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>' + 
-                        '<li class="dg_action_lti"><button class="Button" type="button" id="dg_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>' + 
-                        '<li class="dg_action_outcome"><button class="Button" type="button" id="dg_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button></li>' + 
-                    '</ul><li><strong>Singapore</strong></li><ul>' + 
-                        '<li class="dg_action_lti"><button class="Button" type="button" id="dg_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>' + 
-                        '<li class="dg_action_lti"><button class="Button" type="button" id="dg_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button></li>' + 
-                    '</ul><li><strong>EUROPE (Dublin)</strong></li><ul><li class="dg_action_lti">' + 
-                        '<button class="Button" type="button" id="dg_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>' + 
-                        '<li class="dg_action_lti"><button class="Button" type="button" id="dg_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>' + 
-                        '<li class="dg_action_externalTool"><button class="Button" type="button" id="dg_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button></li>' + 
-                    '</ul></ul></div><hr><div style="padding-left:50px;width: 40%"><label for="dg_apiToken">API token:</label><div class="ic-Input-group"><input name="focus" type="hidden" value="' + userToken + '"><input id="dg_apiToken" type="text" name="dg_apiToken" class="ic-Input ui-autocomplete-input" value="' + userToken + '" aria-labelledby="course_name_label" autocomplete="off">' + 
-                    '<button class="Button" id="dg_apiTokenButton">Update API Token</button></div><br><br></div>');
+            } else if(document.location.pathname.toLowerCase() === "/cxtools2") {
+                _cx_tools_on = true;
 
-                //LTI Buttons Function
-                $('li.dg_action_lti').click(function(e){
+                document.title = "CX Tools";
+                const _main_menu_html_tpl = `
+<div style="text-align: center;">
+    <h1>Canvas Experience (CX) Tools</h1>
+    <div>
+        <em>CX Tools are the best!  Version: <a href="//github.com/clmcavaney/CX-Tools/releases/tag/_VERSION_" title="github tag reference">_VERSION_</a></em>
+    </div>
+</div>
+<div style="padding-left:50px">
+    <hr />
+    <h2>Links</h2>
+        <ul>
+            <li><a href="/cxtools1">Update User SIS id from one to another</a></li>
+            <li><a href="/cxtools3">Create Users</a></li>
+            <li><a href="/cxtools4">Create Sandboxes</a></li>
+            <li><a href="/cxtools5">Trust Account</a></li>
+            <li><a href="https://instructure.atlassian.net/wiki/spaces/APACCS/pages/1314488774/SCORM+-+SCONE+Canvas+LTI" target="_blank">SCORM Setup</a></li>
+            <li><a href="/catalog" target="_blank">Catalog Setup</a></li>
+            <li><a href="/uuid.quiz.next" target="_blank">New Quizzes Setup</a></li>
+            <li><a href="https://learn.microsoft.com/en-us/microsoft-365/lti/onedrive-lti?view=o365-worldwide" target="_blank">Microsoft OneDrive install documentation</a></li>
+            <li><a href="/accounts/self/settings/configurations#tab-tools" target="_blank">LTI Tool Config Settings Page</a></li>
+            <li><a href="/api/v1/accounts/self?includes[]=lti_guid" target="_blank">Canvas Studio GUID</a>
+                <ul>
+                    <li><a href="https://_INSTANCE_SUBDOMAIN_.instructuremedia.com/lti/config.xml" target="_blank">Canvas Studio config URL</a> (you can right click this to &quot;Copy Link Address&quot; and then paste into the LTI install process)
+                </ul>
+            </li>
+            <li><a href="/plugins">Plugins for this instance</a></li>
+            <li><a href="/error_reports">Error Reports for this instance</a></li>
+            <li><a href="/graphiql">Graph<em>i</em>QL playground (i.e. GraphQL playground) for this Canvas instance</a></li>
+            <li><a href="https://www.sslshopper.com/ssl-checker.html?hostname=_INSTANCE_URL_">SSL/TLS check of the certificate for this instance</a></li>
+        </ul>
+    <h2>Tools</h2>
+    <div id="cx_processing" style="display: none;"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/processing-animation.gif" /></div>
+        <ul>
+            <li><strong>Generic</strong>
+            <ul>
+                <li class="cx_enable_inherited_lti_and_app"><button class="Button" type="button" id="cx_button_google_assignments" client_id="170000000000573">Google Assignments (LTI 1.3)</button></li>
+                <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_classes" client_id="170000000000570">Microsoft Teams classes</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-classes-with-canvas?view=o365-worldwide#enable-the-microsoft-teams-app-in-canvas" target="_blank">Microsoft documentation</a> step 5 onwards)</li>
+                <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_microsoft_teams_meetings" client_id="170000000000703">Microsoft Teams meetings</button> (once you have clicked this button and the developer key has been enabled, you will need to refer to <a href="https://learn.microsoft.com/en-us/microsoft-365/lti/teams-meetings-with-canvas?view=o365-worldwide#microsoft-office-365-admin" target="_blank">Microsoft documentation</a> - note: this may have been done already if Microsoft Teams classes has been already configured)</li>
+                <li class="cx_enable_inherited_lti_and_app"><button class="Button" type="button" id="cx_button_lucid_lti_app" client_id="170000000001855">Lucid Integration (enable key + install app)</button></li>
+                <li class="cx_enable_inherited_lti_only"><button class="Button" type="button" id="cx_button_lucid_lti" client_id="170000000001855">Lucid Integration (enable key only)</button></li>
+            </ul>
+            <li><strong>APAC - Sydney</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.sydney.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SYD)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_chat" key="5436" secret="AA7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkWttYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-syd.instructure.com/lti/configure.xml">Chat LTI (SYD)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_syd_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-syd.instructure.com/configure.xml">Roll Call - Attendance (SYD)</button></li>
+                    <li class="cx_action_outcome"><button class="Button" type="button" id="cx_button_syd_outcomes" guid="A8326BEC-901A-11DF-A622-0C319DFF4B22">Australian Outcomes</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_office365" destination="https://office365-syd-prod.instructure.com" url="https://office365-syd-prod.instructure.com/config.xml">MS Office 365 LTI (SYD)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_syd_google" destination="https://google-drive-lti-syd-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-syd-prod.instructure.com/config">Google LTI (SYD)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_au" client_id_api="170000000000731" client_id_lti="170000000000730">Canvas Credentials AU</button> (this will enable the <span id="cx_credentials_au_api_lbl">API <input type="checkbox" id="cx_credentials_au_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_au_lti_lbl">LTI <input type="checkbox" id="cx_credentials_au_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
+                </ul>
+            </li>
+            <li><strong>APAC - Singapore</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.singapore.canvaslms.com/api/account-setup/tool-config">Canvas Commons (SG)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_chat" key="5437" secret="21b2b6008685d7ced7319af8e1349d52b40808cef67e36a6068065c87c13309803adb82c5c880d8f7d928776" url="https://chat-sin.instructure.com/lti/configure.xml">Chat LTI (SG)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_sg_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-sin.instructure.com/configure.xml">Roll Call - Attendence (SG)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_office365" destination="https://office365-sin-prod.instructure.com" url="https://office365-sin-prod.instructure.com/config.xml">MS Office 365 LTI (SG)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_sg_google" destination="https://google-drive-lti-sin-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-sin-prod.instructure.com/config">Google LTI (SG)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_sg" client_id_api="170000000000731" client_id_lti="170000000000822">Canvas Credentials SG</button> (this will enable the <span id="cx_credentials_sg_api_lbl">API <input type="checkbox" id="cx_credentials_sg_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_sg_lti_lbl">LTI <input type="checkbox" id="cx_credentials_sg_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
+                </ul>
+            </li>
+            <li><strong>EMEA - Dublin</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-eu.instructure.com/lti/configure.xml">Chat LTI (DUB)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_dub_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (DUB)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_office365" destination="https://office365-dub-prod.instructure.com" url="https://office365-dub-prod.instructure.com/config.xml">MS Office 365 LTI (DUB)</button></li>
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_dub_google" destination="https://google-drive-lti-dub-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-dub-prod.instructure.com/config.xml">Google LTI (DUB)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_dub" client_id_api="170000000000731" client_id_lti="170000000000728">Canvas Credentials EU/Ireland</button> (this will enable the <span id="cx_credentials_dub_api_lbl">API <input type="checkbox" id="cx_credentials_dub_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_dub_lti_lbl">LTI <input type="checkbox" id="cx_credentials_dub_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
+                </ul>
+            </li>
+            <li><strong>EMEA - Frankfurt</strong>
+                <ul>       
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.eu-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (FRA)</button></li>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_chat" key="5298" secret="OB7UiLCv5QQ63pQ7gWhIEZwiK0wE9bMUB35BT9JOi7zeW2GtIlJB7SkPaaYirL1exa2NrN7Xkzu3O4dZlTRfJv9C" url="https://chat-fra.instructure.com/lti/configure.xml">Chat LTI (FRA)</button></li>       
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_fra_rollCall" key="6edd0a5c8f95ff156168af6db62bf4fe4b404343bc3a7525e5a990d016c0a4c6" secret="49ba3d056fa0b4939aa1018dfeaf09211e922f1164d2c358daf624a9aed2fa2a" url="https://rollcall-eu.instructure.com/configure.xml">Roll Call - Attendance (FRA)</button></li>       
+                    <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_office365" destination="https://office365-fra-prod.instructure.com" url="https://office365-fra-prod.instructure.com/config.xml">MS Office 365 LTI (FRA)</button></li>       
+                   <li class="cx_action_externalTool"><button class="Button" type="button" id="cx_button_fra_google" destination="https://google-drive-lti-fra-prod.instructure.com/lti_credentials/new" url="https://google-drive-lti-fra-prod.instructure.com/config.xml">Google LTI (FRA)</button> (legacy - best to use the &quot;Google Assignments LTI 1.3&quot; - <a href="/accounts/1/developer_keys">inherited developer key</a>)</li>
+                </ul>
+            </li>
+            <li><strong>NORAM - Canada</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_ca_central_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://commons.ca-central.canvaslms.com/api/account-setup/tool-config">Canvas Commons (CA-CENTRAL)</button></li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_ca" client_id_api="170000000000731" client_id_lti="170000000000729">Canvas Credentials CA</button> (this will enable the <span id="cx_credentials_ca_api_lbl">API <input type="checkbox" id="cx_credentials_ca_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_ca_lti_lbl">LTI <input type="checkbox" id="cx_credentials_ca_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
+                </ul>
+            </li>
+            <li><strong>NORAM - USA</strong>
+                <ul>
+                    <li class="cx_action_lti"><button class="Button" type="button" id="cx_button_us_east_1_cc" key="1" secret="c9b6c488-4750-48ce-897c-b919ff3cb0f1" url="https://lor.instructure.com/api/account-setup/tool-config">Canvas Commons (US-EAST-1)</button></li>
+                    <li class="cx_enable_credentials"><button class="Button" type="button" id="cx_button_credentials_us" client_id_api="170000000000731" client_id_lti="170000000000727">Canvas Credentials US</button> (this will enable the <span id="cx_credentials_us_api_lbl">API <input type="checkbox" id="cx_credentials_us_api_chkbx" disabled="disabled" /></span> key and regional <span id="cx_credentials_us_lti_lbl">LTI <input type="checkbox" id="cx_credentials_us_lti_chkbx" disabled="disabled" /></span> key - you will still need to install the LTI at the appropriate sub-account)</li>
+                </ul>
+            </li>
+        </ul>
+    <div>
+    <p>Acknowledgements:</p>
+    <ul>
+    <li><a href="https://www.flaticon.com/free-icons/tick" title="tick icons">Tick icons created by Octopocto - Flaticon</a></li>
+    </ul>
+    </div>
+</div>
+<hr />
+<div style="padding-left:50px; padding-bottom: 2rem; width: 40%;">
+    <label for="cx_apiToken">API token:</label>
+    <div class="ic-Input-group">
+        <input name="focus" type="hidden" value="_userToken_"><input id="cx_apiToken" type="text" name="cx_apiToken" class="ic-Input ui-autocomplete-input" value="_userToken_" aria-labelledby="course_name_label" autocomplete="off">
+        <button class="Button" id="cx_apiTokenButton">Update API Token</button>
+    </div>
+</div>`.trim();
+
+
+                var _subdomain = document.location.hostname.split('.')[0];
+                var _main_menu_html = _main_menu_html_tpl.replaceAll("_VERSION_", _cx_tools_version).replaceAll('_userToken_', userToken).replaceAll('_INSTANCE_URL_', document.location.hostname).replaceAll('_INSTANCE_SUBDOMAIN_', _subdomain);
+                $('#main').html(_main_menu_html);
+
+                // LTI Buttons Function
+                $('li.cx_action_lti button').click(function(e){
                     e.preventDefault();
                     console.log("Installing this Tool: " + $(this).text());
-                    console.log("Key: " + $("button", this).attr("key"));
-                    console.log("Secret: " + $("button", this).attr("secret"));
-                    console.log("URL: " + $("button", this).attr("url"));
+                    console.log("Key: " + $(this).attr("key"));
+                    console.log("Secret: " + $(this).attr("secret"));
+                    console.log("URL: " + $(this).attr("url"));
 
                     //Disable the button
-                    $("button", this).attr("disabled","disabled");
+                    $(this).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
 
                     //Call the function to install LTI based on the paramters in the HTML Buttons
-                    installLTI($(this).text(), $("button", this).attr('key'), $("button", this).attr('secret'), $("button", this).attr('url'));
+                    installLTI($(this).text(), $(this).attr('key'), $(this).attr('secret'), $(this).attr('url'), "", $(this));
                 });
 
                 //Outcomes Install
-                $('li.dg_action_outcome').click(function(e){
+                $('li.cx_action_outcome button').click(function(e){
                     e.preventDefault();
                     console.log('Installing outcomes: ' + $(this).text());
                     //Disable the button
@@ -390,7 +572,7 @@ function myJQueryCode() {
                 });
 
                 //External tool link (Office365 / GAFE)
-                $('li.dg_action_externalTool').click(function(e){
+                $('li.cx_action_externalTool button').click(function(e){
                     e.preventDefault();
                     $("button", this).attr("disabled","disabled");
 
@@ -399,19 +581,69 @@ function myJQueryCode() {
                     //window.open("/accounts/self/settings/configurations#tab-tools", "_blank"); //Config Page - Not needed in 2.1
                 });
 
-                //Update Token function
-                $('#dg_apiTokenButton').click(function(e) {
+                // Inherited LTI developer key
+                $('li.cx_enable_inherited_lti_and_app button').click(function(e){
                     e.preventDefault();
-                    if (confirm("Update token with: " + $('#dg_apiToken').val())) {
-                        storeItem('token', $('#dg_apiToken').val());
+
+                    // need to get the specific button
+                    var id = $(this).prop('id');
+                    // disable the button
+                    $('#'+id).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $('#'+id));
+                });
+
+                $('li.cx_enable_inherited_lti_only button').click(function(e){
+                    e.preventDefault();
+
+                    // need to get the specific button
+                    var id = $(this).prop('id');
+                    // disable the button
+                    $('#'+id).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id'), $('#'+id), false);
+                });
+
+                $('li.cx_enable_credentials button').click(function(e){
+                    e.preventDefault();
+
+                    // need to get the specific button
+                    var id = $(this).prop('id');
+
+                    // disable the button
+                    $('#'+id).attr("disabled","disabled");
+
+                    // show the user something is happening
+                    $('#cx_processing').show();
+
+                    // proposed function
+                    enableLTIKeyandInstallLTI($(this).attr('client_id_api'), $('#'+id), false, handle_credentials_api_key_enable);
+                    enableLTIKeyandInstallLTI($(this).attr('client_id_lti'), $('#'+id), false, handle_credentials_lti_key_enable);
+                });
+
+                //Update Token function
+                $('#cx_apiTokenButton').click(function(e) {
+                    e.preventDefault();
+                    if (confirm("Update token with: " + $('#cx_apiToken').val())) {
+                        storeItem('token', $('#cx_apiToken').val());
                         location.reload();
                     }
                     return;
                 });
-            }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
+            }else if(document.location.pathname.toLowerCase() === "/cxtools3") {
+                _cx_tools_on = true;
+
                 //Create users page
-                document.title="DG - Create Users"
-                $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="dg_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="dg_last_name"></textarea>                </td>                <td>                    <textarea id="dg_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="dg_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                        <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="dg_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="dg_set_auth" id="dg_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="dg_notifyUsers" type="checkbox" name="dg_notifyUsers" value="dg_notifyUsers">Notify?                                     </label>                                     <button type="button" id="dg_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
+                document.title="CX Tools - Create Users"
+                $('#main').html('<div>    <h1>Create Users</h1>    <div style="padding-left: 50px;"><p>&quot;User ID&quot; and &quot;Login ID&quot; are the only required fields.</p><p>Multiple users can be specified and each users details can be comma separated or new line separated.</p></div><div style="padding-left:50px;">        <table>            <tr>                <th>First Name</th>                <th>Last Name</th>                <th>User ID</th>                <th>Login ID</th>                <th>Email Address</th>            </tr>            <tr>                <td>                    <textarea rows="10" id="cx_first_name" ></textarea>                </td>                <td>                    <textarea rows="10"id="cx_last_name"></textarea>                </td>                <td>                    <textarea id="cx_user_id" rows="10"></textarea>                </td>                <td>                    <textarea id="cx_login_id" rows="10"></textarea>                </td>                <td>                    <textarea id="cx_email" rows="10"></textarea>                </td>            </tr>            <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                        <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled">                        </td>                        <td>                            <label for="cx_apiToken">Auth Provider ID:</label>                            <br>                                <select class="locale" name="cx_set_auth" id="cx_set_auth" style="width:initial;">                                    <option value="">Null</option>                                    <option value="canvas">Canvas</option>                                    <option value="ldap">LDAP</option>                                    <option value="saml">SAML</option>                                    <option value="microsoft">Microsoft (Office 365)</option>                                    <option value="google">Google</option>                                    <option value="openid_connect">OpenID Connect</option>                                </select>                            </td>                            <td>                                <br>                                    <label>                                         <input id="cx_notifyUsers" type="checkbox" name="cx_notifyUsers" value="cx_notifyUsers">Notify?                                     </label>                                     <button type="button" id="cx_create_users" class="btn filter_button">Create Users</button>                                </td>                            </tr>                        </table>                        <div>                            <h3>Console Log</h3>                            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>                        </div>                    </div>                    <div style="padding-left:50px;" >      Useful links;                               <ul>                            <li>Case convert:                                 <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a>                            </li>                            <li>Convert Column to Comma Separated List:                                 <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a>                            </li>                        </ul>                    </div>                    <br>                        <br>                        </div>');
 
                 //getting the auto created users from SF
                 var urlVars = getUrlVars();
@@ -420,32 +652,32 @@ function myJQueryCode() {
                     $.each(splitUsers,function(){
                         var thisUser = this.split('~');
                         if(thisUser[0]!="undefined" && thisUser[0]!="" && thisUser[1]!="undefined" && thisUser[1]!="" && thisUser[2]!="undefined" && thisUser[2]!=""){
-                            $('#dg_first_name').val($('#dg_first_name').val() + thisUser[0] + '\n');
-                            $('#dg_last_name').val($('#dg_last_name').val() + thisUser[1] + '\n');
-                            $('#dg_user_id').val($('#dg_user_id').val() + thisUser[2] + '\n');
-                            $('#dg_login_id').val($('#dg_login_id').val() + thisUser[2] + '\n');
-                            $('#dg_email').val($('#dg_email').val() + thisUser[2] + '\n');
+                            $('#cx_first_name').val($('#cx_first_name').val() + thisUser[0] + '\n');
+                            $('#cx_last_name').val($('#cx_last_name').val() + thisUser[1] + '\n');
+                            $('#cx_user_id').val($('#cx_user_id').val() + thisUser[2] + '\n');
+                            $('#cx_login_id').val($('#cx_login_id').val() + thisUser[2] + '\n');
+                            $('#cx_email').val($('#cx_email').val() + thisUser[2] + '\n');
                         }
                     });
                 }
 
-                $('button#dg_create_users').click(function(e) {
+                $('button#cx_create_users').click(function(e) {
                     e.preventDefault();
                     //disable fields and buttons
-                    $('#dg_create_users,#dg_set_auth,#dg_first_name,#dg_last_name,#dg_login_id,#dg_user_id,#dg_email,#dg_notifyUsers').attr('disabled', 'disabled');
+                    $('#cx_create_users,#cx_set_auth,#cx_first_name,#cx_last_name,#cx_login_id,#cx_user_id,#cx_email,#cx_notifyUsers').attr('disabled', 'disabled');
 
                     //check the "Notify" flag
-                    var notifyCheck = $('#dg_notifyUsers').prop('checked');
+                    var notifyCheck = $('#cx_notifyUsers').prop('checked');
                     //if its not null or canvas, then u can't notify
-                    if($('#dg_set_auth').val() == '' || $('#dg_set_auth').val() == 'canvas' || $('#dg_set_auth').val() == 'Null') notifyCheck = false;
+                    if($('#cx_set_auth').val() == '' || $('#cx_set_auth').val() == 'canvas' || $('#cx_set_auth').val() == 'Null') notifyCheck = false;
 
                     //get the arrays and confrim that they match
-                    var first_name = csvOrNot($('#dg_first_name').val());
-                    var last_name = csvOrNot($('#dg_last_name').val());
-                    var login_id = csvOrNot($('#dg_login_id').val());
-                    var user_id = csvOrNot($('#dg_user_id').val());
-                    var email = csvOrNot($('#dg_email').val());
-                    var auth_id = $('#dg_set_auth').val();
+                    var first_name = csvOrNot($('#cx_first_name').val());
+                    var last_name = csvOrNot($('#cx_last_name').val());
+                    var login_id = csvOrNot($('#cx_login_id').val());
+                    var user_id = csvOrNot($('#cx_user_id').val());
+                    var email = csvOrNot($('#cx_email').val());
+                    var auth_id = $('#cx_set_auth').val();
 
                     //create new object array
                     var createNewUserArray = [];
@@ -474,52 +706,107 @@ function myJQueryCode() {
                         return alert('Array lengths do not match!');
                     }
                 });
-            }else if(document.location.pathname.toLowerCase() === "/dgtools4") {
-                document.title="DG - Create Sandboxes";
-                $('#main').html('<div>   <h1>Create Users</h1>   <div style="padding-left:50px;">      <table>         <tr>           <li><button class="Button" type="button" id="dg_button_create_sandbox">Create Sandbox Sub-Account</button></li>           <li><button class="Button" type="button" id="dg_button_create_canvas101">Create Canvas 101</button></li>         </tr>         <tr>            <th>User ID</th>         </tr>         <tr>            <td><textarea id="dg_user_id" rows="10"></textarea></td>         </tr>         <tr>            <td> <label for="dg_apiToken">API token:</label> <br> <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>            <td>               <label for="dg_canvas101">Enrol in Canvas 101 (Growing with Canvas)</label> <br>                <select class="locale" name="dg_canvas101" id="dg_canvas101" style="width:initial;">                  <option value="true">Yes</option>                  <option value="false">No</option>               </select>            </td>            <td> <br> <button type="button" id="dg_create_sandboxes" class="btn filter_button">Create Sandboxes</button> </td>         </tr>      </table>      <div><h3>Console Log</h3>         <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>      </div>   </div>   <div style="padding-left:50px;" >      Useful links;       <ul>         <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>         <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>      </ul>   </div></div>');
-                //Create canavs101 Button
-                $('#dg_button_create_canvas101').click(function(){
-                    $('#dg_button_create_canvas101').attr('disabled','disabled');
-                    var createCanvas101 = createCanvasCourse("Canvas 101","canvas101","sandbox","Growing With Canvas",null);
-                });
+            }else if(document.location.pathname.toLowerCase() === "/cxtools4") {
+                _cx_tools_on = true;
+
+                document.title="CX Tools - Create Sandboxes";
+                const _create_sandboxes_html_tpl = `
+<div>
+	<h1>Create Sandboxes</h1>
+	<div style="padding-left:50px;">
+		<h3>Actions</h3>
+		<table>
+			<tr>
+				<td>
+					<ul>
+						<li><button class="Button" type="button" id="cx_button_create_sandbox">Create &quot;Sandbox&quot; sub-account</button></li>
+						<li><button class="Button" type="button" id="cx_button_create_canvas101">Create &quot;Canvas 101&quot; course in &quot;sandbox&quot; sub-account</button></li>
+						<li>
+							<div style="border: 1px solid #c7cdd1; border-radius: 4px; padding: 0.25rem;">
+								<p style="margin-top: 0rem;">Create sandbox courses for each user below:</p>
+								<p style="font-weight: bold;">User ID(s)</p>
+								<textarea id="cx_user_id" rows="10"></textarea>
+								<p>You can choose to enrol these users into the &quot;Canvas 101 (Growing with Canvas)&quot; course too.<br />
+									<label for="cx_canvas101">Enrol user(s) in &quot;Canvas 101&quot;</label>
+								<select class="locale" name="cx_canvas101" id="cx_canvas101" style="width:initial;">
+									<option value="true">Yes</option>
+									<option value="false">No</option>
+								</select>
+								</p>
+								<button type="button" id="cx_create_sandboxes" class="btn filter_button">Create Sandboxes</button>
+							</div>
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+
+		<div><h3>API token</h3>
+			<label for="cx_apiToken">Canvas access token:</label> <input id="cx_apiToken" type="text" name="cx_apiToken" value="_userToken_" autocomplete="off" cols="50" disabled="disabled" size="60" />
+		</div>
+
+		<div><h3>Console Log</h3>
+			<textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>
+		</div>
+
+		<div>
+			<h3>Useful links</h3>
+			<ul>
+				<li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>
+				<li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>
+			</ul>
+		</div>
+	</div>
+</div>
+                `.trim();
+                var _create_sandboxes_html = _create_sandboxes_html_tpl.replaceAll('_userToken_', userToken);
+                $('#main').html(_create_sandboxes_html);
 
                 //Create Sandbox Account
-                $('#dg_button_create_sandbox').click(function(){
-                    $('#dg_button_create_sandbox').attr('disabled','disabled');
+                $('#cx_button_create_sandbox').click(function(){
+                    $('#cx_button_create_sandbox').attr('disabled','disabled');
                     var createSandbox = createSandboxAccount();
                 });
 
+                //Create canavs101 Button
+                $('#cx_button_create_canvas101').click(function(){
+                    $('#cx_button_create_canvas101').attr('disabled','disabled');
+                    var createCanvas101 = createCanvasCourse("Canvas 101","canvas101","sandbox","Growing With Canvas",null);
+                });
+
                 //create Sandboxes function
-                $('#dg_create_sandboxes').click(function(){
-                    $('#dg_create_sandboxes, #dg_user_id, #dg_canvas101').attr('disabled','disabled');
-                    var userID_array = csvOrNot($('#dg_user_id').val());
-                    var alsoCanvas101 = $('#dg_canvas101').val();
+                $('#cx_create_sandboxes').click(function(){
+                    $('#cx_create_sandboxes, #cx_user_id, #cx_canvas101').attr('disabled','disabled');
+                    var userID_array = csvOrNot($('#cx_user_id').val());
+                    var alsoCanvas101 = $('#cx_canvas101').val();
                     sandboxCreate(userID_array,alsoCanvas101);
                 });
-            }else if(document.location.pathname.toLowerCase() === "/dgtools5") {
-                document.title="DG - Create Trust";
-                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="dg_apiToken">API token:</label>                    <br>                    <input id="dg_apiToken" type="text" name="dg_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="dg_apiToken">Trust users from this Account</label>                    <br>                    <label for="dg_trustID">Canvas ID</label>                    <input type="text" id="dg_trustID" name="trustID"><br><br>                    <label for="dg_shard">Shard number (usually "1")</label>                    <input type="text" id="dg_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="dg_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="dg_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="dg_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
+            }else if(document.location.pathname.toLowerCase() === "/cxtools5") {
+                _cx_tools_on = true;
 
-                //When the user clicks "Create trust"
-                $('#dg_createTrust').click(function(e){
+                document.title="CX Tools - Create Trust";
+                $('#main').html('<div>    <h1>Trust Account</h1>    <div style="padding-left:50px;">        <table>                        <tr>                <td>                    <label for="cx_apiToken">API token:</label>                    <br>                    <input id="cx_apiToken" type="text" name="cx_apiToken" value="' + userToken + '" autocomplete="off" cols="50" disabled="disabled"> </td>                <td>                    <label for="cx_apiToken">Trust users from this Account</label>                    <br>                    <label for="cx_trustID">Canvas Shard ID</label>                    <input type="text" id="cx_trustID" name="trustID"><br><br>                    <label for="cx_shard">Shard number (usually "1")</label>                    <input type="text" id="cx_shard" name="shard" value="1"><br><br>                </td>                <td>                    <br>                    <button type="button" id="cx_createTrust" class="btn filter_button">Create Trust</button>                </td><td><br><button type="button" id="cx_ListTrust" class="btn filter_button">List Trusted Canvas</button></td></tr>        </table>        <div>            <h3>Console Log</h3>            <textarea id="cx_console_log" rows="10" cols="150" disabled="disabled" style="width:80%;"></textarea>        </div>    </div>    <div style="padding-left:50px;"> Useful links;        <ul>            <li>Case convert: <a href="https://convertcase.net/" target="_blank">https://convertcase.net/</a> </li>            <li>Convert Column to Comma Separated List: <a href="https://convert.town/column-to-comma-separated-list" target="_blank">https://convert.town/column-to-comma-separated-list</a> </li>            <li>Internal Trust Doco: <a href="https://community.canvaslms.com/docs/DOC-5623" target="_blank">https://community.canvaslms.com/docs/DOC-5623</a>        </ul>    </div>    <br>    <br></div>');
+
+                // When the user clicks "Create trust"
+                $('#cx_createTrust').click(function(e){
                     e.preventDefault();
                     updateConsoleLog('Start creating trust...');
                     //disbaled the button and fields
-                    $('#dg_createTrust, #dg_trustID, #dg_shard').attr('disabled','disabled');
+                    $('#cx_createTrust, #cx_trustID, #cx_shard').attr('disabled','disabled');
 
                     //action the function to create the trust
-                    var trustID = $('#dg_trustID').val();
-                    var shardID = $('#dg_shard').val();
+                    var trustID = $('#cx_trustID').val();
+                    var shardID = $('#cx_shard').val();
                     createTrust(trustID,shardID);
 
                     return 0;
                 });
 
                 //List trusts attached to the Canvas
-                $('#dg_ListTrust').click(function(e){
+                $('#cx_ListTrust').click(function(e){
                     e.preventDefault();
                     updateConsoleLog('Checking trusts...');
-                    $('#dg_ListTrust').attr('disabled','disabled');
+                    $('#cx_ListTrust').attr('disabled','disabled');
                     listTrusts();
                 });
             }
@@ -527,7 +814,7 @@ function myJQueryCode() {
             //link to the IC support page within the Canvas help
             $($('#global_nav_help_link').parent()).click(function() {
                 //check to see if the link has been made, as the canvas help only renders on the help link click!
-                if ($('#dg_icSupportLink').length === 0) {
+                if ($('#cx_icSupportLink').length === 0) {
 
                     var buildIcLink = [];
                     var linkURL = "https://s3.amazonaws.com/SSL_Assets/APAC/ticketpage.html";
@@ -545,7 +832,7 @@ function myJQueryCode() {
 
                     $.ajax(settings).done(function(response) {
                         buildIcLink = {
-                            dgtools: true,
+                            cxtools: true,
                             name: response.name,
                             currentURL: document.location.toString(),
                             DOMAIN_ROOT_ACCOUNT_ID: ENV.DOMAIN_ROOT_ACCOUNT_ID,
@@ -558,7 +845,7 @@ function myJQueryCode() {
                         //build the support link URI
                         linkURL = buildURI(buildIcLink, linkURL);
                         console.log(linkURL);
-                        $('#help_tray > ul:first > li:first').before('<li class="ic-NavMenu-list-item"><a id="#dg_icSupportLink" href="' + linkURL + '" target="_blank" class="ic-NavMenu-list-item__link">IC Support</a><div class="ic-NavMenu-list-item__helper-text is-help-link">Link to the IC support page</div></li>');
+                        $('#help_tray > ul:first > li:first').before('<li class="ic-NavMenu-list-item"><a id="#cx_icSupportLink" href="' + linkURL + '" target="_blank" class="ic-NavMenu-list-item__link">IC Support</a><div class="ic-NavMenu-list-item__helper-text is-help-link">Link to the IC support page</div></li>');
                     });
                 }
                 return;
@@ -567,14 +854,33 @@ function myJQueryCode() {
             //if within a course
             if(document.location.pathname.toLowerCase().indexOf('/courses/') >= 0){
 
+                // Add button to take user back to courses list for root account
+                $('div.ic-app-nav-toggle-and-crumbs > div.right-of-crumbs').append('<a class="btn" rel="nofollow" href="/accounts/1"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> View all courses</a>');
+
+
                 if(document.location.pathname.toLowerCase() === "/courses/" + ENV.course_id){
+                    _cx_tools_on = true;
+
                     //If on the homepage of the course
 
                     //Settings link above the options on RHS
-                    $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/settings" class="btn button-sidebar-wide course-home-sub-navigation-lti"><i class="icon-link"></i> Course Settings</a>');
+                    $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/settings" class="btn button-sidebar-wide course-home-sub-navigation-lti"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> <i class="icon-link"></i> Course Settings</a>');
                     //Undelete option
-                    $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/undelete" class="btn button-sidebar-wide course-home-sub-navigation-lti"><i class="icon-link"></i> Undelete Course Content</a>');
+                    $('#course_show_secondary > div.course-options > a.btn.button-sidebar-wide.course-home-sub-navigation-lti:last').before('<a href="/courses/' + ENV.course_id + '/undelete" class="btn button-sidebar-wide course-home-sub-navigation-lti"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> <i class="icon-link"></i> Undelete Course Content</a>');
                 }
+            }
+
+            if ( document.location.pathname.match(re_perms) !== null ) {
+                _cx_tools_on = true;
+
+                // change each header to be no longer than 18 characters followed by an ellipses - but only call the function once the table has been loaded
+                waitForKeyElements("table.ic-permissions__table", fix_permission_header);
+            }
+
+            // Turn on ribbon if a page has modification through the CX Tools
+            if (_cx_tools_on == true) {
+                // put the banner div after the body
+                $('body').prepend('<div class="cx-tools-ribbon"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> CX Tools ON</div>');
             }
 
         });
@@ -611,8 +917,8 @@ function myJQueryCode() {
 
                 var icSupportObject = getUrlVars();
 
-                //if done via DG tools
-                if (icSupportObject.dgtools == "true") {
+                //if done via CX Tools
+                if (icSupportObject.cxtools == "true") {
                     console.log('gg');
                     //fill out the title field
                     $('#school_name').val(icSupportObject.name);
@@ -640,7 +946,7 @@ function myJQueryCode() {
                     }, 5000
                 );
             }
-        }else if(document.location.pathname.toLowerCase() === "/dgtools3") {
+        }else if(document.location.pathname.toLowerCase() === "/cxtools3") {
             //Once on the create users page
             var urlVars = getUrlVars();
             if(urlVars.sfUsers == "true"){
@@ -648,11 +954,11 @@ function myJQueryCode() {
                 $.each(splitUsers,function(){
                     var thisUser = this.split('~');
                     if(thisUser[0]!="undefined" && thisUser[0]!="" && thisUser[1]!="undefined" && thisUser[1]!="" && thisUser[2]!="undefined" && thisUser[2]!=""){
-                        $('#dg_first_name').val($('#dg_first_name').val() + thisUser[0] + '\n');
-                        $('#dg_last_name').val($('#dg_last_name').val() + thisUser[1] + '\n');
-                        $('#dg_user_id').val($('#dg_user_id').val() + thisUser[2] + '\n');
-                        $('#dg_login_id').val($('#dg_login_id').val() + thisUser[2] + '\n');
-                        $('#dg_email').val($('#dg_email').val() + thisUser[2] + '\n');
+                        $('#cx_first_name').val($('#cx_first_name').val() + thisUser[0] + '\n');
+                        $('#cx_last_name').val($('#cx_last_name').val() + thisUser[1] + '\n');
+                        $('#cx_user_id').val($('#cx_user_id').val() + thisUser[2] + '\n');
+                        $('#cx_login_id').val($('#cx_login_id').val() + thisUser[2] + '\n');
+                        $('#cx_email').val($('#cx_email').val() + thisUser[2] + '\n');
                     }
                 });
             }
@@ -662,10 +968,10 @@ function myJQueryCode() {
     // ============== My functions =====================
 
     //get all the LTIs installed
-    function listLtiID(){
+    function listLtiID(canvas_account_id){
       var form = new FormData();
       var settings = {
-        "url": "/api/v1/accounts/1/external_tools?per_page=100",
+        "url": "/api/v1/accounts/" + canvas_account_id + "/external_tools?per_page=100",
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -679,7 +985,7 @@ function myJQueryCode() {
 
       $.ajax(settings).done(function (response) {
         console.log(response);
-        apiReply = JSON.parse(response);
+        var apiReply = JSON.parse(response);
         if(apiReply.length > 0){
           $.each(apiReply,function(index,element){
             console.log(element);
@@ -687,13 +993,13 @@ function myJQueryCode() {
           });
 
           //add the hide button too
-          var buildHideButton = '<form id="dg_hideLTI" autocomplete="off"><label for="lti_id" style="display: initial;">LTI ID:</label><input autocomplete="off" type="text" id="lti_id" name="lti_id"><label for="lti_name" style="display: initial;"> New Name:</label><input autocomplete="off" type="text" id="lti_name" name="lti_name"> <button type="button" id="dg_hideLTI_submit">Hide this LTI!</button>';
+          var buildHideButton = '<form id="cx_hideLTI" autocomplete="off"><label for="lti_id" style="display: initial;">LTI ID:</label><input autocomplete="off" type="text" id="lti_id" name="lti_id"><label for="lti_name" style="display: initial;"> New Name:</label><input autocomplete="off" type="text" id="lti_name" name="lti_name"> <button type="button" id="cx_hideLTI_submit">Hide this LTI!</button>';
 
           $('div.Header > div > p:last').after(buildHideButton);
 
-          $("#dg_hideLTI_submit").click(function(e){
+          $("#cx_hideLTI_submit").click(function(e){
             e.preventDefault();
-            $("#dg_hideLTI_submit").attr('disabled','disabled');
+            $("#cx_hideLTI_submit").attr('disabled','disabled');
             if(confirm("Are you sure you want to do this?! It cannot be undone!") === true) hideElement();
           });
         }
@@ -733,12 +1039,14 @@ function myJQueryCode() {
 
     //Add the show LTIs button on the settings page
     //users must first be on the page before pressing the button
-    if(document.location.pathname.toLowerCase().indexOf("/accounts/1/settings/") >= 0 || document.location.pathname.toLowerCase().indexOf("/accounts/self/settings/") >= 0){
-      $('nav#breadcrumbs').after('<br><button type="button" id="dg_listLti_ID">Show the LTI IDs</button><br>');
-      $("#dg_listLti_ID").click(function(e){
+    const re_settings=/\/accounts\/(\d+|self)\/settings/;
+    var settings_match = document.location.pathname.toLowerCase().match(re_settings);
+    if ( settings_match !== null ) {
+      $('nav#breadcrumbs').after('<div style="padding-left: 1rem;"><button type="button" id="cx_listLti_ID"><img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/dabpanda-cropped-16x16.png" /> Show the LTI IDs</button></div>');
+      $("#cx_listLti_ID").click(function(e){
         e.preventDefault();
-        $("#dg_listLti_ID").attr('disabled','disabled');
-        listLtiID();
+        $("#cx_listLti_ID").attr('disabled','disabled');
+        listLtiID(settings_match[1]);
         return 0;
       });
     }
@@ -773,7 +1081,7 @@ function myJQueryCode() {
                 "error": function(jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 404 || errorThrown == 'Not Found') {
                         console.log("Error: " + jqXHR.status + " - User not found: " + element.old);
-                        $('#dg_console_log').val("Error: " + jqXHR.status + " - User not found: " + element.old + " \n" + $('#dg_console_log').val());
+                        $('#cx_console_log').val("Error: " + jqXHR.status + " - User not found: " + element.old + " \n" + $('#cx_console_log').val());
                     }
                 }
             };
@@ -787,7 +1095,7 @@ function myJQueryCode() {
                 xhr.addEventListener("readystatechange", function() {
                     if (this.readyState === 4) {
                         console.log("Completed id update for: " + this.responseText);
-                        $('#dg_console_log').val("Completed id update for: " + element.new + " [" + element.old + "]\n" + $('#dg_console_log').val());
+                        $('#cx_console_log').val("Completed id update for: " + element.new + " [" + element.old + "]\n" + $('#cx_console_log').val());
                     }
                 });
 
@@ -797,7 +1105,7 @@ function myJQueryCode() {
                 xhr.setRequestHeader("cache-control", "no-cache");
                 xhr.send(data);
                 console.log("Processing for: " + element.new + "[" + element.old + "]");
-                $('#dg_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#dg_console_log').val());
+                $('#cx_console_log').val("Processing for: " + element.new + "[" + element.old + "]\n" + $('#cx_console_log').val());
             });
         });
     }
@@ -844,8 +1152,8 @@ function myJQueryCode() {
         }
     }
 
-    //Install LTIs that use URL Install
-    function installLTI(name,consumer_key,shared_secret,config_url,canvas_lti_url){
+    // Install LTIs that use URL Install
+    function installLTI(name, consumer_key, shared_secret, config_url, canvas_lti_url, button_trigger) {
         var data = null;
 
         var xhr = new XMLHttpRequest();
@@ -854,16 +1162,6 @@ function myJQueryCode() {
         if(canvas_lti_url === null || canvas_lti_url === undefined){
             canvas_lti_url = "";
         }
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-                alert(this.responseText);
-                if(name === "Canvas Commons"){
-                    window.open("/accounts/self/settings/configurations#tab-tools", "_blank");
-                }
-            }
-        });
 
         //Build the API Call
         var apiURL = canvas_lti_url + "/api/v1/accounts/self/external_tools?name=";
@@ -877,6 +1175,124 @@ function myJQueryCode() {
         xhr.setRequestHeader("Cache-Control", "no-cache");
 
         xhr.send(data);
+
+        xhr.onload = function() {
+            if ( xhr.status != 200 ) {
+                alert(`${xhr.status}: ${xhr.statusText}`);
+            }
+            $(button_trigger).removeAttr("disabled");
+            $('#cx_processing').hide();
+
+            // Show the user something
+            $(button_trigger).parent().append(' LTI installed <img src="https://raw.githubusercontent.com/clmcavaney/CX-Tools/master/assets/check-mark-64x64.png" style="width: 16px; height: 16px;" />');
+
+            // LTI specific code can go here if required
+
+            // If the LTI is Canvas Commons, there is one more step so present the link to head on over and complete that step
+            if ( name.match('Canvas Commons') != null ) {
+                $(button_trigger).parent().append(' &mdash; now <a href="/accounts/self/settings/configurations#tab-tools">complete configuration via root account settings/apps area</a>');
+            }
+        };
+    }
+
+    // enable an inherited LTI developer key
+    // Note: this will install the LTI, unless install_lti == false
+    function enableLTIKeyandInstallLTI(client_id, button_trigger, install_lti = true, s_func = null) {
+        // relative to the domain of the Canvas instance being browsed
+        var apiURL = '/api/v1/accounts/self/developer_keys/' + client_id + '/developer_key_account_bindings';
+        // JSON body
+        var payload = JSON.stringify({developer_key_account_binding:{workflow_state:'on'}});
+
+        // debugging
+        // alert('enableLTIKey(): apiURL == ' + apiURL);
+        // alert('enableLTIKey(): payload == ' + payload);
+
+        $.ajax({
+            type: "POST",
+            url: apiURL,
+            headers: {
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
+            },
+            data: payload,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response) {
+                console.log('successfully enabled developer LTI key: ' + client_id);
+                parsed_response = $.parseJSON(JSON.stringify(response));
+                console.log('developer LTI key: ' + parsed_response.workflow_state);
+                if ( install_lti == true ) {
+                    // debugging
+                    // alert('at this point make a HTTP POST request to install the app/LTI');
+                    installLTIviaClientID(client_id, button_trigger);
+                } else {
+                    $(button_trigger).removeAttr("disabled");
+                    $('#cx_processing').hide();
+
+                    $(button_trigger).parent().append(' <strong>developer key (' + client_id + ') enabled</strong>');
+
+                    // call additional "success function" if one supplied
+                    if ( s_func != null ) {
+                        s_func(button_trigger);
+                    }
+                }
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = $.parseJSON(e.responseText);
+                var err_msg = json_msg['errors']['base'];
+                console.log('Unable to enable developer LTI key: ' + err_msg);
+            }
+        });
+    }
+
+    // install LTI via client_id
+    function installLTIviaClientID(client_id, button_trigger) {
+        // relative to the domain of the Canvas instance being browsed
+        var apiURL = '/api/v1/accounts/1/external_tools/';
+
+        // debugging
+        // alert('installLTIviaClientID(): client_id == ' + client_id);
+
+        $.ajax({
+            type: "POST",
+            url: apiURL + '?' + $.param({client_id: client_id}),
+            headers: {
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
+            },
+            success: function(response) {
+                console.log('successfully installed external tool (aka LTI)');
+                parsed_response = $.parseJSON(JSON.stringify(response));
+                console.log('name of installed LTI: ' + parsed_response.name);
+
+                $(button_trigger).removeAttr("disabled");
+                $('#cx_processing').hide();
+
+                $(button_trigger).parent().append(' <strong>LTI "' + parsed_response.name + '" installed</strong>');
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = $.parseJSON(e.responseText);
+                var err_msg = json_msg['errors']['base'];
+                console.log('Unable to install external tool: ' + err_msg);
+            }
+        });
+    }
+
+    // Note: this are very specific to the Credentials button
+    function handle_credentials_api_key_enable(button_trigger) {
+        var lti_span;
+        lti_span=$(button_trigger).parent().find("span:nth-of-type(1)").css('padding', '0.25rem').css('background-color','lightgreen').css('color', 'white');
+        $(lti_span).find("input").prop('checked', true);
+    }
+    // Note: this are very specific to the Credentials button
+    function handle_credentials_lti_key_enable(button_trigger) {
+        var lti_span;
+        lti_span=$(button_trigger).parent().find("span:nth-of-type(2)").css('padding', '0.25rem').css('background-color','lightgreen').css('color', 'white');
+        $(lti_span).find("input").prop('checked', true);
     }
 
     //Import Outcomes Function
@@ -929,7 +1345,7 @@ function myJQueryCode() {
             }*/
             });
             //Build Post Call
-            var postCall = "/api/v1/accounts/1/users?user[name]=" + encodeURIComponent(e.full_name);
+            var postCall = "/api/v1/accounts/self/users?user[name]=" + encodeURIComponent(e.full_name);
             postCall += "&user[skip_registration]="+!notifyCheck;
             postCall += "&pseudonym[send_confirmation]="+notifyCheck;
             //postCall += "&pseudonym[force_self_registration]=" + notifyCheck;
@@ -951,7 +1367,7 @@ function myJQueryCode() {
     }
 
     function updateConsoleLog(newVal){
-        $('#dg_console_log').val(timeStamp() + " | " + newVal + "\n" + $('#dg_console_log').val());
+        $('#cx_console_log').val(timeStamp() + " | " + newVal + "\n" + $('#cx_console_log').val());
     }
 
     function timeStamp() {
@@ -1091,40 +1507,44 @@ function myJQueryCode() {
     }
 
 
-    //Create trust function
+    // Create trust function
     function createTrust(targetID,shardID){
-        //build Post URL
-        //Example post: "https://apaccs.instructure.com/api/v1/accounts/13677~1/trust_links?trust_link%5Bmanaging_account_id%5D=16292~1"
+        // build Post URL
+        // Example post: "https://apaccs.instructure.com/api/v1/accounts/13677~1/trust_links?trust_link%5Bmanaging_account_id%5D=16292~1"
 
         var buildPost = "/api/v1/accounts/";
-        //add this accounts ID
+        // add this accounts ID
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
-        buildPost += "/trust_links?trust_link%5Bmanaging_account_id%5D=";
+        buildPost += "/trust_links";
 
-        //Add the trust from ID and Shard
-        buildPost += targetID + "~" + shardID;
-
-        var data = new FormData();
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === 4) {
-                console.log(this.responseText);
-                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
-                    updateConsoleLog('Failed creating Trust with error: ' + this.responseText);
-                }else{
-                    updateConsoleLog('Success! Creating Trust with message: ' + this.responseText);
-                }
+        $.ajaxSetup({
+            headers:{
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
             }
         });
 
-        xhr.open("POST", buildPost);
-        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
-        xhr.setRequestHeader("Cache-Control", "no-cache");
-
-        xhr.send(data);
+        var trust_data = 'trust_link[managing_account_id]=' + targetID + "~" + shardID;
+        console.log(trust_data);
+        $.ajax({
+            url: buildPost,
+            type: 'POST',
+            data: trust_data,
+            success: function(response) {
+                console.log("success");
+                console.log(response);
+                updateConsoleLog('Success! Created Trust - ID:' + response['id']);
+            },
+            error: function(e) {
+                console.log(e);
+                console.log(JSON.parse(e.responseText));
+                json_msg = jQuery.parseJSON(e.responseText);
+                var err_attr = json_msg['errors']['managed_role_id'][0]['attribute'];
+                var err_msg = json_msg['errors']['managed_role_id'][0]['message'];
+                updateConsoleLog('Unable to create trust: ' + err_attr + ' - ' + err_msg);
+            },
+            dataType: "json"
+        });
     }
 
     function listTrusts(){
@@ -1132,30 +1552,45 @@ function myJQueryCode() {
         buildPost += ENV.DOMAIN_ROOT_ACCOUNT_ID;
         buildPost += '/trust_links';
 
-        //build call
-        var data = new FormData();
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === 4) {
-                console.log(this.responseText);
-                if(this.responseText.toLowerCase().indexOf('error') >=0 || this.responseText.toLowerCase().indexOf('fail') >=0){
-                    updateConsoleLog('Failed with error: ' + this.responseText);
-                }else{
-                    var newLineReply = this.responseText.split('}').join('}\n').split(',').join('');
-                    newLineReply = newLineReply.split('[').join('').split(']').join('');
-                    updateConsoleLog('Success! Listing IDs of trusted Canvi:\n ' + newLineReply);
-                }
+        $.ajaxSetup({
+            headers:{
+                "Authorization": "Bearer " + userToken,
+                "Cache-Control": "no-cache",
+                "Accept": "application/json+canvas-string-ids"
             }
         });
 
-        xhr.open("GET", buildPost);
-        xhr.setRequestHeader("Authorization", "Bearer " + userToken);
-        xhr.setRequestHeader("Cache-Control", "no-cache");
+        $.get( buildPost, function( data ) {
+            console.log("success");
 
-        xhr.send(data);
+            updateConsoleLog('API call success! Now listing IDs of trusted Canvi: (above - can take a little while)');
+
+            console.log("length of data is " + data.length);
+
+            if ( data.length == 0 ) {
+                updateConsoleLog('No trusts found')
+            } else {
+                // Get details (i.e. name of each trusted instance)
+                // "/api/v1/accounts/<account id>";
+                // console.log(json_resp);
+                $.each(data, function( key, value ) {
+                    // console.log(value);
+                    $.get( "/api/v1/accounts/" + value.managing_account_id, function( data ) {
+                        console.log("success");
+                        updateConsoleLog(JSON.stringify(value));
+                        updateConsoleLog('ID: ' + value.id + ' Name: ' + data.name);
+                    }, 'json')
+                        .fail(function() {
+                            console.log("error");
+                            updateConsoleLog('Unable to get account name for "' + value.managing_account_id + '"');
+                        });
+                });
+            }
+        }, 'json')
+            .fail(function() {
+                console.log("error");
+                updateConsoleLog('Unable to get trusts: ' + data);
+            });
     }
 
     function getUsersFullName(sisUserId){
@@ -1254,7 +1689,7 @@ function myJQueryCode() {
                     console.log('Canvas Destination: ' + ltiDestination)
 
                     //build the paramters URL
-                    ltiDestination += "/accounts/self/settings/configurations#tab-tools?dg_installLTI=true";
+                    ltiDestination += "/accounts/self/settings/configurations#tab-tools?cx_installLTI=true";
                     ltiDestination += "&ltiName=" + encodeURI(ltiName);
                     ltiDestination += "&ltiKey=" + encodeURI(ltiKey);
                     ltiDestination += "&ltiSecret=" + encodeURI(ltiSecret);
@@ -1272,7 +1707,7 @@ function myJQueryCode() {
     //now on the LTI config Settings
     if(document.location.pathname === "/accounts/self/settings/configurations"){
         var ltiURLvals = getUrlVars();
-        if(ltiURLvals.dg_installLTI === undefined || ltiURLvals.dg_installLTI === null){
+        if(ltiURLvals.cx_installLTI === undefined || ltiURLvals.cx_installLTI === null){
             console.log('No LTI to install');
         }else{
             alert("Installing LTI: " + ltiURLvals.ltiName + "\nClick 'OK' and the page will refresh with the LTI Installed");
@@ -1297,7 +1732,8 @@ function myJQueryCode() {
     jqTag.type = 'text/javascript';
     jqTag.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
     headTag.appendChild(jqTag);
-    jqTag.onload = myJQueryCode;}
+    jqTag.onload = myJQueryCode;
+}
 
 
 function openInNewTab(url) {
@@ -1354,35 +1790,70 @@ function getUsers(){
 function buildTheContactsTableUI(){
     //Put the action box at the top
     if($('h2.mainTitle').text() === "Account Detail"){
-        $('div.listRelatedObject.contactBlock input[value="New Contact"]').after('<input type="text"  id="dg_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
+        $('div.listRelatedObject.contactBlock input[value="New Contact"]').after('<input type="text"  id="cx_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="cx_userToCanvas"></input>');
     }else{
-        $('div.pbHeader:first').after('<input type="text"  id="dg_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="dg_userToCanvas"></input>');
+        $('div.pbHeader:first').after('<input type="text"  id="cx_canvasURL"></input><input type="button" class="btn" Value = "Send Users to Canvas.instructure.com" id="cx_userToCanvas"></input>');
     }
 
     //put the checkboxes in
-    $('#bodyCell div.pbBody table:contains("Contact Status") th.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked id="dg_checkUsersMaster">'); //Master checkbox
+    $('#bodyCell div.pbBody table:contains("Contact Status") th.actionColumn').prepend('<input type="checkbox" class="cx_checkUsers" checked id="cx_checkUsersMaster">'); //Master checkbox
     //user array
-    $('#bodyCell div.pbBody table:contains("Contact Status") td.actionColumn').prepend('<input type="checkbox" class="dg_checkUsers" checked>');
+    $('#bodyCell div.pbBody table:contains("Contact Status") td.actionColumn').prepend('<input type="checkbox" class="cx_checkUsers" checked>');
 
     //function to check, or uncheck all based on the master checkbox
-    $('#dg_checkUsersMaster').change(function(e){
+    $('#cx_checkUsersMaster').change(function(e){
         e.preventDefault();
         //console.log('here');
-        var checkBoxes = $('input.dg_checkUsers:not(:first)');
+        var checkBoxes = $('input.cx_checkUsers:not(:first)');
         checkBoxes.prop("checked", !checkBoxes.prop("checked"));
     });
 
 
-    $('#dg_userToCanvas').click(function(e){
-        $('#dg_canvasURL, #dg_userToCanvas, input.dg_checkUsers').attr('disabled','disabled');
+    $('#cx_userToCanvas').click(function(e){
+        $('#cx_canvasURL, #cx_userToCanvas, input.cx_checkUsers').attr('disabled','disabled');
         e.preventDefault();
         //sessionStorage.setItem('userArrayString',getUsers()); //Local storage doesnt seem to be working adding it to the link
         var userString = getUsers();
         userString = userString.trim();
         userString = encodeURI(userString);
-        var buildCanvasURL = "https://" + $('#dg_canvasURL').val() + ".instructure.com/dgtools3?sfUsers=true&userData=" + userString;
+        var buildCanvasURL = "https://" + $('#cx_canvasURL').val() + ".instructure.com/cxtools3?sfUsers=true&userData=" + userString;
         openInNewTab(buildCanvasURL);
     });
 }
 
+// shorten some text to textLength long and add an ellipses
+function shorten(text, textLength){
+    if(text.length > textLength){
+        text = text.substring(0, textLength) + '&hellip;';
+    }
+    return text;
+}
 
+function fix_permission_header() {
+    var existing_label;
+    var new_label;
+
+    // very specific selector
+    $('table.ic-permissions__table > thead > tr.ic-permissions__top-header > th.ic-permissions__top-header__col-wrapper-th > div > div > span > button > span').each(function(i, obj) {
+        existing_label = $(this).text();
+        new_label = shorten(existing_label, 18);
+        $(this).html(new_label);
+    });
+}
+
+function append_feature_details(node) {
+    const admin_shield_svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" width="24px" height="24px" style="padding-left: 0.25rem; vertical-align: middle;" viewBox="0 0 200 224" enable-background="new 0 0 200 224" xml:space="preserve"><path d="M87,83.47a9.53,9.53,0,1,1-9.53-9.53A9.53,9.53,0,0,1,87,83.47m35.26,62.28h17.29V128.45l-40-40,.44-4.19c.11-13.94-10.3-24.37-23.1-24.37a23.22,23.22,0,0,0,0,46.44l5.31-.6,7.18,7.17h16.86V126h13.14V142.9Zm30,12.71H117l-10.3-10.29v-9.43H93.57V125.59H84.16L77.58,119h-.65a35.93,35.93,0,1,1,35.92-35.92c0,.22,0,.43,0,.64l39.44,39.45ZM99.72,220.06a6.46,6.46,0,0,1-3-.78l-3.93-2.13c-34.84-18.92-82.55-44.81-82.55-99.89V49.59a6.37,6.37,0,0,1,3.65-5.76L97,4.66a6.28,6.28,0,0,1,5.4,0L185.6,43.83a6.37,6.37,0,0,1,3.65,5.76v67.67c0,55.08-47.72,81-82.55,99.89l-3.93,2.13A6.47,6.47,0,0,1,99.72,220.06ZM22.91,53.62v63.64c0,47.52,42.09,70.37,75.9,88.73l.9.48.91-.48c33.81-18.36,75.9-41.21,75.9-88.73V53.62L99.72,17.43Z"></path></svg>';
+
+    node.append('<div style="position: absolute; right: 1rem; padding: 0.25rem; border: 1px solid black; background-color: rgb(239,239,239);">' + admin_shield_svg + ' <a href="https://community.canvaslms.com/t5/Canvas-Resource-Documents/Canvas-Feature-Option-Summary/ta-p/531316">Canvas Feature Option Summary</a></div>');
+}
+
+// 20231006 - can't get this to fire at the correct time - really needs to be supplied by the underling code
+/*
+function append_feature_account_details(node) {
+    // attempting to append a feature
+    $('#tab-features > div > table > tbody > tr > td > div > button > span > span:contains("Account and Course Level Outcome Mastery Scales")').closest('div').find('div > div > div').append('<br /><a href="">feature definition</a>');
+    alert('in append_feature_account_details()')
+}
+*/
+
+// vim:expandtab ts=4 sw=4
